@@ -1,4 +1,4 @@
-package com.gikk.twirc.messages;
+package com.gikk.twirc.types;
 
 /**Class for IrcUsers. Easier than sending a bunch of strings everywhere.
  * 
@@ -33,7 +33,7 @@ public class TwirkUser {
 		String nick = prefix.substring( prefix.charAt(0) == ':' ? 1 : 0, nickIdx);
 		
 		if( message.getTag().startsWith("@"))
-			return new TwirkUser(nick, new TwirkUserstate( message.getTag() ) );
+			return new TwirkUser(nick, new TwirkUserstate( message.getTag(), message.getPrefix() ) );
 		else
 			return new TwirkUser(nick);
 	}

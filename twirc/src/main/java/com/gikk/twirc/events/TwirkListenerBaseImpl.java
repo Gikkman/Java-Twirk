@@ -1,12 +1,12 @@
 package com.gikk.twirc.events;
 
-import com.gikk.twirc.messages.TwirkHostNotice;
-import com.gikk.twirc.messages.TwirkMessage;
-import com.gikk.twirc.messages.TwirkMode;
-import com.gikk.twirc.messages.TwirkNotice;
-import com.gikk.twirc.messages.TwirkRoomstate;
-import com.gikk.twirc.messages.TwirkUser;
-import com.gikk.twirc.messages.TwirkUserstate;
+import com.gikk.twirc.types.TwirkHostNotice;
+import com.gikk.twirc.types.TwirkMessage;
+import com.gikk.twirc.types.TwirkMode;
+import com.gikk.twirc.types.TwirkNotice;
+import com.gikk.twirc.types.TwirkRoomstate;
+import com.gikk.twirc.types.TwirkUser;
+import com.gikk.twirc.types.TwirkUserstate;
 
 /**Convenience class.<br>
  * Instead if extending the TwirkListener interface, you can instead extend this class. That
@@ -17,7 +17,7 @@ import com.gikk.twirc.messages.TwirkUserstate;
  * @author Gikkman
  *
  */
-public abstract class AbstractTwirkListener implements TwirkListener{
+public abstract class TwirkListenerBaseImpl implements TwirkListener{
 
 	@Override
 	public void onAnything(String line) { }

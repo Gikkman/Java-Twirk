@@ -1,4 +1,4 @@
-package com.gikk.twirc.messages;
+package com.gikk.twirc.types;
 
 /**Class for Twitch's Roomstate
  * 

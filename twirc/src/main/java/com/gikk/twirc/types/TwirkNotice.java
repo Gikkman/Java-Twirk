@@ -1,4 +1,4 @@
-package com.gikk.twirc.messages;
+package com.gikk.twirc.types;
 
 public class TwirkNotice {
 	public static enum Event{ SUB_MODE_ON, SUB_MODE_OFF,

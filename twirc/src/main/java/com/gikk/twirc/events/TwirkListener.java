@@ -1,12 +1,12 @@
 package com.gikk.twirc.events;
 
-import com.gikk.twirc.messages.TwirkHostNotice;
-import com.gikk.twirc.messages.TwirkMessage;
-import com.gikk.twirc.messages.TwirkMode;
-import com.gikk.twirc.messages.TwirkNotice;
-import com.gikk.twirc.messages.TwirkRoomstate;
-import com.gikk.twirc.messages.TwirkUser;
-import com.gikk.twirc.messages.TwirkUserstate;
+import com.gikk.twirc.types.TwirkHostNotice;
+import com.gikk.twirc.types.TwirkMessage;
+import com.gikk.twirc.types.TwirkMode;
+import com.gikk.twirc.types.TwirkNotice;
+import com.gikk.twirc.types.TwirkRoomstate;
+import com.gikk.twirc.types.TwirkUser;
+import com.gikk.twirc.types.TwirkUserstate;
 
 public interface TwirkListener {	
 	

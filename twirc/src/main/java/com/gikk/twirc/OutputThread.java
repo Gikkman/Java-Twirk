@@ -99,6 +99,9 @@ class OutputThread extends Thread{
 	 * @param message The message to write to out BufferedWriter
 	 */
 	private void sendLine(String message) throws SocketException{
+		if( !isConnected ){
+			System.err.println("Twirk is not connected! Sending messages will not succeed!");
+		}
 		/**An IRC message may not be longer than 512 characters. Also, they must end with \r\n,
 		 * so if the supplied message is longer than 510 characters, we have to cut it short.
 		 * 

@@ -1,9 +1,9 @@
 package com.gikk.twirc;
 
-import com.gikk.twirc.events.AbstractTwirkListener;
-import com.gikk.twirc.messages.TwirkMode;
+import com.gikk.twirc.events.TwirkListenerBaseImpl;
+import com.gikk.twirc.types.TwirkMode;
 
-class TwirkMaintainanceListener extends AbstractTwirkListener{
+class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
 	private final Twirk instance;
 	
 	TwirkMaintainanceListener(Twirk twirk) {
@@ -18,12 +18,14 @@ class TwirkMaintainanceListener extends AbstractTwirkListener{
 
 	@Override
 	public void onJoin(String joinedNick) {
-		instance.online.add( joinedNick );
+		if( !instance.online.add( joinedNick ) )
+			System.out.println("\tUser " + joinedNick + " was already listed as online....");
 	}
 
 	@Override
 	public void onPart(String partedNick) {
-		instance.online.remove( partedNick );
+		if( !instance.online.remove( partedNick ) )
+			System.out.println("\tUser " + partedNick + " was not listed as online....");
 	}
 
 	@Override

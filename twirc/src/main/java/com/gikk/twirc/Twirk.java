@@ -8,16 +8,19 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.gikk.twirc.events.TwirkListener;
-import com.gikk.twirc.messages.TwirkMessage;
-import com.gikk.twirc.messages.TwirkMode;
-import com.gikk.twirc.messages.TwirkNotice;
-import com.gikk.twirc.messages.TwirkRoomstate;
-import com.gikk.twirc.messages.TwirkUser;
-import com.gikk.twirc.messages.TwirkUserstate;
+import com.gikk.twirc.types.TwirkMessage;
+import com.gikk.twirc.types.TwirkMode;
+import com.gikk.twirc.types.TwirkNotice;
+import com.gikk.twirc.types.TwirkRoomstate;
+import com.gikk.twirc.types.TwirkUser;
+import com.gikk.twirc.types.TwirkUserstate;
 
 /**Class for communicating with the TwitchIrc chat.<br>
  * To create instances of Twirk, see {@link TwirkBuilder}.<br><br>
@@ -61,8 +64,8 @@ public class Twirk {
 	private BufferedReader reader = null;
 
 	private final ArrayList<TwirkListener> listeners = new ArrayList<TwirkListener>();
-	final Set<String> moderators = new HashSet<String>();
-	final Set<String> online	 = new HashSet<String>();
+	final Set<String> moderators = Collections.synchronizedSet( new HashSet<String>() );
+	final Set<String> online	 = Collections.synchronizedSet( new HashSet<String>() );
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************    
@@ -203,11 +206,6 @@ public class Twirk {
 		
 		isConnected = false;
 		
-		//Tell twitch we want to D/C, and give the output thread a few moments to process it
-		serverMessage("PRIVMSG " + channel +" :.disconnect");	
-		try { Thread.sleep(10); }
-		catch (InterruptedException e) { }
-		
 		System.out.println("\n\tDisconnecting from Twitch chat...");
 		releaseResources();		
 		System.out.println("\tDisconnected from Twitch chat\n");
@@ -230,11 +228,6 @@ public class Twirk {
 		
 		isDisposed = true;
 		isConnected = false;
-
-		//Tell twitch we want to D/C, and give the output thread a few moments to process it
-		serverMessage("PRIVMSG " + channel +" :.disconnect");	
-		try { Thread.sleep(10); }
-		catch (InterruptedException e) { }
 		
 		System.out.println("\n\tDisposing of IRC...");
 		releaseResources();		
@@ -275,13 +268,13 @@ public class Twirk {
 		outThread.end();
 		inThread.end();
 		
+		try { socket.close(); } 
+		catch (IOException e) {  }
+
 		try { reader.close(); } 
 		catch (IOException e) {  }
 		
 		try { writer.close(); } 
-		catch (IOException e) {  }
-		
-		try { socket.close(); } 
 		catch (IOException e) {  }
 	}
 	
@@ -350,6 +343,10 @@ public class Twirk {
 				return;
 			//Twitch might in the future implement these...
 			else if( message.getCommand().matches("[0-9]+") ){
+				if( message.getCommand().matches("353") ){
+					List<String> users = Arrays.asList( message.getContent().split(" ") );
+					online.addAll( users );
+				} 
 				return;
 			}	
 			else if( message.getCommand().matches("NOTICE") ){
@@ -365,7 +362,7 @@ public class Twirk {
 				return;
 			}
 			else if( message.getCommand().matches("USERSTATE") ){
-				TwirkUserstate userstate = new TwirkUserstate( message.getTag() );
+				TwirkUserstate userstate = new TwirkUserstate( message.getTag(), message.getPrefix() );
 				for(TwirkListener l : listeners )
 					l.onUserstate( userstate );
 			}
@@ -383,7 +380,7 @@ public class Twirk {
 			else if( message.getCommand().matches("PART") ){
 				String userName = parseUsername( message.getPrefix() );
 				for(TwirkListener l : listeners )
-					l.onJoin( userName );
+					l.onPart( userName );
 				return;
 			}
 			else {

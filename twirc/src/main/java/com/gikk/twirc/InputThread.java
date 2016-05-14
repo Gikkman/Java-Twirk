@@ -2,7 +2,7 @@ package com.gikk.twirc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.net.SocketException;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**Class for handling all incoming IRC traffic (after the initial connection is established). <br><br>
@@ -52,9 +52,15 @@ class InputThread extends Thread{
 	            	//If we time out, that means we haven't seen anything from server in a while, so we ping it
 	            	connection.serverMessage("PING " + System.currentTimeMillis());
 	            }
-	            catch (SocketException e) {
+	            catch (IOException e) {
 	            	//This probably means we force closed the socket. In case something else occurred, we print the StackTrace
-	            	if( !(e.getMessage().indexOf("Socket Closed") >= 0) ){
+	            	String message = e.getMessage();
+	            	if( (message.indexOf("Socket Closed") >= 0) ){
+	            		//Ignore
+	            	} else if ( message.indexOf("Connection reset") >= 0 || message.indexOf("Stream closed") >= 0) {
+	            		System.err.println( message );
+	            	}
+	            	else {
 	            		e.printStackTrace();
 	            	}
 	            	isConnected = false;
