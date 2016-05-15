@@ -1,12 +1,13 @@
-package com.gikk.twirc.events;
+package com.gikk.twirk.events;
 
-import com.gikk.twirc.types.TwirkHostNotice;
-import com.gikk.twirc.types.TwirkMessage;
-import com.gikk.twirc.types.TwirkMode;
-import com.gikk.twirc.types.TwirkNotice;
-import com.gikk.twirc.types.TwirkRoomstate;
-import com.gikk.twirc.types.TwirkUser;
-import com.gikk.twirc.types.TwirkUserstate;
+import com.gikk.twirk.types.TwirkClearChat;
+import com.gikk.twirk.types.TwirkHostTarget;
+import com.gikk.twirk.types.TwirkMessage;
+import com.gikk.twirk.types.TwirkMode;
+import com.gikk.twirk.types.TwirkNotice;
+import com.gikk.twirk.types.TwirkRoomstate;
+import com.gikk.twirk.types.TwirkUser;
+import com.gikk.twirk.types.TwirkUserstate;
 
 /**Convenience class.<br>
  * Instead if extending the TwirkListener interface, you can instead extend this class. That
@@ -44,7 +45,7 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	public void onNotice(TwirkNotice notice) { }
 	
 	@Override
-	public void onHost(TwirkHostNotice hostNotice) { }
+	public void onHost(TwirkHostTarget hostNotice) { }
 
 	@Override
 	public void onMode(TwirkMode mode) { }
@@ -54,6 +55,9 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	
 	@Override
 	public void onRoomstate(TwirkRoomstate roomstate) { }
+	
+	@Override
+	public void onClearChat(TwirkClearChat clearChat) { }
 
 	@Override
 	public void onUnknown(String line) { }	

@@ -1,4 +1,4 @@
-package com.gikk.twirc.types;
+package com.gikk.twirk.types;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -75,9 +75,6 @@ public class TwirkMessage {
 		return content;
 	}
 	
-	public String toString(){
-		return line;
-	}
 	
 	public boolean hasEmotes(){
 		return hasEmotes;
@@ -87,6 +84,9 @@ public class TwirkMessage {
 		return emotes;
 	}
 	
+	public String toString(){
+		return line;
+	}
 	//***********************************************************
 	// 				PRIVATE
 	//***********************************************************
@@ -120,6 +120,7 @@ public class TwirkMessage {
 		}
 		
 		parseEmotes(tag, content);
+		this.line = prefix + " " + command + " " + target + " " + content;
 	}
 
 	private void parseWithoutTag(String line){
@@ -147,6 +148,7 @@ public class TwirkMessage {
 		}
 		
 		tag = "";
+		this.line = line;
 	}
 	
 	//***********************************************************
@@ -160,10 +162,14 @@ public class TwirkMessage {
 		 * The first number indicates the emotes ID. The emote ID is follower by a :
 		 * The numbers separated by a - indicates the indices in the message that makes up the emote. 
 		 *     If an emote appears several times in a message, the different index ranges are separated by a ,
+		 *     
+		 * So we find the begining of the emotes section and the end of the section.
+		 * Then, check that the message actually contains an emotes section and that
+		 * the emote section actually contains data.
 		 */
 		int begin = tag.indexOf( EMOTES_IDENTIFIER );
-		int end =   tag.indexOf(';', begin);	
-		if( begin == end || begin == -1){
+		int end =   tag.indexOf(';', begin );	
+		if( begin == -1 || begin + EMOTES_IDENTIFIER.length() == end){
 			return;
 		}
 		

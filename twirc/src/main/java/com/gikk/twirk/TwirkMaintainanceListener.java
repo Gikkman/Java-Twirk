@@ -1,7 +1,7 @@
-package com.gikk.twirc;
+package com.gikk.twirk;
 
-import com.gikk.twirc.events.TwirkListenerBaseImpl;
-import com.gikk.twirc.types.TwirkMode;
+import com.gikk.twirk.events.TwirkListenerBaseImpl;
+import com.gikk.twirk.types.TwirkMode;
 
 class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
 	private final Twirk instance;

@@ -1,4 +1,4 @@
-package com.gikk.twirc;
+package com.gikk.twirk;
 
 /**Class for creating instances of Twirk.<br>
  * To build an instance of Twirk, the user has to supply the bot's nick and 

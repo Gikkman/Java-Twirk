@@ -1,6 +1,6 @@
-package com.gikk.twirc.types;
+package com.gikk.twirk.types;
 
-import com.gikk.twirc.events.TwirkListener;
+import com.gikk.twirk.events.TwirkListener;
 
 /**Class for representing information about a user<br>
  * Userstate's are received in two different ways:
@@ -12,7 +12,7 @@ import com.gikk.twirc.events.TwirkListener;
  *
  */
 public class TwirkUserstate {
-	public static enum UserType{ MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY }
+	public static enum USER_TYPE{ MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY }
 	private static final String NAMES_IDENTIFIER 	= "display-name=";
 	private static final String COLOR_IDENTIFIER 	= "color=";
 	private static final String SUB_IDENTIFIER 		= "subscriber=";
@@ -32,36 +32,39 @@ public class TwirkUserstate {
 	public final boolean isTurbo;
 	public final int[] emoteSets;
 	public final String[] badges;
-	public final UserType userType;
+	public final USER_TYPE userType;
 	
-	public TwirkUserstate( String messageTag, String sender ) {
+	public TwirkUserstate( TwirkMessage message ) {
 		//If display-name is empty, it means that the the user name can be read from the IRC message's prefix and
 		//that it has it's first character in upper case and the rest of the characters in lower case
-		String displayName =  parseFeature( NAMES_IDENTIFIER, messageTag );
-		this.displayName = displayName.isEmpty()
+		String tag = 	 message.getTag();
+		String sender  = message.getPrefix();
+		
+		String temp =  parseFeature( NAMES_IDENTIFIER, tag );
+		this.displayName = temp.isEmpty()
 						   ? Character.toUpperCase( sender.charAt(1) ) + sender.substring(2, sender.indexOf("!") )
-						   : displayName;
+						   : temp;
 		
-		String color = parseFeature(COLOR_IDENTIFIER, messageTag);
-		this.color = color.matches("") ? getDefaultColor() : Integer.decode(color);
+	    temp = parseFeature(COLOR_IDENTIFIER, tag);
+		this.color = temp.isEmpty() ? getDefaultColor() : Integer.decode(temp);
 		
-		String mod = parseFeature(MOD_IDENTIFIER, messageTag);
-		this.isMod = mod.matches("1") ? true : false;
+		temp = parseFeature(MOD_IDENTIFIER, tag);
+		this.isMod = temp.matches("1") ? true : false;
 		
-		String sub = parseFeature(SUB_IDENTIFIER, messageTag);
-		this.isSub = sub.matches("1") ? true : false;
+		temp = parseFeature(SUB_IDENTIFIER, tag);
+		this.isSub = temp.matches("1") ? true : false;
 		
-		String turbo = parseFeature(TURBO_IDENTIFIER, messageTag);
-		this.isTurbo = turbo.matches("1") ? true : false;
+		temp = parseFeature(TURBO_IDENTIFIER, tag);
+		this.isTurbo = temp.matches("1") ? true : false;
 		
-		String emoteSet = parseFeature(EMOTE_SET_IDENTIFIER, messageTag);
-		this.emoteSets = parseEmoteSets( emoteSet );
+		temp = parseFeature(EMOTE_SET_IDENTIFIER, tag);
+		this.emoteSets = parseEmoteSets( temp );
 		
-		String userType = parseFeature(USERTYPE_IDENTIFIER, messageTag);
-		this.userType = parseUserType( userType );
+		temp = parseFeature(USERTYPE_IDENTIFIER, tag);
+		this.userType = parseUserType( temp );
 		
-		String badges = parseFeature(BADGE_IDENTIFIER, messageTag);
-		this.badges = badges.isEmpty() ? new String[0] : badges.split(",");
+		temp = parseFeature(BADGE_IDENTIFIER, tag);
+		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
 	}
 	
 	private int[] parseEmoteSets(String emoteSet) {
@@ -77,31 +80,31 @@ public class TwirkUserstate {
 		return out;
 	}
 
-	private UserType parseUserType(String userType) {
+	private USER_TYPE parseUserType(String userType) {
 		if( userType.equalsIgnoreCase( "mod" ) )
-			return UserType.MOD;
+			return USER_TYPE.MOD;
 		else if( userType.equalsIgnoreCase( "global_mod" ) )
-			return UserType.GLOBAL_MOD;
+			return USER_TYPE.GLOBAL_MOD;
 		else if( userType.equalsIgnoreCase( "admin" ) )
-			return UserType.ADMIN;
+			return USER_TYPE.ADMIN;
 		else if( userType.equalsIgnoreCase( "staff" ) )
-			return UserType.STAFF;
+			return USER_TYPE.STAFF;
 		else 
-			return UserType.EMPTY;
+			return USER_TYPE.EMPTY;
 	}
 
-	private String parseFeature(String IDENTIFIER, String messageTag) {
-		int begin = messageTag.indexOf( IDENTIFIER );
-		int end =   messageTag.indexOf(';', begin);	
-		//If begin == -1, it means this tag was not present. If begin == end, it means that the tag was empty
-		if( begin == end || begin == -1)
+	private String parseFeature(String IDENTIFIER, String tag) {
+		int begin = tag.indexOf( IDENTIFIER );
+		int end =   tag.indexOf(';', begin);	
+		//If begin == -1, it means this tag was not present. If begin + IDENTIFIER.lenght() == end, it means that the tag was empty
+		if( begin == -1 || begin + IDENTIFIER.length() == end)
 			return "";
 		//If end == -1, it means that this tag was the last one. We can get valid data if we take from begin (and remove the IDENTIFIER) to the end of the tag.
 		else if( end == -1 )
-			return messageTag.substring(begin + IDENTIFIER.length());
+			return tag.substring(begin + IDENTIFIER.length());
 		//If none of them returned -1, it means that we can get valid data between begin (and remove the IDENTIFIER) and end
 		else
-			return messageTag.substring(begin + IDENTIFIER.length(), end);
+			return tag.substring(begin + IDENTIFIER.length(), end);
 	}
 
 	private int getDefaultColor(){

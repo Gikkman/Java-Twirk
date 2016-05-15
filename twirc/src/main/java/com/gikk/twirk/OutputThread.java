@@ -1,4 +1,4 @@
-package com.gikk.twirc;
+package com.gikk.twirk;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

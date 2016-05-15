@@ -1,4 +1,4 @@
-package com.gikk.twirc.types;
+package com.gikk.twirk.types;
 
 public class TwirkMode {
 	public static enum Event{ GainedMod, LostMod };

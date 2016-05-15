@@ -1,4 +1,4 @@
-package com.gikk.twirc;
+package com.gikk.twirk;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,13 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.gikk.twirc.events.TwirkListener;
-import com.gikk.twirc.types.TwirkMessage;
-import com.gikk.twirc.types.TwirkMode;
-import com.gikk.twirc.types.TwirkNotice;
-import com.gikk.twirc.types.TwirkRoomstate;
-import com.gikk.twirc.types.TwirkUser;
-import com.gikk.twirc.types.TwirkUserstate;
+import com.gikk.twirk.events.TwirkListener;
+import com.gikk.twirk.types.TwirkClearChat;
+import com.gikk.twirk.types.TwirkMessage;
+import com.gikk.twirk.types.TwirkMode;
+import com.gikk.twirk.types.TwirkNotice;
+import com.gikk.twirk.types.TwirkRoomstate;
+import com.gikk.twirk.types.TwirkUser;
+import com.gikk.twirk.types.TwirkUserstate;
 
 /**Class for communicating with the TwitchIrc chat.<br>
  * To create instances of Twirk, see {@link TwirkBuilder}.<br><br>
@@ -155,7 +156,7 @@ public class Twirk {
      * @throws IOException In case the BufferedReader or BufferedWriter throws an error during connection. Might be due to timeout, socket closing or something else
      * @throws InterruptedException In case the Twirk process is interrupted while connecting
      */
-    public boolean connect() throws IOException, InterruptedException{
+    public synchronized boolean connect() throws IOException, InterruptedException{
     	if( isConnected ){
 	    	System.err.println("\tError. Cannot connect. Already connected to Twitch server");
 	    	return false;
@@ -174,9 +175,8 @@ public class Twirk {
     		inThread.start();
     		outThread.start();  
     		
-    		//Add capacities to the bot
+    		//Add capacities to the bot and wait for them to take effect
     		addCapacies();
-    		
     		Thread.sleep(500);
     		
     		//Join the channel
@@ -195,10 +195,10 @@ public class Twirk {
      * 
      * It is safe to call this method even if connections are already closed.<br><br>
      * 
-     * This method is different from {@code dispose()} in that it calls the {@code onDisconnect()} method
+     * This method is different from {@link #close()} in that it calls the {@link TwirkListener#onDisconnect()} method
      * of all the listeners. A listener may thus attempt to reconnect 
      */
-	public void disconnect() {
+	public synchronized void disconnect() {
 		//Since several sources can call this method on program shutdown, we avoid entering it again if 
 		//we've already disconnected
 		if( !isConnected )
@@ -219,15 +219,15 @@ public class Twirk {
      * 
      * It is safe to call this method even if connections are already closed.<br><br>
      * 
-     * This method is different from {@code dispose()} in that it <b>does not</b> call the {@code onDisconnect()} method
-     * of any of the listeners.
+     * This method is different from {@link Twirk#disconnect()} in that it <b>does not</b> call the {@link TwirkListener#onDisconnect()} method
+     * of any of the listeners. Thus, this method is intended to be called if you want to make sure no reconnect attempts are performed.
      */
-	public void dispose(){
+	public synchronized void close(){
 		if( isDisposed )
 			return;
 		
-		isDisposed = true;
 		isConnected = false;
+		isDisposed = true;
 		
 		System.out.println("\n\tDisposing of IRC...");
 		releaseResources();		
@@ -318,18 +318,16 @@ public class Twirk {
 		serverMessage("CAP REQ :twitch.tv/tags");
 	}
     
-	void incommingMessage(String line){
-		TwirkMessage message	= new TwirkMessage(line);
-		
+	void incommingMessage(String line){		
 		//PING is a bit strange, so we need to handle it separately. And also, we want to respond to a ping
 		//before we do anything else.
-		if (message.getPrefix().equalsIgnoreCase("PING") ||  message.getCommand().equalsIgnoreCase("PING")) {
+		if ( line.contains("PING") ) {
 
     		// A PING contains the message "PING MESSAGE", and we want to reply with MESSAGE as well
     		// Hence, we reply "PONG MESSAGE" . That's where the substring(5) comes from bellow, we strip
     		//out everything but the message
 			System.out.println("IN  " + line );
-    		serverMessage("PONG " + message.getCommand() ); 		
+    		serverMessage("PONG " + line.substring(5) ); //Remove the "PING " part, and send the rest back		
     		return;
 		}
 		
@@ -337,16 +335,33 @@ public class Twirk {
 		synchronized (listeners) {
 			//First, we call all onAnything messages
 			for(TwirkListener l : listeners )
-				l.onAnything( line );		
-			//This message might be a reply for a capacity request. In that case, just ignore it
-			if( message.getCommand().matches("CAP") )
+				l.onAnything( line );	
+			
+			TwirkMessage message = new TwirkMessage(line);
+			
+			//This message is a reply for a capacity request. Just ignore it
+			if( message.getCommand().matches("JOIN") ){
+				String userName = parseUsername( message.getPrefix() );
+				for(TwirkListener l : listeners )
+					l.onJoin( userName );
 				return;
-			//Twitch might in the future implement these...
-			else if( message.getCommand().matches("[0-9]+") ){
-				if( message.getCommand().matches("353") ){
-					List<String> users = Arrays.asList( message.getContent().split(" ") );
-					online.addAll( users );
-				} 
+			}
+			else if( message.getCommand().matches("PART") ){
+				String userName = parseUsername( message.getPrefix() );
+				for(TwirkListener l : listeners )
+					l.onPart( userName );
+				return;
+			}
+			else if( message.getCommand().matches("PRIVMSG") ){
+				TwirkUser user = new TwirkUser(message);
+				for(TwirkListener l : listeners )
+					l.onPrivMsg(user, message);
+				return;
+			}
+			else if( message.getCommand().matches("WHISPER") ) {
+				TwirkUser user = new TwirkUser(message);
+				for(TwirkListener l : listeners )
+					l.onWhisper(user, message);
 				return;
 			}	
 			else if( message.getCommand().matches("NOTICE") ){
@@ -362,47 +377,35 @@ public class Twirk {
 				return;
 			}
 			else if( message.getCommand().matches("USERSTATE") ){
-				TwirkUserstate userstate = new TwirkUserstate( message.getTag(), message.getPrefix() );
+				TwirkUserstate userstate = new TwirkUserstate( message );
 				for(TwirkListener l : listeners )
 					l.onUserstate( userstate );
 			}
 			else if( message.getCommand().matches("ROOMSTATE") ){
-				TwirkRoomstate roomstate = new TwirkRoomstate( message.getTag() );
+				TwirkRoomstate roomstate = new TwirkRoomstate( message );
 				for(TwirkListener l : listeners )
 					l.onRoomstate(roomstate);
 			}
-			else if( message.getCommand().matches("JOIN") ){
-				String userName = parseUsername( message.getPrefix() );
+			else if( message.getCommand().matches("CLEARCHAT") ){
+				TwirkClearChat clearChat = new TwirkClearChat(message);
 				for(TwirkListener l : listeners )
-					l.onJoin( userName );
-				return;
+					l.onClearChat(clearChat);
 			}
-			else if( message.getCommand().matches("PART") ){
-				String userName = parseUsername( message.getPrefix() );
-				for(TwirkListener l : listeners )
-					l.onPart( userName );
+			else if( message.getCommand().matches("CAP") )
+				return;
+			//Twitch might in the future implement more of these...
+			else if( message.getCommand().matches("[0-9]+") ){
+				//Code 353 is USER LIST messages, which lists users online separated by a space
+				if( message.getCommand().matches("353") ){
+					List<String> users = Arrays.asList( message.getContent().split(" ") );
+					online.addAll( users );
+				} 
 				return;
 			}
 			else {
-				//Check if the message has a valid USER field
-				TwirkUser user = TwirkUser.create( message );
-				if( user != null) {
-					if( message.getCommand().matches("PRIVMSG") ){
-						for(TwirkListener l : listeners )
-							l.onPrivMsg(user, message);
-						return;
-					}
-					else if( message.getCommand().matches("WHISPER") ) {
-						for(TwirkListener l : listeners )
-							l.onWhisper(user, message);
-						return;
-					}
-				}
-				else {
-					//If we've gotten all the way down here, we don't know this message's type
-					for(TwirkListener l : listeners )
-						l.onUnknown( line );
-				}
+				//If we've gotten all the way down here, we don't know this message's type
+				for(TwirkListener l : listeners )
+					l.onUnknown( line );
 			}
 		}
 	}
