@@ -30,7 +30,7 @@ class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
 
 	@Override
 	public void onMode(TwirkMode mode) {			
-		if( mode.event == TwirkMode.Event.GainedMod ){
+		if( mode.event == TwirkMode.EVENT.GAINED_MOD ){
 			//Moderator added
 			instance.moderators.add( mode.user );
 		}
