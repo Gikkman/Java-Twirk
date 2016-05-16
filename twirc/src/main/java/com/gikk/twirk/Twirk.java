@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.TwirkClearChat;
 import com.gikk.twirk.types.TwirkMessage;
@@ -171,13 +173,15 @@ public class Twirk {
     	socket.setSoTimeout(oldTimeout); //Return timeout to what it was before connecting
     	
     	if( isConnected ){
-    		//Start the processing threads
-    		inThread.start();
+    		//Start the output thread
     		outThread.start();  
     		
     		//Add capacities to the bot and wait for them to take effect
     		addCapacies();
     		Thread.sleep(500);
+    		
+    		//Start the input thread
+    		inThread.start();
     		
     		//Join the channel
     		serverMessage("JOIN " + channel);		
@@ -241,9 +245,9 @@ public class Twirk {
 	private void createResources(){
 		resourcesCreated  = true;
 		
-        try{
-        	socket = new Socket(server, port);
-        	socket.setSoTimeout(5 * 60 * 1000); //Set a timeout for connection to 10 minutes
+        try{        	
+        	socket = SSLSocketFactory.getDefault().createSocket(server, port);
+        	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
         } catch (Exception e){
         	e.printStackTrace();
         }

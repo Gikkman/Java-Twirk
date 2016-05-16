@@ -2,13 +2,14 @@ package com.gikk.twirk;
 
 import java.util.LinkedList;
 
-/**We need a specialized messaging queue to be able to handle A) one consumer/multiple producers and 
- * B) being able to put messages to the front and back of the queue.
+/**We need a specialized messaging queue to be able to handle <ul>
+ * <li>A) one consumer/multiple producers and 
+ * <li>B) being able to put messages to the front and back of the queue.
+ *</ul>
+ * We also want the {@link #next()} method to block until there is anything to send to the IRC server in the 
+ * queue.<br><br>
  * 
- * We also want the next() method to block until there is anything to send to the IRC server in the 
- * queue.
- * 
- * Due to these reasons, we cannot use a normal queue.
+ * Due to these reasons, we cannot use a normal queue. Thus we use this thread safe and blocking implementation.
  * 
  * @author Gikkman
  *

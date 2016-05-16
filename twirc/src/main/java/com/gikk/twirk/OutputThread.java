@@ -90,7 +90,7 @@ class OutputThread extends Thread{
 	//											PRIVATE
 	//***********************************************************************************************
 
-	/**Sends a message AS IS, without modyfying it in any way. Users of this method are responsible for
+	/**Sends a message AS IS, without modifying it in any way. Users of this method are responsible for
 	 * formating the string correctly: 
 	 * <br>
 	 * That means, who ever uses this method has to manually assign channel data and the similar to the

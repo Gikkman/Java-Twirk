@@ -18,7 +18,7 @@ public class TwirkBuilder {
 	boolean verboseMode = false;
 
 	String server = "irc.chat.twitch.tv";
-	int 	port  = 6667;
+	int 	port  = 6697;
 	
 	String nick = "";
 	String oauth = "";

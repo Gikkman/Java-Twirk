@@ -7,9 +7,7 @@ import java.net.SocketTimeoutException;
 
 /**Class for handling all incoming IRC traffic (after the initial connection is established). <br><br>
  * 
- * The implementation is intended to be thread safe and handle all potential errors (<u>keyword: INTENDED</u>).
- * 
- * @author Simon
+ * @author Gikkman
  *
  */
 class InputThread extends Thread{
@@ -20,6 +18,7 @@ class InputThread extends Thread{
 	private final BufferedReader reader;
 	
 	private boolean isConnected = true;
+	private boolean havePinged = false;
 	
 	//***********************************************************************************************
 	//											CONSTRUCTOR
@@ -37,7 +36,9 @@ class InputThread extends Thread{
 	        while (isConnected) {
 	            try {
 	                String line = null;
-	                while ( (line = reader.readLine()) != null ) {           	
+	                while ( (line = reader.readLine()) != null ) {    
+	                	havePinged = false;
+	                	
 	                	try{
 		                	connection.incommingMessage(line);
 	                	} catch (Exception e) {
@@ -49,8 +50,16 @@ class InputThread extends Thread{
 	                isConnected = false;
 	            }
 	            catch (SocketTimeoutException e){
-	            	//If we time out, that means we haven't seen anything from server in a while, so we ping it
-	            	connection.serverMessage("PING " + System.currentTimeMillis());
+	            	//If we time out, that means we haven't seen anything from server in a while.
+	            	//We first attempt to ping the server, to see if it is still there.
+	            	//If we time out again without receiving a responce from the server, we have disconnected.
+	            	if( !havePinged ){
+	            		connection.serverMessage("PING " + System.currentTimeMillis());
+	            		havePinged = true;	            		
+	            	}
+	            	else {
+	            		isConnected = false;
+	            	}
 	            }
 	            catch (IOException e) {
 	            	//This probably means we force closed the socket. In case something else occurred, we print the StackTrace
@@ -84,10 +93,13 @@ class InputThread extends Thread{
 	//***********************************************************************************************
 	//											PUBLIC
 	//***********************************************************************************************
+	/**
+	 * Tells the InputThread that we have disconnected. <br>
+	 * This does not release the InputThread from waiting for messages, it simply
+	 * makes the InputThread not start listening for messages again. To finish the
+	 * InputThread, close the socket afterwards.
+	 */
 	public void end() {
 		isConnected = false;
-	}
-	public boolean isConnected(){
-		return isConnected;
 	}
 }

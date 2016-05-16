@@ -14,6 +14,7 @@ import com.gikk.twirk.events.TwirkListener;
 public class TwirkUserstate {
 	public static enum USER_TYPE{ MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY }
 	private static final String NAMES_IDENTIFIER 	= "display-name=";
+	private static final String	USER_ID_IDENTIFIER  = "user-id=";
 	private static final String COLOR_IDENTIFIER 	= "color=";
 	private static final String SUB_IDENTIFIER 		= "subscriber=";
 	private static final String MOD_IDENTIFIER 		= "mod=";
@@ -27,12 +28,13 @@ public class TwirkUserstate {
 	
 	public final int color;
 	public final String displayName;
+	public final int userID;
 	public final boolean isMod;
 	public final boolean isSub;
 	public final boolean isTurbo;
-	public final int[] emoteSets;
 	public final String[] badges;
 	public final USER_TYPE userType;
+	public final int[] emoteSets;
 	
 	public TwirkUserstate( TwirkMessage message ) {
 		//If display-name is empty, it means that the the user name can be read from the IRC message's prefix and
@@ -65,6 +67,9 @@ public class TwirkUserstate {
 		
 		temp = parseFeature(BADGE_IDENTIFIER, tag);
 		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
+		
+		temp = parseFeature(USER_ID_IDENTIFIER, tag);
+		this.userID = Integer.parseInt(temp);
 	}
 	
 	private int[] parseEmoteSets(String emoteSet) {
