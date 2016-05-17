@@ -62,7 +62,7 @@ public class TwirkUser {
 		return userState.isSub;
 	}
 	
-	/**Retrieves this users USER_TYPE<br>
+	/**Retrieves this users {@link USER_TYPE} <br>
 	 * There are five USER_TYPEs: MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY.
 	 * 
 	 * @return The user's USER_TYPE

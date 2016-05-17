@@ -159,6 +159,10 @@ public class Twirk {
      * @throws InterruptedException In case the Twirk process is interrupted while connecting
      */
     public synchronized boolean connect() throws IOException, InterruptedException{
+    	if( isDisposed ){
+    		System.err.println("\tError. Cannot connect. This Twirk instance has been disposed.");
+	    	return false;
+    	}
     	if( isConnected ){
 	    	System.err.println("\tError. Cannot connect. Already connected to Twitch server");
 	    	return false;
@@ -205,7 +209,7 @@ public class Twirk {
 	public synchronized void disconnect() {
 		//Since several sources can call this method on program shutdown, we avoid entering it again if 
 		//we've already disconnected
-		if( !isConnected )
+		if( !isConnected || isDisposed )
 			return;
 		
 		isConnected = false;

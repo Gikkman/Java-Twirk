@@ -12,6 +12,10 @@ import com.gikk.twirk.events.TwirkListener;
  *
  */
 public class TwirkUserstate {
+	/** Enum for representing different types of users, as labeled by Twitch. 
+	 * EMPTY in this case means that no information was given, and it can be assumed that a user
+	 * with EMPTY user type is a normal user, without any special privileges is this channel.
+	 */
 	public static enum USER_TYPE{ MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY }
 	private static final String NAMES_IDENTIFIER 	= "display-name=";
 	private static final String	USER_ID_IDENTIFIER  = "user-id=";
