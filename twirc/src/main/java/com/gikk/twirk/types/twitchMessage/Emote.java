@@ -1,6 +1,8 @@
-package com.gikk.twirk.types;
+package com.gikk.twirk.types.twitchMessage;
 
 import java.util.LinkedList;
+
+import com.gikk.twirk.types.EMOTE_SIZE;
 
 /**Class for representing a Twitch emote, which can be embedded into chat messages.<br><br>
  * 
@@ -17,35 +19,15 @@ import java.util.LinkedList;
  * @author Gikkman
  *
  */
-public class TwirkEmote {
-	private final static String EMOTE_URL_BASE 	= "http://static-cdn.jtvnw.net/emoticons/v1/";	
-	public static enum SIZE{
-		SMALL("/1.0"),
-		MEDIUM("/2.0"),
-		LARGE("/3.0");
-		
-		private final String value;
-		private SIZE(String val){ this.value = val; }
-	}
+public interface Emote {
 	
+
 	/** The emotes numeric ID */
-	public int emoteID;
+	public int getEmoteID();
 	/** A list of pairs on indices. Each pair is a BEGIN-END pair of a emote occurrence in the message */
-	public LinkedList<EmoteIndices> indices = new LinkedList<EmoteIndices>();
+	public LinkedList<EmoteIndices> getIndices();
 	/** The emote's pattern. For example: 'Kappa' */
-	public String pattern;
-	
-	void setEmoteID(int emoteID){
-		this.emoteID = emoteID;
-	}
-	
-	void setPattern(String pattern){
-		this.pattern = pattern;
-	}
-	
-	void addIndices(int begin, int end){
-		this.indices.add( new EmoteIndices(begin, end) );
-	}
+	public String getPattern();
 	
 	/**Emote images can be downloaded from Twitch's server, and come in three
 	 * sizes. Use this method to get the address for the emote.
@@ -53,30 +35,17 @@ public class TwirkEmote {
 	 * @param imageSize Emotes comes in three sizes. Specify which size you want
 	 * @return The address for the emote's image
 	 */
-	public String emoteImageUrl(SIZE imageSize){
-		return EMOTE_URL_BASE + emoteID + imageSize.value;
-	}
-	
-	public String toString(){
-		String out = emoteID + " " + ( pattern == null ? "NULL" : pattern) + "[ ";
-		
-		for( EmoteIndices index : indices )
-			out += index.toString();
-		
-		out += " ]";
-		
-		return out;
-	}
+	public String getEmoteImageUrl(EMOTE_SIZE imageSize);
 	
 	/**Class for representing the beginning and end of an emote occurrence within a message
 	 * 
 	 * @author Gikkman
-	 */
-	public class EmoteIndices{
+	 */	
+	public static class EmoteIndices{
 		public final int beingIndex;
 		public final int endIndex;
 		
-		private EmoteIndices(int begin, int end){
+		public EmoteIndices(int begin, int end){
 			this.beingIndex = begin;
 			this.endIndex = end;
 		}

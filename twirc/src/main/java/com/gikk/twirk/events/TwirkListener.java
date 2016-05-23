@@ -1,13 +1,14 @@
 package com.gikk.twirk.events;
 
-import com.gikk.twirk.types.TwirkClearChat;
-import com.gikk.twirk.types.TwirkHostTarget;
-import com.gikk.twirk.types.TwirkMessage;
-import com.gikk.twirk.types.TwirkMode;
-import com.gikk.twirk.types.TwirkNotice;
-import com.gikk.twirk.types.TwirkRoomstate;
-import com.gikk.twirk.types.TwirkUser;
-import com.gikk.twirk.types.TwirkUserstate;
+import com.gikk.twirk.types.clearChat.ClearChat;
+import com.gikk.twirk.types.hostTarget.HostTarget;
+import com.gikk.twirk.types.mode.Mode;
+import com.gikk.twirk.types.notice.Notice;
+import com.gikk.twirk.types.roomstate.Roomstate;
+import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.userstate.Userstate;
 
 public interface TwirkListener {	
 	
@@ -22,17 +23,19 @@ public interface TwirkListener {
 	 * @param sender The user who sent the message. Parsed from the incoming message's tag
 	 * @param message The message that was sent, with the tag removed
 	 */
-	public void onPrivMsg( TwirkUser sender, TwirkMessage message );
+	public void onPrivMsg( TwitchUser  sender, TwitchMessage  message );
 	
 	/**Fires for incoming WHISPERS directed at the bot
 	 * 
 	 * @param sender The user who sent the whisper. Parsed from the incoming message's tag
 	 * @param message The whisper that was sent, with the tag removed
 	 */
-	public void onWhisper( TwirkUser sender, TwirkMessage message );
+	public void onWhisper( TwitchUser  sender, TwitchMessage  message );
 	
 	/**Fires when the bot receives a JOIN from Twitch. Note that Twitch sometimes drops
-	 * PART messages, so we might receive a JOIN from a user who we never saw PART.<br><br>
+	 * PART messages, so we might receive a JOIN from a user who we never saw PART. Another
+	 * important thing to note is that for large channels (1k chatters +), Twitch only sends
+	 * JOINS/PARTS for moderators.<br><br>
 	 * 
 	 * Also worth noting is that we don't see any properties for the joining user, we only see his/her
 	 * Twitch user name in lower case
@@ -42,7 +45,9 @@ public interface TwirkListener {
 	public void onJoin( String joinedNick );
 	
 	/**Fires when the bot receives a PART from Twitch. Note that Twitch sometimes drops
-	 * JOIN messages, so we might receive a PART from a user who we never saw JOIN.<br><br>
+	 * JOIN messages, so we might receive a PART from a user who we never saw JOIN. Another
+	 * important thing to note is that for large channels (1k chatters +), Twitch only sends
+	 * JOINS/PARTS for moderators.<br><br>
 	 * 
 	 * Also worth noting is that we don't see any properties for the parting user, we only see his/her
 	 * Twitch user name in lower case
@@ -60,39 +65,45 @@ public interface TwirkListener {
 	 */
 	public void onDisconnect();
 	
-	/**Fires whenever we receive a NOTICE from Twitch. See {@link TwirkNotice}<br>
+	/**Fires whenever we receive a NOTICE from Twitch. See {@link Notice }<br>
 	 * NOTICE tells us about certain events, such as being Timed Out, 
 	 * 
 	 * @param notice The notice we received.
 	 */
-	public void onNotice( TwirkNotice notice );
+	public void onNotice( Notice  notice );
 	
-	/**Fires whenever we receive a HOST from Twitch. See {@link TwirkHostTarget}
+	/**Fires whenever we receive a HOSTTARGET from Twitch. See {@link HostTarget }
 	 * 
 	 * @param hostNotice The host notice we received.
 	 */
-	public void onHost( TwirkHostTarget hostNotice );
+	public void onHost( HostTarget  hostNotice );
 	
-	/**Fires whenever we receive a MODE from Twitch. See {@link TwirkMode}.<br>
+	/**Fires whenever we receive information about a subscriber event from Twitch. See {@link SubscriberEvent}
+	 * 
+	 * @param subscriberEvent The event we received.
+	 */
+	public void onSubscriberEvent( SubscriberEvent subscriberEvent );
+	
+	/**Fires whenever we receive a MODE from Twitch. See {@link Mode}.<br>
 	 * A mode means that a user gained or lost moderator status. However, this
-	 * is unreliable, and you should consider looking at the {@link TwirkUser} you
-	 * receive in the {@link #onPrivMsg(TwirkUser, TwirkMessage)} instead. Twitch sends
+	 * is unreliable, and you should consider looking at the {@link TwitchUser } you
+	 * receive in the {@link #onPrivMsg(TwitchUser , TwitchMessage )} instead. Twitch sends
 	 * mode notices every now and then, and does not reliably reflect a users current status
 	 * 
 	 * @param mode The mode notice
 	 */
-	public void onMode( TwirkMode mode );
+	public void onMode( Mode  mode );
 
-	/**Fires whenever we receive a USERSTATE from Twitch. See {@link TwirkUserstate}<br>
+	/**Fires whenever we receive a USERSTATE from Twitch. See {@link Userstate }<br>
 	 * USERSTATE is sent whenever the bot sends a message to Twirk. You should <b>never</b> respond
 	 * to a USERSTATE, as that will create a cycle that will get your bot banned for spamming Twitch's
 	 * server
 	 * 
 	 * @param userstate The user state we received
 	 */
-	public void onUserstate( TwirkUserstate userstate );
+	public void onUserstate( Userstate  userstate );
 
-	/**Fires whenever we receive a ROOMSTATE from Twitch. See {@link TwirkRoomstate}<br>
+	/**Fires whenever we receive a ROOMSTATE from Twitch. See {@link Roomstate }<br>
 	 * ROOMSTATE is sent when joining a channel and every time one of the chat room settings, 
 	 * like slow mode, change. <br>
 	 * The message on join contains all room settings. <br>
@@ -100,9 +111,9 @@ public interface TwirkListener {
 	 * 
 	 * @param roomstate The room state we received
 	 */
-	public void onRoomstate( TwirkRoomstate roomstate );
+	public void onRoomstate( Roomstate  roomstate );
 	
-	/**Fires when we receive a CLEARCHAT from Twitch. See {@link TwirkClearChat}<br>
+	/**Fires when we receive a CLEARCHAT from Twitch. See {@link ClearChat }<br>
 	 * CLEARCHAT comes in two modes: <ul>
 	 * <li>USER - This clears everything a certain user has written in chat
 	 * <li>TOTAL - This clear everything in chat
@@ -110,7 +121,7 @@ public interface TwirkListener {
 	 * 
 	 * @param clearChat The clear chat notice we received
 	 */
-	public void onClearChat( TwirkClearChat clearChat );
+	public void onClearChat( ClearChat  clearChat );
 
 	/**Fires when we received a message we could not categorize. This might happen
 	 * if Twitch changes something suddenly, so we cannot parse the incomming message.

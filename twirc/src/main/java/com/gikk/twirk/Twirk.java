@@ -17,13 +17,22 @@ import java.util.Set;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.gikk.twirk.events.TwirkListener;
-import com.gikk.twirk.types.TwirkClearChat;
-import com.gikk.twirk.types.TwirkMessage;
-import com.gikk.twirk.types.TwirkMode;
-import com.gikk.twirk.types.TwirkNotice;
-import com.gikk.twirk.types.TwirkRoomstate;
-import com.gikk.twirk.types.TwirkUser;
-import com.gikk.twirk.types.TwirkUserstate;
+import com.gikk.twirk.types.clearChat.ClearChat;
+import com.gikk.twirk.types.clearChat.ClearChatBuilder;
+import com.gikk.twirk.types.hostTarget.HostTarget;
+import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
+import com.gikk.twirk.types.mode.Mode;
+import com.gikk.twirk.types.mode.ModeBuilder;
+import com.gikk.twirk.types.notice.Notice;
+import com.gikk.twirk.types.notice.NoticeBuilder;
+import com.gikk.twirk.types.roomstate.Roomstate;
+import com.gikk.twirk.types.roomstate.RoomstateBuilder;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
+import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.twitchUser.TwitchUserBuilder;
+import com.gikk.twirk.types.userstate.Userstate;
+import com.gikk.twirk.types.userstate.UserstateBuilder;
 
 /**Class for communicating with the TwitchIrc chat.<br>
  * To create instances of Twirk, see {@link TwirkBuilder}.<br><br>
@@ -69,6 +78,15 @@ public class Twirk {
 	private final ArrayList<TwirkListener> listeners = new ArrayList<TwirkListener>();
 	final Set<String> moderators = Collections.synchronizedSet( new HashSet<String>() );
 	final Set<String> online	 = Collections.synchronizedSet( new HashSet<String>() );
+	
+	private final ClearChatBuilder 		clearChatBuilder;
+	private final HostTargetBuilder 	hostTargetBuilder;
+	private final ModeBuilder 			modeBuilder;
+	private final NoticeBuilder 		noticeBuilder;
+	private final RoomstateBuilder 		roomstateBuilder;
+	private final TwitchMessageBuilder 	twitchMessageBuilder;
+	private final TwitchUserBuilder 	twitchUserBuilder;
+	private final UserstateBuilder 		userstateBuilder;
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************    
@@ -79,6 +97,17 @@ public class Twirk {
 		this.channel = builder.channel;
 		this.port = builder.port;
 		this.verboseMode = builder.verboseMode;
+		
+		this.clearChatBuilder = builder.getClearChatBuilder();		
+		this.hostTargetBuilder= builder.getHostTargetBuilder();	
+		this.modeBuilder	  = builder.getModeBuilder();	
+		this.noticeBuilder	  = builder.getNoticeBuilder();
+		this.roomstateBuilder = builder.getRoomstateBuilder(); 		
+		this.twitchUserBuilder= builder.getTwitchUserBuilder();
+		this.userstateBuilder = builder.getUserstateBuilder();	
+		this.twitchMessageBuilder = builder.getTwitchMessageBuilder(); 	
+				
+		
 		this.queue = new OutputQueue();
 		
 		addIrcListener( new TwirkMaintainanceListener(this) );
@@ -182,7 +211,7 @@ public class Twirk {
     		
     		//Add capacities to the bot and wait for them to take effect
     		addCapacies();
-    		Thread.sleep(500);
+    		Thread.sleep(1000);
     		
     		//Start the input thread
     		inThread.start();
@@ -246,25 +275,17 @@ public class Twirk {
 	//***********************************************************************************************
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************	
-	private void createResources(){
+	private void createResources() throws IOException{
 		resourcesCreated  = true;
 		
-        try{        	
-        	socket = SSLSocketFactory.getDefault().createSocket(server, port);
-        	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
-        } catch (Exception e){
-        	e.printStackTrace();
-        }
-		try {
-			writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+               	
+    	socket = SSLSocketFactory.getDefault().createSocket(server, port);
+    	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
+   
+		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
+	
+		reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
+	
 		
 		this.outThread = new OutputThread(this, queue, reader, writer);
 		this.inThread  = new InputThread(this, reader, writer);
@@ -345,7 +366,7 @@ public class Twirk {
 			for(TwirkListener l : listeners )
 				l.onAnything( line );	
 			
-			TwirkMessage message = new TwirkMessage(line);
+			TwitchMessage message = twitchMessageBuilder.build(line);
 			
 			//This message is a reply for a capacity request. Just ignore it
 			if( message.getCommand().matches("JOIN") ){
@@ -361,43 +382,48 @@ public class Twirk {
 				return;
 			}
 			else if( message.getCommand().matches("PRIVMSG") ){
-				TwirkUser user = new TwirkUser(message);
+				TwitchUser user = twitchUserBuilder.build(message, userstateBuilder);
 				for(TwirkListener l : listeners )
 					l.onPrivMsg(user, message);
 				return;
 			}
 			else if( message.getCommand().matches("WHISPER") ) {
-				TwirkUser user = new TwirkUser(message);
+				TwitchUser user = twitchUserBuilder.build(message, userstateBuilder);
 				for(TwirkListener l : listeners )
 					l.onWhisper(user, message);
 				return;
 			}	
 			else if( message.getCommand().matches("NOTICE") ){
-				TwirkNotice notice = new TwirkNotice( message );
+				Notice notice = noticeBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onNotice( notice );
 				return;
 			}
 			else if( message.getCommand().matches("MODE") ){
-				TwirkMode mode = new TwirkMode( message );
+				Mode mode = modeBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onMode( mode );
 				return;
 			}
 			else if( message.getCommand().matches("USERSTATE") ){
-				TwirkUserstate userstate = new TwirkUserstate( message );
+				Userstate userstate = userstateBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onUserstate( userstate );
 			}
 			else if( message.getCommand().matches("ROOMSTATE") ){
-				TwirkRoomstate roomstate = new TwirkRoomstate( message );
+				Roomstate roomstate = roomstateBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onRoomstate(roomstate);
 			}
 			else if( message.getCommand().matches("CLEARCHAT") ){
-				TwirkClearChat clearChat = new TwirkClearChat(message);
+				ClearChat clearChat = clearChatBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onClearChat(clearChat);
+			}
+			else if( message.getCommand().matches("HOSTTARGET") ){
+				HostTarget hostTarget = hostTargetBuilder.build(message);
+				for(TwirkListener l : listeners )
+					l.onHost(hostTarget);
 			}
 			else if( message.getCommand().matches("CAP") )
 				return;

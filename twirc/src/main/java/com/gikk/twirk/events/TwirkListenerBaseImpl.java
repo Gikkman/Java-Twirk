@@ -1,13 +1,14 @@
 package com.gikk.twirk.events;
 
-import com.gikk.twirk.types.TwirkClearChat;
-import com.gikk.twirk.types.TwirkHostTarget;
-import com.gikk.twirk.types.TwirkMessage;
-import com.gikk.twirk.types.TwirkMode;
-import com.gikk.twirk.types.TwirkNotice;
-import com.gikk.twirk.types.TwirkRoomstate;
-import com.gikk.twirk.types.TwirkUser;
-import com.gikk.twirk.types.TwirkUserstate;
+import com.gikk.twirk.types.clearChat.ClearChat;
+import com.gikk.twirk.types.hostTarget.HostTarget;
+import com.gikk.twirk.types.mode.Mode;
+import com.gikk.twirk.types.notice.Notice;
+import com.gikk.twirk.types.roomstate.Roomstate;
+import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.userstate.Userstate;
 
 /**Convenience class.<br>
  * Instead if extending the TwirkListener interface, you can instead extend this class. That
@@ -24,10 +25,10 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	public void onAnything(String line) { }
 
 	@Override
-	public void onPrivMsg(TwirkUser sender, TwirkMessage message) {	}
+	public void onPrivMsg(TwitchUser sender, TwitchMessage message) {	}
 
 	@Override
-	public void onWhisper(TwirkUser sender, TwirkMessage message) {	}
+	public void onWhisper(TwitchUser sender, TwitchMessage message) {	}
 
 	@Override
 	public void onJoin(String joinedNick) { }
@@ -42,22 +43,25 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	public void onDisconnect() { }
 
 	@Override
-	public void onNotice(TwirkNotice notice) { }
+	public void onNotice(Notice notice) { }
 	
 	@Override
-	public void onHost(TwirkHostTarget hostNotice) { }
+	public void onHost(HostTarget hostNotice) { }
 
 	@Override
-	public void onMode(TwirkMode mode) { }
+	public void onMode(Mode mode) { }
 	
 	@Override
-	public void onUserstate(TwirkUserstate userstate) { }
+	public void onSubscriberEvent(SubscriberEvent subscriberEvent) { }
 	
 	@Override
-	public void onRoomstate(TwirkRoomstate roomstate) { }
+	public void onUserstate(Userstate userstate) { }
 	
 	@Override
-	public void onClearChat(TwirkClearChat clearChat) { }
+	public void onRoomstate(Roomstate roomstate) { }
+	
+	@Override
+	public void onClearChat(ClearChat clearChat) { }
 
 	@Override
 	public void onUnknown(String line) { }	
