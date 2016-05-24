@@ -18,7 +18,7 @@ class HostTargetImpl implements HostTarget{
 	}
 
 	@Override
-	public String getHoster() {
+	public String getHoste() {
 		return hoster;
 	}
 

@@ -29,7 +29,7 @@ public interface TwitchUser {
 	public boolean isSub();
 	
 	/**Retrieves this users {@link USER_TYPE} <br>
-	 * There are five USER_TYPEs: MOD, GLOBAL_MOD, ADMIN, STAFF, EMPTY.
+	 * There are six USER_TYPEs: OWNER, MOD, GLOBAL_MOD, ADMIN, STAFF, DEFAULT.
 	 * 
 	 * @return The user's USER_TYPE
 	 */

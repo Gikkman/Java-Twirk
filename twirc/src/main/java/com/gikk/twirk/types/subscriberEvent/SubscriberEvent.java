@@ -6,6 +6,5 @@ public interface SubscriberEvent {
 	
 	public String getSubscriber();
 	public SUB_EVENT getEventType();
-	public int getMonths();
-	public int getResubAmount();
+	public int getValue();
 }

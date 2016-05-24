@@ -9,8 +9,7 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 	private final String AWAY_IDENTIFIER = "you were away!";
 	
 	String subscriber = "";
-	int months = -1;
-	int resubAmount = -1;
+	int value = -1;
 	SUB_EVENT type = SUB_EVENT.UNKNOWN;
 	
 	@Override
@@ -41,7 +40,7 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 			if( parts[1].indexOf(RESUB_IDENTIFIER) >= 0 ) {
 				type = SUB_EVENT.HOST_RESUB;
 				subscriber = parts[0];
-				months = parseMonths( content );
+				value = parseMonths( content );
 			} 
 			else {
 				type = SUB_EVENT.HOST_NEW_SUB;
@@ -51,12 +50,12 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 			//Sub event to my channel
 			if( parts[1].indexOf(AWAY_IDENTIFIER) >= 0 ){
 				type = SUB_EVENT.RESUB_AWAY;
-				resubAmount = parseAmount( content );				
+				value = parseAmount( content );				
 			}
 			else if( parts[1].indexOf(RESUB_IDENTIFIER) >= 0 ){
 				type = SUB_EVENT.RESUB;
 				subscriber = parts[0];
-				months = parseMonths( content );
+				value = parseMonths( content );
 			}
 			else {
 				type = SUB_EVENT.NEW_SUB;

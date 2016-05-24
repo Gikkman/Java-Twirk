@@ -56,11 +56,11 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 		temp = TWIRK_UTIL.parseFeature(EMOTE_SET_IDENTIFIER, tag);
 		this.emoteSets = parseEmoteSets( temp );
 		
-		temp = TWIRK_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
-		this.userType = parseUserType( temp, displayName, channelOwner );
-		
 		temp = TWIRK_UTIL.parseFeature(BADGE_IDENTIFIER, tag);
 		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
+
+		temp = TWIRK_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
+		this.userType = parseUserType( temp, displayName, channelOwner );
 		
 		temp = TWIRK_UTIL.parseFeature(USER_ID_IDENTIFIER, tag);
 		this.userID = temp.isEmpty() ? -1 : Integer.parseInt(temp);
@@ -84,7 +84,9 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 
 	private USER_TYPE parseUserType(String userType, String sender, String channelOwner) {
 		if( userType.isEmpty() )
-			return USER_TYPE.EMPTY;
+			return USER_TYPE.DEFAULT;
+		else if( sender.toLowerCase().matches(channelOwner.toLowerCase() ) )
+			return USER_TYPE.OWNER;			
 		else if( userType.equalsIgnoreCase( "mod" ) )
 			return USER_TYPE.MOD;
 		else if( userType.equalsIgnoreCase( "global_mod" ) )
@@ -93,10 +95,8 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 			return USER_TYPE.ADMIN;
 		else if( userType.equalsIgnoreCase( "staff" ) )
 			return USER_TYPE.STAFF;
-		else if( sender.toLowerCase().matches(channelOwner.toLowerCase() ) )
-			return USER_TYPE.BROADCASTER;			
 		else
-			return USER_TYPE.EMPTY;	//Safety valve
+			return USER_TYPE.DEFAULT;	//Safety valve
 	}
 
 	private int getDefaultColor(){

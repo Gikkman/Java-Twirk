@@ -1,5 +1,7 @@
 package com.gikk.twirk.types.notice;
 
+import com.gikk.twirk.types.NOTICE_EVENT;
+
 class NoticeImpl implements Notice {
 	private final NOTICE_EVENT event;
 	private final String message;

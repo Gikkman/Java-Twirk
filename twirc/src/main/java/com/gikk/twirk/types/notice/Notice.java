@@ -1,5 +1,7 @@
 package com.gikk.twirk.types.notice;
 
+import com.gikk.twirk.types.NOTICE_EVENT;
+
 /**Class for representing a NOTICE from Twitch.<br><br>
  * 
  * A NOTICE means that there were some event occured on Twitch's side that they want to inform us of. There are
@@ -18,13 +20,6 @@ package com.gikk.twirk.types.notice;
  *
  */
 public interface Notice {
-	/** Represents different types of NOTICE events.<br> See <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md">https://github.com/justintv/Twitch-API/blob/master/IRC.md</a> */
-	public static enum NOTICE_EVENT{ SUB_MODE_ON, SUB_MODE_OFF,
-							  		 SLOW_MODE_ON, SLOW_MODE_OFF,
-							  		 R9K_MODE_ON, R9K_MODE_OFF,
-							  		 HOST_MODE_ON, HOST_MODE_OFF,
-							  		 TIMED_OUT, BANNED,
-							  		 OTHER };
 
 	/** The {@link NOTICE_EVENT} type of this NOTICE */
 	public NOTICE_EVENT getEvent();

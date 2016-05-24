@@ -62,6 +62,7 @@ public class Twirk {
 	private final String server;
 	private final String channel;
 	private final int port;
+	private final boolean useSSL;
 	final boolean verboseMode;
 	
 	private OutputThread outThread;
@@ -87,6 +88,7 @@ public class Twirk {
 	private final TwitchMessageBuilder 	twitchMessageBuilder;
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
+	
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************    
@@ -97,6 +99,7 @@ public class Twirk {
 		this.channel = builder.channel;
 		this.port = builder.port;
 		this.verboseMode = builder.verboseMode;
+		this.useSSL = builder.useSSL;
 		
 		this.clearChatBuilder = builder.getClearChatBuilder();		
 		this.hostTargetBuilder= builder.getHostTargetBuilder();	
@@ -276,19 +279,20 @@ public class Twirk {
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************	
 	private void createResources() throws IOException{
-		resourcesCreated  = true;
-		
-               	
-    	socket = SSLSocketFactory.getDefault().createSocket(server, port);
+        if( useSSL )
+        	socket = SSLSocketFactory.getDefault().createSocket(server, port);      
+    	else 
+    		socket = new Socket(server, port);
+    	
     	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
    
 		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
-	
 		reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 	
-		
 		this.outThread = new OutputThread(this, queue, reader, writer);
 		this.inThread  = new InputThread(this, reader, writer);
+		
+		resourcesCreated  = true;
 	}
 	
 	private void releaseResources(){

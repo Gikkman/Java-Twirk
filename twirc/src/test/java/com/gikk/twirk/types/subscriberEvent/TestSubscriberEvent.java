@@ -15,21 +15,20 @@ public class TestSubscriberEvent {
 	private static final String RESUB_HOST = ":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv PRIVMSG #target :Trikkman subscribed to target for 2 months in a row!";
 	
 	public static void testSubEvent(){
-		testEvent(SUB_NOTICE, SUB_EVENT.NEW_SUB, "Gikkman", -1, -1);
-		testEvent(RESUB_NOTICE, SUB_EVENT.RESUB, "Slikkman", 12, -1);
-		testEvent(RESUB_AWAY, SUB_EVENT.RESUB_AWAY, "", -1, 13);
-		testEvent(SUB_HOST, SUB_EVENT.HOST_NEW_SUB, "Likkman", -1, -1);
-		testEvent(RESUB_HOST, SUB_EVENT.HOST_RESUB, "Trikkman", 2, -1);		
+		testEvent(SUB_NOTICE, SUB_EVENT.NEW_SUB, "Gikkman", 0);
+		testEvent(RESUB_NOTICE, SUB_EVENT.RESUB, "Slikkman", 12);
+		testEvent(RESUB_AWAY, SUB_EVENT.RESUB_AWAY, "", 13);
+		testEvent(SUB_HOST, SUB_EVENT.HOST_NEW_SUB, "Likkman", 0);
+		testEvent(RESUB_HOST, SUB_EVENT.HOST_RESUB, "Trikkman", 2);		
 	}
 	
-	private static void testEvent(String EVENT, SUB_EVENT EVENT_TYPE, String subscriber, int months, int resubAmount ){
+	private static void testEvent(String EVENT, SUB_EVENT EVENT_TYPE, String subscriber, int value ){
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(EVENT);
 		SubscriberEvent subEvent = new SubscriberEventBuilderDefault().build(message);
 		
 		assertTrue( subEvent.getEventType() == EVENT_TYPE);
 		assertTrue( subEvent.getSubscriber().matches( subscriber ) );
-		assertTrue( subEvent.getMonths() == months );
-		assertTrue( subEvent.getResubAmount() == resubAmount );
+		assertTrue( subEvent.getValue() == value );
 	}
 	
 	

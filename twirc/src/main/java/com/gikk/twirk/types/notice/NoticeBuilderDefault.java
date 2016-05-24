@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.notice;
 
-import com.gikk.twirk.types.notice.Notice.NOTICE_EVENT;
+import com.gikk.twirk.types.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class NoticeBuilderDefault implements NoticeBuilder {
@@ -34,10 +34,6 @@ public class NoticeBuilderDefault implements NoticeBuilder {
 			return NOTICE_EVENT.HOST_MODE_ON;
 		else if( event.equalsIgnoreCase( "host_off" ) )
 			return NOTICE_EVENT.HOST_MODE_OFF;
-		else if( event.equalsIgnoreCase("msg_timedout") )
-			return NOTICE_EVENT.TIMED_OUT;
-		else if( event.equalsIgnoreCase("msg_banned"))
-			return NOTICE_EVENT.BANNED;
 		else 
 			return NOTICE_EVENT.OTHER;	
 	}

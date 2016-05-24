@@ -36,6 +36,7 @@ public class TwirkBuilder {
 
 	String server = "irc.chat.twitch.tv";
 	int 	port  = 6697;
+	boolean useSSL = true;    	
 	
 	String nick = "";
 	String oauth = "";
@@ -48,7 +49,8 @@ public class TwirkBuilder {
 	private RoomstateBuilder 	roomstateBuilder;    
 	private TwitchMessageBuilder twitchMessageBuilder;
 	private TwitchUserBuilder 	twitchUserBuilder;   
-	private UserstateBuilder 	userstateBuilder;    	
+	private UserstateBuilder 	userstateBuilder;
+
 	//***********************************************************
 	// 				CONSTRUCTOR
 	//***********************************************************
@@ -86,6 +88,11 @@ public class TwirkBuilder {
 	 */
 	public TwirkBuilder setPort(int port){
 		this.port = port;
+		return this;
+	}
+	
+	public TwirkBuilder setSSL(boolean ssl) {
+		this.useSSL = ssl;
 		return this;
 	}
 	
@@ -171,6 +178,5 @@ public class TwirkBuilder {
 	 */
 	public Twirk build(){
 		return new Twirk(this);
-	}
-	
+	}	
 }
