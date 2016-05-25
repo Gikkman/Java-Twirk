@@ -1,5 +1,7 @@
 package com.gikk.twirk.types.roomstate;
 
+import com.gikk.twirk.types.AbstractType;
+
 /**Class for representing a ROOMSTATE from Twitch.<br><br>
  * 
  * A ROOMSTATE means that there were some changes to the rooms attributes. When you first join a room, you will get a snapshot
@@ -13,9 +15,9 @@ package com.gikk.twirk.types.roomstate;
  * @author Gikkman
  *
  */
-public interface Roomstate {	
+public interface Roomstate extends AbstractType{	
 	/** The chat language when broadcaster language mode is enabled, and empty otherwise.
-	 * Might be null, if this ROOMSTATE had no information about it */
+	 * Might be empty, if this ROOMSTATE had no information about it */
 	public String getBroadcasterLanguage();
 	/** If 1, it means that R9K mode is enabled. 0 means it is disabled. -1 means that this ROOMSTATE did not mention r9k */
 	public int get9kMode();

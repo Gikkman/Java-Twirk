@@ -6,13 +6,16 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 public class NoticeBuilderDefault implements NoticeBuilder {
 	NOTICE_EVENT event;
 	String message;
+	String rawLine;
+	String rawEvent;
 	
 	@Override
 	public Notice build(TwitchMessage message) {
 		//The event is posted after the '@msg-id=' part of the tag
-		String event = message.getTag().substring( message.getTag().indexOf('=') + 1 );
-		this.event = parseEvent( event );
+		this.rawEvent = message.getTag().substring( message.getTag().indexOf('=') + 1 );
+		this.event = parseEvent( rawEvent );
 		this.message = message.getContent();
+		this.rawLine = message.getRaw();
 		
 		return new NoticeImpl(this);
 	}

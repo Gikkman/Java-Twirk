@@ -1,5 +1,7 @@
 package com.gikk.twirk.types.hostTarget;
 
+import com.gikk.twirk.types.AbstractType;
+
 /**Class for representing a HOSTTARGET from Twitch.<br><br>
  * 
  * A HOSTTARGET means that we started hosting another. HOSTTARGET comes in two forms: START and STOP. <ul>
@@ -9,13 +11,13 @@ package com.gikk.twirk.types.hostTarget;
  * @author Gikkman
  *
  */
-public interface HostTarget {
+public interface HostTarget extends AbstractType {
 	public static enum HOSTTARGET_MODE{ START, STOP };
 	
 	/** Tells which MODE this HOSTTARGET has (START or STOP) */
 	public HOSTTARGET_MODE getMode();
 	/** Tells us which channel we started hosting with this HOSTTARGET */
-	public String getHoste();
+	public String getTarget();
 	/** Tells us how many viewers this HOSTTARGET affected (MODE:START adds viewers, MODE:STOP removes viewers) */
 	public int getViewerCount();
 	

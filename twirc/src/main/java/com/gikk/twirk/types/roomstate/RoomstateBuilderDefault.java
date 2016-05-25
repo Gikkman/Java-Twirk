@@ -13,12 +13,14 @@ public class RoomstateBuilderDefault implements RoomstateBuilder{
 	int r9kMode;
 	int subMode;
 	int slowModeTimer;
+	String rawLine;
 	
 	public Roomstate build(TwitchMessage message) {
+		this.rawLine = message.getRaw();
 		String tag = message.getTag();
 		
 		String temp = TWIRK_UTIL.parseFeature(LANGUAGE_IDENTIFIER, tag);
-		broadcasterLanguage = temp.isEmpty() ? null : temp;
+		broadcasterLanguage = temp.isEmpty() ? "" : temp;
 		
 		temp = TWIRK_UTIL.parseFeature(R9K_IDENTIFIER, tag);
 		r9kMode = temp.isEmpty() ? -1 : Integer.parseInt(temp);

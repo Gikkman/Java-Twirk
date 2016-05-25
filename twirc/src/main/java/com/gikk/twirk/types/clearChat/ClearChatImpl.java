@@ -7,6 +7,7 @@ class ClearChatImpl implements ClearChat{
 	public final CLEARCHAT_MODE mode;
 	public final String target;
 	private final String reason;
+	private final String rawLine;
 	private final int duration;
 	
 	ClearChatImpl(ClearChatBuilderDefault builder){
@@ -14,6 +15,7 @@ class ClearChatImpl implements ClearChat{
 		this.target = builder.target;
 		this.reason = builder.reason;
 		this.duration = builder.duration;
+		this.rawLine = builder.rawLine;
 	}
 
 	@Override
@@ -34,5 +36,10 @@ class ClearChatImpl implements ClearChat{
 	@Override
 	public String getReason() {
 		return reason;
+	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
 	}
 }

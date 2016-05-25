@@ -25,7 +25,7 @@ class TwitchMessageImpl implements TwitchMessage {
 	//***********************************************************
 	// 				PUBLIC
 	//***********************************************************
-	public String getLine(){
+	public String getRaw(){
 		return line;
 	}
 

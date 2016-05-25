@@ -77,8 +77,8 @@ public class Twirk {
 	private BufferedReader reader = null;
 
 	private final ArrayList<TwirkListener> listeners = new ArrayList<TwirkListener>();
-	final Set<String> moderators = Collections.synchronizedSet( new HashSet<String>() );
-	final Set<String> online	 = Collections.synchronizedSet( new HashSet<String>() );
+	final Set<String> moderators = Collections.synchronizedSet( new HashSet<String>());
+	final Set<String> online	 = Collections.synchronizedSet( new HashSet<String>());
 	
 	private final ClearChatBuilder 		clearChatBuilder;
 	private final HostTargetBuilder 	hostTargetBuilder;
@@ -153,6 +153,40 @@ public class Twirk {
 	
 	public boolean isDisposed() {
 		return isDisposed;
+	}
+	
+	/**Fetches a set of all the users that are <b>currently</b> online in the joined channel. Note that this set is
+	 * <b>copy</b> of the underlying set of online users. Thus, changes to the original set will not be visible
+	 * in the returned set, and changes to the returned set will not affect the original set.<br><br>
+	 * 
+	 * Also worth noting is that the set only contains the users names in lower case letters.
+	 * 
+	 * @return A copy of the Set of online users.
+	 */
+	public Set<String> getUsersOnline(){
+		Set<String> out = new HashSet<String>();
+		synchronized (online) {
+			for( String s : online )
+				out.add(s);
+		}
+		return out;
+	}
+	
+	/**Fetches a set of all the moderators that are <b>currently</b> online in the joined channel. Note that this set is
+	 * <b>copy</b> of the underlying set of online moderators. Thus, changes to the original set will not be visible
+	 * in the returned set, and changes to the returned set will not affect the original set.<br><br>
+	 * 
+	 * Also worth noting is that the set only contains the moderators names in lower case letters.
+	 * 
+	 * @return A copy of the Set of online moderators.
+	 */
+	public Set<String> getModsOnline(){
+		Set<String> out = new HashSet<String>();
+		synchronized (moderators) {
+			for( String s : moderators )
+				out.add(s);
+		}
+		return out;
 	}
 	
 	/**Fetches the nick of the bot, which it will use to connect to an IRC server
@@ -438,6 +472,7 @@ public class Twirk {
 					List<String> users = Arrays.asList( message.getContent().split(" ") );
 					online.addAll( users );
 				} 
+				//TODO: If matches 366 we've gotten /NAMES
 				return;
 			}
 			else {

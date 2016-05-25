@@ -26,9 +26,10 @@ public class TestSubscriberEvent {
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(EVENT);
 		SubscriberEvent subEvent = new SubscriberEventBuilderDefault().build(message);
 		
-		assertTrue( subEvent.getEventType() == EVENT_TYPE);
-		assertTrue( subEvent.getSubscriber().matches( subscriber ) );
-		assertTrue( subEvent.getValue() == value );
+		assertTrue( "Got: " + subEvent.getEventType() +" Expected: " + EVENT_TYPE, subEvent.getEventType() == EVENT_TYPE);
+		assertTrue( "Got: " + subEvent.getSubscriber() + " Expected: " + subscriber,subEvent.getSubscriber().matches( subscriber ) );
+		assertTrue( "Got: " + subEvent.getValue() + " Expected: " + value,subEvent.getValue() == value );
+		assertTrue( "Got: " + subEvent.getRaw() + " Expected: " + EVENT ,EVENT.matches( subEvent.getRaw() ));
 	}
 	
 	

@@ -19,10 +19,10 @@ public class TwitchMessageBuilderDefault implements TwitchMessageBuilder{
 		if( chatLine.startsWith("@") )
 			parseWithTag(chatLine);
 		else{
-			this.line = chatLine;
 			parseWithoutTag(chatLine);
 		}
 		
+		this.line = chatLine;		
 		return new TwitchMessageImpl(this);
 	}
 	//***********************************************************
@@ -58,7 +58,6 @@ public class TwitchMessageBuilderDefault implements TwitchMessageBuilder{
 		}
 		
 		parseEmotes(tag, content);
-		this.line = prefix + " " + command + " " + target + " " + content;
 	}
 
 	private void parseWithoutTag(String line){

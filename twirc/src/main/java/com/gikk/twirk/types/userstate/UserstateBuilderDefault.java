@@ -6,27 +6,24 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class UserstateBuilderDefault implements UserstateBuilder {
 	private static final String NAMES_IDENTIFIER 	= "display-name=";
-	private static final String	USER_ID_IDENTIFIER  = "user-id=";
 	private static final String COLOR_IDENTIFIER 	= "color=";
 	private static final String SUB_IDENTIFIER 		= "subscriber=";
 	private static final String MOD_IDENTIFIER 		= "mod=";
 	private static final String TURBO_IDENTIFIER 	= "turbo=";
 	private static final String USERTYPE_IDENTIFIER = "user-type=";
 	private static final String EMOTE_SET_IDENTIFIER= "emote-sets=";
-	private static final String BADGE_IDENTIFIER 	= "badges=";
 	private static final int[] default_colors = { 0xFF0000, 0x0000FF, 0x00FF00, 0xB22222, 0xFF7F50,
 												  0x9ACD32, 0xFF4500, 0x2E8B57, 0xDAA520, 0xD2691E,
 												  0x5F9EA0, 0x1E90FF, 0xFF69B4, 0x8A2BE2, 0x00FF7F };
 	
 	int 	  color;
 	String 	  displayName;
-	int 	  userID;
 	boolean   isMod;
 	boolean   isSub;
 	boolean   isTurbo;
-	String[]  badges;
 	USER_TYPE userType;
 	int[] 	  emoteSets;
+	String 	  rawLine;
 	
 	@Override
 	public Userstate build(TwitchMessage message) {
@@ -55,17 +52,11 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 		
 		temp = TWIRK_UTIL.parseFeature(EMOTE_SET_IDENTIFIER, tag);
 		this.emoteSets = parseEmoteSets( temp );
-		
-		temp = TWIRK_UTIL.parseFeature(BADGE_IDENTIFIER, tag);
-		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
 
 		temp = TWIRK_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
 		this.userType = parseUserType( temp, displayName, channelOwner );
 		
-		temp = TWIRK_UTIL.parseFeature(USER_ID_IDENTIFIER, tag);
-		this.userID = temp.isEmpty() ? -1 : Integer.parseInt(temp);
-		
-		
+		this.rawLine = message.getRaw();
 		return new UserstateImpl(this);
 	}
 	

@@ -1,5 +1,6 @@
 package com.gikk.twirk.types.clearChat;
 
+import com.gikk.twirk.types.AbstractType;
 import com.gikk.twirk.types.CLEARCHAT_MODE;
 
 /**Class for representing a CLEARCHAT from Twitch.<br><br>
@@ -11,7 +12,7 @@ import com.gikk.twirk.types.CLEARCHAT_MODE;
  * <br>
  * @author Gikkman
  */
-public interface ClearChat {
+public interface ClearChat extends AbstractType{
 	/** Retrieves the MODE of the CLEARCHAT. Can be USER, if a user was purged, or COMPLETE, if the entire chat was purged 
 	 * 	
 	 * @return CLEARCHAT_MODE of this CLEARCHAT

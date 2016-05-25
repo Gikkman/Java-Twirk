@@ -1,5 +1,6 @@
 package com.gikk.twirk.types.mode;
 
+import com.gikk.twirk.types.AbstractType;
 import com.gikk.twirk.types.twitchUser.TwitchUser;
 
 /**Class for representing a MODE from Twitch. A MODE means that a user gained or lost mod status. <br><br>
@@ -16,7 +17,7 @@ import com.gikk.twirk.types.twitchUser.TwitchUser;
  * @author Gikkman
  *
  */
-public interface Mode {
+public interface Mode extends AbstractType{
 	public static enum MODE_EVENT{ GAINED_MOD, LOST_MOD }
 
 	/** GAINED_MOD if {@code user} gained mod, LOST_MOD if {@code user} lost mod */

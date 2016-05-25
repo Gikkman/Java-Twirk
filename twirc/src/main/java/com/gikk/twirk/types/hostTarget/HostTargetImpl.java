@@ -3,13 +3,15 @@ package com.gikk.twirk.types.hostTarget;
 class HostTargetImpl implements HostTarget{
 	
 	final HOSTTARGET_MODE mode;
-	final String hoster;
+	final String target;
 	final int viwerAmount;
+	private final String rawLine;
 	
 	HostTargetImpl(HostTargetBuilderDefault builder){
 		this.mode = builder.mode;
-		this.hoster = builder.hoster;
+		this.target = builder.target;
 		this.viwerAmount = builder.viwerAmount;
+		this.rawLine = builder.rawLine;
 	}
 
 	@Override
@@ -18,12 +20,17 @@ class HostTargetImpl implements HostTarget{
 	}
 
 	@Override
-	public String getHoste() {
-		return hoster;
+	public String getTarget() {
+		return target;
 	}
 
 	@Override
 	public int getViewerCount() {
 		return viwerAmount;
+	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
 	}
 }

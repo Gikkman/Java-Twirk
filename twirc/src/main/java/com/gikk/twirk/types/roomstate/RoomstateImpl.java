@@ -10,12 +10,14 @@ class RoomstateImpl implements Roomstate {
 	private final  int r9kMode;
 	private final  int subMode;
 	private final  int slowModeTimer;
+	private final String rawLine;
 	
 	RoomstateImpl(RoomstateBuilderDefault builder){
 		this.broadcasterLanguage = builder.broadcasterLanguage;
 		this.r9kMode = builder.r9kMode;
 		this.subMode = builder.subMode;
 		this.slowModeTimer = builder.slowModeTimer;
+		this.rawLine = builder.rawLine;
 	}
 
 	@Override
@@ -46,5 +48,10 @@ class RoomstateImpl implements Roomstate {
 			   (slowModeTimer == 0 ? "" : (SLOW_IDENTIFIER + slowModeTimer))
 			   + " " +
 			   (subMode == 0 ? "" : (SUBS_IDENTIFIER + subMode));
+	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
 	}
 }

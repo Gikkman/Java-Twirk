@@ -9,11 +9,14 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 	private final String AWAY_IDENTIFIER = "you were away!";
 	
 	String subscriber = "";
-	int value = -1;
+	int value = 0;
 	SUB_EVENT type = SUB_EVENT.UNKNOWN;
+	String rawLine;
 	
 	@Override
 	public SubscriberEvent build(TwitchMessage message) {
+		this.rawLine = message.getRaw();
+		
 		if( !message.getPrefix().substring(1).startsWith("twitchnotify") ){
 			System.err.println("Error. Invalid TwitchMessage.\nCannot construct SubscriberEvent from " + message);
 			return null;

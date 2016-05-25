@@ -1,5 +1,6 @@
 package com.gikk.twirk.types.notice;
 
+import com.gikk.twirk.types.AbstractType;
 import com.gikk.twirk.types.NOTICE_EVENT;
 
 /**Class for representing a NOTICE from Twitch.<br><br>
@@ -19,10 +20,24 @@ import com.gikk.twirk.types.NOTICE_EVENT;
  * @author Gikkman
  *
  */
-public interface Notice {
+public interface Notice extends AbstractType{
 
-	/** The {@link NOTICE_EVENT} type of this NOTICE */
+	/** The {@link NOTICE_EVENT} type of this NOTICE 
+	 * 
+	 * @return The {@link NOTICE_EVENT} of this NOTICE
+	 */
 	public NOTICE_EVENT getEvent();
-	/** The message that came with this NOTICE. Useful when we get a {@link NOTICE_EVENT} of type MISC */
+	
+	/** The message that came with this NOTICE. Useful when we get a {@link NOTICE_EVENT} of type MISC 
+	 * 
+	 * @return The message
+	 */
 	public String getMessage();
+	
+	/** Fetches the raw Notice ID exactly as Twitch formats it. In case the {@link NOTICE_EVENT} is of type {@link NOTICE_EVENT#OTHER}, this
+	 * field might be useful for checking what id this EVENT had.
+	 * 
+	 * @return The raw Notice ID
+	 */
+	public String getRawNoticeID();
 }

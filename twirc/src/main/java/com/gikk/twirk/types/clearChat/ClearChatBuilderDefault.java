@@ -12,9 +12,12 @@ public class ClearChatBuilderDefault implements ClearChatBuilder{
 	String target = "";
 	int duration = -1;
 	String reason = "";
+	String rawLine;
 	
 	@Override
 	public ClearChat build(TwitchMessage twitchMessage) {
+		this.rawLine = twitchMessage.getRaw();
+		
 		if( twitchMessage.getContent().isEmpty() ){
 			this.mode = CLEARCHAT_MODE.COMPLETE;
 			this.target = "";

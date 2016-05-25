@@ -3,10 +3,12 @@ package com.gikk.twirk.types.mode;
 class ModeImpl implements Mode{
 	private final String user;
 	private final MODE_EVENT  event;
+	private final String rawLine;
 	
 	ModeImpl( ModeBuilderDefault builder ){
 		this.event = builder.event;
 		this.user =  builder.user;
+		this.rawLine = builder.rawLine;
 	}
 
 	@Override
@@ -17,5 +19,10 @@ class ModeImpl implements Mode{
 	@Override
 	public String getUser() {
 		return user;
+	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
 	}
 }

@@ -6,6 +6,7 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 public class ModeBuilderDefault implements ModeBuilder{
 	MODE_EVENT event;
 	String user;
+	String rawLine;
 	
 	@Override
 	public Mode build(TwitchMessage message) {
@@ -17,9 +18,10 @@ public class ModeBuilderDefault implements ModeBuilder{
 		 * So we simply look at the content part to determine which user is affected
 		 * and what event occurred
 		 */
+		this.rawLine = message.getRaw();
 		String content = message.getContent();
 		this.event = content.startsWith("+o") ? MODE_EVENT.GAINED_MOD : MODE_EVENT.LOST_MOD;
-		this.user =  content.substring( content.indexOf(' ') );
+		this.user =  content.substring( content.indexOf(' ') +1 );
 		
 		return new ModeImpl(this);
 	}		

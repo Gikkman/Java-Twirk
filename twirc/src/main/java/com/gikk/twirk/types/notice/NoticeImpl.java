@@ -5,10 +5,14 @@ import com.gikk.twirk.types.NOTICE_EVENT;
 class NoticeImpl implements Notice {
 	private final NOTICE_EVENT event;
 	private final String message;
+	private final String rawLine;
+	private final String rawEvent;
 	
 	NoticeImpl(NoticeBuilderDefault builder) {
 		this.event = builder.event;
 		this.message = builder.message;
+		this.rawLine = builder.rawLine;
+		this.rawEvent = builder.rawEvent;
 	}
 
 	@Override
@@ -20,4 +24,16 @@ class NoticeImpl implements Notice {
 	public String getMessage() {
 		return message;
 	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
+	}
+
+	@Override
+	public String getRawNoticeID() {
+		return rawEvent;
+	}
+	
+	
 }

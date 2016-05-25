@@ -2,6 +2,8 @@ package com.gikk.twirk.types.twitchMessage;
 
 import java.util.List;
 
+import com.gikk.twirk.types.AbstractType;
+
 /**An encapsulation of a message sent via Twitch chat. <br><br>
  * 
  * A message can have many different structures, but since they are based on the 
@@ -22,14 +24,13 @@ import java.util.List;
  * @author Gikkman
  *
  */
-public interface TwitchMessage {
+public interface TwitchMessage extends AbstractType {
 
-	/**Retrieves the entire message, exactly as received from the server <b>but</b> with the 
-	 * tag segment removed
+	/**Retrieves the entire message, exactly as received from the server.
 	 * 
-	 * @return The unformatted chat line, with the tag removed
+	 * @return The unformatted chat line
 	 */
-	public String getLine();
+	public String getRaw();
 	
 	/**Retrieves this message's tag segment. Should always starts with a @. Note that the 
 	 * Tag segment will look vastly different for different Twitch commands, and some won't

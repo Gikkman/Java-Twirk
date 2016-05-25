@@ -29,9 +29,11 @@ public class TestClearChat {
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(MESSAGE);
 		ClearChat clearChat   = new ClearChatBuilderDefault().build(message);
 		
-		assertTrue( clearChat.getMode() == mode);
-		assertTrue( clearChat.getDuration() == duration);
-		assertTrue( clearChat.getTarget().matches(target) );
-		assertTrue( clearChat.getReason().matches(reason) );
+		assertTrue("Got: " + clearChat.getMode() + " Expected: " + mode, clearChat.getMode() == mode);
+		assertTrue("Got: " + clearChat.getDuration() + " Expected: " + duration, clearChat.getDuration() == duration);
+		assertTrue("Got: " + clearChat.getTarget()+ " Expected: " + target, clearChat.getTarget().contentEquals(target) );
+		assertTrue("Got: " + clearChat.getReason()+ " Expected: " + reason, clearChat.getReason().contentEquals(reason) );
+		String raw = clearChat.getRaw();
+		assertTrue("Got: " + clearChat.getRaw()+ " Expected: " + MESSAGE , MESSAGE.contentEquals(raw) );
 	}
 }

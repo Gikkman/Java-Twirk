@@ -6,11 +6,13 @@ class SubscriberEventImpl implements SubscriberEvent{
 	private final String subscriber;
 	private final int value;
 	private final SUB_EVENT type;
+	private final String rawLine;
 	
 	public SubscriberEventImpl(SubscriberEventBuilderDefault builder) {
 		this.subscriber = builder.subscriber;
 		this.value = builder.value;
 		this.type = builder.type;
+		this.rawLine = builder.rawLine;
 	}
 	
 	@Override
@@ -26,6 +28,11 @@ class SubscriberEventImpl implements SubscriberEvent{
 	@Override
 	public int getValue() {
 		return value;
+	}
+
+	@Override
+	public String getRaw() {
+		return rawLine;
 	}
 
 	

@@ -19,6 +19,8 @@ public class TwitchUserImpl implements TwitchUser{
 	// 				VARIABLES
 	//***********************************************************
 	private Userstate userState = null;
+	private String[] badges;
+	private int userID;
 
 	//***********************************************************
 	// 				CONSTRUCTOR
@@ -26,6 +28,8 @@ public class TwitchUserImpl implements TwitchUser{
 	
 	public TwitchUserImpl(TwitchUserBuilderDefault builder) {
 		this.userState = builder.userstate;
+		this.badges = builder.badges;
+		this.userID = builder.userID;
 	}
 
 	//***********************************************************
@@ -56,9 +60,9 @@ public class TwitchUserImpl implements TwitchUser{
 	}
 	
 	public String[] getBadges(){
-		return userState.getBadges();
+		return badges;
 	}
 	public int getUserID(){
-		return userState.getUserID();
+		return userID;
 	}
 }

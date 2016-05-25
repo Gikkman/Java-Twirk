@@ -6,19 +6,25 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 public class HostTargetBuilderDefault implements HostTargetBuilder {
 
 	HOSTTARGET_MODE mode;
-	String hoster;
+	String target;
 	int viwerAmount;
+	String rawLine;
 	
 	@Override
 	public HostTarget build(TwitchMessage message) {
-		this.hoster = message.getTarget().substring(1); //Remove the #
+		this.rawLine = message.getRaw();
 		this.mode = message.getContent().startsWith("-") ? HOSTTARGET_MODE.STOP : HOSTTARGET_MODE.START;
 		
-		int viewerAmountIndex = message.getContent().indexOf(" ");
-		if( viewerAmountIndex == -1 )
-			this.viwerAmount = 0;
-		else
-			this.viwerAmount = Integer.parseInt( message.getContent().substring(viewerAmountIndex).trim() );
+		String[] segments = message.getContent().split(" ", 2);
+		this.target = segments[0].matches("-") ? "" : segments[0];		
+		
+		try { 
+			this.viwerAmount = Integer.parseInt(segments[1]); 
+		} 
+		catch(Exception e){ 
+			System.err.println("Could not parse " + segments[1] +" in HostTargetBuilderDefault");
+			this.viwerAmount = 0; 
+		}
 		
 		return new HostTargetImpl(this);
 	}
