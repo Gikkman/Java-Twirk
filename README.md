@@ -1,4 +1,6 @@
 # Java-Twirk
+[![](https://jitpack.io/v/gikkman/java-twirk.svg)](https://jitpack.io/#gikkman/java-twirk)
+
 Small, basic library for creating an IRC connection to the Twitch chat.
 
 The library is intended to make communication via Twitch chat as easy as possible, and uses Java objects to represent most events that can occur in Twitch chat. 
