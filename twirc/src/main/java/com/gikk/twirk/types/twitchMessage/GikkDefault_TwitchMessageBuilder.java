@@ -2,7 +2,7 @@ package com.gikk.twirk.types.twitchMessage;
 
 import java.util.LinkedList;
 
-public class TwitchMessageBuilderDefault implements TwitchMessageBuilder{
+public class GikkDefault_TwitchMessageBuilder implements TwitchMessageBuilder{
 	//***********************************************************
 	// 				VARIABLES
 	//***********************************************************

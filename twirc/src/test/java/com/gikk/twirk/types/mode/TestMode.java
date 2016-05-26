@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.mode.Mode.MODE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestMode {
 	public static String GAIN_MOD = ":jtv MODE #gikkman +o gikkbot";
@@ -17,8 +17,8 @@ public class TestMode {
 	}
 
 	private static void doTest(String STRING, MODE_EVENT EVENT, String target) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
-		Mode mode = new ModeBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(STRING);
+		Mode mode = new GikkDefault_ModeBuilder().build(message);
 		
 		assertTrue("Got: " + mode.getEvent() + " Expected: " + EVENT  ,mode.getEvent() == EVENT);
 		assertTrue("Got: " + mode.getUser()  + " Expected: " + target ,mode.getUser().equals(target));

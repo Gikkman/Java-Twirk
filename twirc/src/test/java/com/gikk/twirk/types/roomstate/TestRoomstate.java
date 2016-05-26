@@ -3,7 +3,7 @@ package com.gikk.twirk.types.roomstate;
 import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestRoomstate {
 	private final static String JOIN = "@broadcaster-lang=;emote-only=0;r9k=0;slow=0;subs-only=0 :tmi.twitch.tv ROOMSTATE #gikkman";
@@ -25,8 +25,8 @@ public class TestRoomstate {
 	}
 
 	private static void doTest(String STRING, String lang, int r9k, int sub, int slow ) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
-		Roomstate room        = new RoomstateBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(STRING);
+		Roomstate room        = new GikkDefault_RoomstateBuilder().build(message);
 		
 		assertTrue("Got: " + room.getBroadcasterLanguage() + " Expected: " + lang, room.getBroadcasterLanguage().equals(lang) );
 		assertTrue("Got: " + room.get9kMode() 			   + " Expected: " + r9k , room.get9kMode() == r9k);

@@ -1,9 +1,9 @@
 package com.gikk.twirk.types.roomstate;
 
-import com.gikk.twirk.types.TWIRK_UTIL;
+import com.gikk.twirk.types._PARSING_UTIL;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class RoomstateBuilderDefault implements RoomstateBuilder{
+public class GikkDefault_RoomstateBuilder implements RoomstateBuilder{
 	private static final String LANGUAGE_IDENTIFIER = "broadcaster-lang=";
 	private static final String R9K_IDENTIFIER = "r9k=";
 	private static final String SUBS_IDENTIFIER = "subs-only=";
@@ -19,16 +19,16 @@ public class RoomstateBuilderDefault implements RoomstateBuilder{
 		this.rawLine = message.getRaw();
 		String tag = message.getTag();
 		
-		String temp = TWIRK_UTIL.parseFeature(LANGUAGE_IDENTIFIER, tag);
+		String temp = _PARSING_UTIL.parseFeature(LANGUAGE_IDENTIFIER, tag);
 		broadcasterLanguage = temp.isEmpty() ? "" : temp;
 		
-		temp = TWIRK_UTIL.parseFeature(R9K_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(R9K_IDENTIFIER, tag);
 		r9kMode = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
-		temp = TWIRK_UTIL.parseFeature(SLOW_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(SLOW_IDENTIFIER, tag);
 		slowModeTimer = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
-		temp = TWIRK_UTIL.parseFeature(SUBS_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(SUBS_IDENTIFIER, tag);
 		subMode = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
 		return new RoomstateImpl(this);

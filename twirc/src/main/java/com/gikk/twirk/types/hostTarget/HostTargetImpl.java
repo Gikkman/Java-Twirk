@@ -9,7 +9,7 @@ class HostTargetImpl implements HostTarget{
 	final int viwerAmount;
 	private final String rawLine;
 	
-	HostTargetImpl(HostTargetBuilderDefault builder){
+	HostTargetImpl(GikkDefault_HostTargetBuilder builder){
 		this.mode = builder.mode;
 		this.target = builder.target;
 		this.viwerAmount = builder.viwerAmount;

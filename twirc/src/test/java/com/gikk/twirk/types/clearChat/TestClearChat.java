@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.CLEARCHAT_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestClearChat {
 	private static String CLEAR_CHAT_TOTAL = ":tmi.twitch.tv CLEARCHAT #gikkman";
@@ -26,8 +26,8 @@ public class TestClearChat {
 
 
 	private static void testMessage(String MESSAGE, CLEARCHAT_MODE mode, String target, int duration, String reason) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(MESSAGE);
-		ClearChat clearChat   = new ClearChatBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(MESSAGE);
+		ClearChat clearChat   = new GikkDefault_ClearChatBuilder().build(message);
 		
 		assertTrue("Got: " + clearChat.getMode() + " Expected: " + mode, clearChat.getMode() == mode);
 		assertTrue("Got: " + clearChat.getDuration() + " Expected: " + duration, clearChat.getDuration() == duration);

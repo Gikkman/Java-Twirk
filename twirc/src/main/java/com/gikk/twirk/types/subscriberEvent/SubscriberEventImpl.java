@@ -8,7 +8,7 @@ class SubscriberEventImpl implements SubscriberEvent{
 	private final SUB_EVENT type;
 	private final String rawLine;
 	
-	public SubscriberEventImpl(SubscriberEventBuilderDefault builder) {
+	public SubscriberEventImpl(GikkDefault_SubscriberEventBuilder builder) {
 		this.subscriber = builder.subscriber;
 		this.value = builder.value;
 		this.type = builder.type;

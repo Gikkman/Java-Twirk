@@ -5,7 +5,7 @@ class ModeImpl implements Mode{
 	private final MODE_EVENT  event;
 	private final String rawLine;
 	
-	ModeImpl( ModeBuilderDefault builder ){
+	ModeImpl( GikkDefault_ModeBuilder builder ){
 		this.event = builder.event;
 		this.user =  builder.user;
 		this.rawLine = builder.rawLine;

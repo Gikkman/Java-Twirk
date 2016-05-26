@@ -3,7 +3,7 @@ package com.gikk.twirk.types.notice;
 import com.gikk.twirk.types.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class NoticeBuilderDefault implements NoticeBuilder {
+public class GikkDefault_NoticeBuilder implements NoticeBuilder {
 	NOTICE_EVENT event;
 	String message;
 	String rawLine;

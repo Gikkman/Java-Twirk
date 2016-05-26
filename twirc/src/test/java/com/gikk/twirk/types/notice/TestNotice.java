@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestNotice {
 	private final static String SUB_MODE_ON_MESSAGE = "@msg-id=subs_on :tmi.twitch.tv NOTICE #gikkman :This room is now in subscribers-only mode.";
@@ -30,8 +30,8 @@ public class TestNotice {
 	}
 
 	private static void doTest(String line, NOTICE_EVENT EVENT, String theMessage, String rawNoticeID) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(line);
-		Notice notice = new NoticeBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(line);
+		Notice notice = new GikkDefault_NoticeBuilder().build(message);
 		
 		assertTrue( notice.getEvent() == EVENT );
 		assertTrue( notice.getMessage().equals(theMessage) );

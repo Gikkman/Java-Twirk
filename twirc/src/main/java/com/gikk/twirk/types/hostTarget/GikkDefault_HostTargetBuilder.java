@@ -3,7 +3,7 @@ package com.gikk.twirk.types.hostTarget;
 import com.gikk.twirk.types.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class HostTargetBuilderDefault implements HostTargetBuilder {
+public class GikkDefault_HostTargetBuilder implements HostTargetBuilder {
 
 	HOSTTARGET_MODE mode;
 	String target;

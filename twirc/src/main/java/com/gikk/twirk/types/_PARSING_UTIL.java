@@ -1,6 +1,6 @@
 package com.gikk.twirk.types;
 
-public class TWIRK_UTIL {
+public class _PARSING_UTIL {
 	public static String parseFeature(String IDENTIFIER, String tag) {
 		int begin = tag.indexOf( IDENTIFIER );
 		int end =   tag.indexOf(';', begin);	

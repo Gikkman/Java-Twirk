@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestHostTarget {
 	private final static String START_HOST = ":tmi.twitch.tv HOSTTARGET #gikkman :gikkbot 1";	//Gikkman host Gikkbot for 1 viewer
@@ -16,8 +16,8 @@ public class TestHostTarget {
 	}
 
 	private static void doTest(String STRING, HOSTTARGET_MODE MODE, int viewers, String target) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
-		HostTarget host = new HostTargetBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(STRING);
+		HostTarget host = new GikkDefault_HostTargetBuilder().build(message);
 		
 		assertTrue("Got: "+ host.getTarget() 	  + " Expected: " + target,  host.getTarget().equals(target));
 		assertTrue("Got: "+ host.getViewerCount() + " Expected: " + viewers, host.getViewerCount() == viewers);

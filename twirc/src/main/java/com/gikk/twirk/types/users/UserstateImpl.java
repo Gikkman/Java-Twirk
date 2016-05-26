@@ -23,7 +23,7 @@ class UserstateImpl implements Userstate {
 	private final int[] emoteSets;
 	private final String rawLine;
 	
-	UserstateImpl( UserstateBuilderDefault builder ) {
+	UserstateImpl( GikkDefault_UserstateBuilder builder ) {
 		this.color = builder.color;
 		this.displayName = builder.displayName;
 		this.isMod = builder.isMod;

@@ -10,7 +10,7 @@ class ClearChatImpl implements ClearChat{
 	private final String rawLine;
 	private final int duration;
 	
-	ClearChatImpl(ClearChatBuilderDefault builder){
+	ClearChatImpl(GikkDefault_ClearChatBuilder builder){
 		this.mode = builder.mode;
 		this.target = builder.target;
 		this.reason = builder.reason;

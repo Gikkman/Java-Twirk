@@ -12,7 +12,7 @@ class RoomstateImpl implements Roomstate {
 	private final  int slowModeTimer;
 	private final String rawLine;
 	
-	RoomstateImpl(RoomstateBuilderDefault builder){
+	RoomstateImpl(GikkDefault_RoomstateBuilder builder){
 		this.broadcasterLanguage = builder.broadcasterLanguage;
 		this.r9kMode = builder.r9kMode;
 		this.subMode = builder.subMode;

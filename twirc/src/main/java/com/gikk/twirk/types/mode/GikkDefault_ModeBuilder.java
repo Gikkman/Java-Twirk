@@ -3,7 +3,7 @@ package com.gikk.twirk.types.mode;
 import com.gikk.twirk.types.mode.Mode.MODE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class ModeBuilderDefault implements ModeBuilder{
+public class GikkDefault_ModeBuilder implements ModeBuilder{
 	MODE_EVENT event;
 	String user;
 	String rawLine;

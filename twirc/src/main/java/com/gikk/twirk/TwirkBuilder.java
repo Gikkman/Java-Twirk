@@ -1,23 +1,23 @@
 package com.gikk.twirk;
 
 import com.gikk.twirk.types.clearChat.ClearChatBuilder;
-import com.gikk.twirk.types.clearChat.ClearChatBuilderDefault;
+import com.gikk.twirk.types.clearChat.GikkDefault_ClearChatBuilder;
 import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
-import com.gikk.twirk.types.hostTarget.HostTargetBuilderDefault;
+import com.gikk.twirk.types.hostTarget.GikkDefault_HostTargetBuilder;
 import com.gikk.twirk.types.mode.ModeBuilder;
-import com.gikk.twirk.types.mode.ModeBuilderDefault;
+import com.gikk.twirk.types.mode.GikkDefault_ModeBuilder;
 import com.gikk.twirk.types.notice.NoticeBuilder;
-import com.gikk.twirk.types.notice.NoticeBuilderDefault;
+import com.gikk.twirk.types.notice.GikkDefault_NoticeBuilder;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
-import com.gikk.twirk.types.roomstate.RoomstateBuilderDefault;
+import com.gikk.twirk.types.roomstate.GikkDefault_RoomstateBuilder;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
-import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilderDefault;
+import com.gikk.twirk.types.subscriberEvent.GikkDefault_SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
-import com.gikk.twirk.types.users.TwitchUserBuilderDefault;
+import com.gikk.twirk.types.users.GikkDefault_TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
-import com.gikk.twirk.types.users.UserstateBuilderDefault;
+import com.gikk.twirk.types.users.GikkDefault_UserstateBuilder;
 
 /**Class for creating instances of {@link Twirk}.<br>
  * To build an instance of {@link Twirk}, the user has to supply the bot's nick and 
@@ -224,7 +224,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link ClearChatBuilder}
 	 */
 	public ClearChatBuilder getClearChatBuilder() {
-		return clearChatBuilder != null ? clearChatBuilder : new ClearChatBuilderDefault();
+		return clearChatBuilder != null ? clearChatBuilder : new GikkDefault_ClearChatBuilder();
 	}
 
 	/**Retrieves the assigned {@link HostTargetBuilder}, or the default one, if none is assigned.
@@ -232,7 +232,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link HostTargetBuilder}
 	 */
 	public HostTargetBuilder getHostTargetBuilder() {
-		return hostTargetBuilder != null ? hostTargetBuilder : new HostTargetBuilderDefault();
+		return hostTargetBuilder != null ? hostTargetBuilder : new GikkDefault_HostTargetBuilder();
 	}
 
 	/**Retrieves the assigned {@link ModeBuilder}, or the default one, if none is assigned.
@@ -240,7 +240,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link ModeBuilder}
 	 */
 	public ModeBuilder getModeBuilder() {
-		return modeBuilder != null ? modeBuilder : new ModeBuilderDefault();
+		return modeBuilder != null ? modeBuilder : new GikkDefault_ModeBuilder();
 	}
 
 	/**Retrieves the assigned {@link NoticeBuilder}, or the default one, if none is assigned.
@@ -248,7 +248,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link NoticeBuilder}
 	 */
 	public NoticeBuilder getNoticeBuilder() {
-		return noticeBuilder != null ? noticeBuilder : new NoticeBuilderDefault();
+		return noticeBuilder != null ? noticeBuilder : new GikkDefault_NoticeBuilder();
 	}
 
 	/**Retrieves the assigned {@link RoomstateBuilder}, or the default one, if none is assigned.
@@ -256,7 +256,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link RoomstateBuilder}
 	 */
 	public RoomstateBuilder getRoomstateBuilder() {
-		return roomstateBuilder != null ? roomstateBuilder : new RoomstateBuilderDefault();
+		return roomstateBuilder != null ? roomstateBuilder : new GikkDefault_RoomstateBuilder();
 	}
 
 	/**Retrieves the assigned {@link TwitchMessageBuilder}, or the default one, if none is assigned.
@@ -264,7 +264,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link TwitchMessageBuilder}
 	 */
 	public TwitchMessageBuilder getTwitchMessageBuilder() {
-		return twitchMessageBuilder != null ? twitchMessageBuilder : new TwitchMessageBuilderDefault();
+		return twitchMessageBuilder != null ? twitchMessageBuilder : new GikkDefault_TwitchMessageBuilder();
 	}
 
 	/**Retrieves the assigned {@link TwitchUserBuilder}, or the default one, if none is assigned.
@@ -272,7 +272,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link TwitchUserBuilder}
 	 */
 	public TwitchUserBuilder getTwitchUserBuilder() {
-		return twitchUserBuilder != null ? twitchUserBuilder : new TwitchUserBuilderDefault();
+		return twitchUserBuilder != null ? twitchUserBuilder : new GikkDefault_TwitchUserBuilder();
 	}
 
 	/**Retrieves the assigned {@link UserstateBuilder}, or the default one, if none is assigned.
@@ -280,7 +280,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link UserstateBuilder}
 	 */
 	public UserstateBuilder getUserstateBuilder() {
-		return userstateBuilder != null ? userstateBuilder : new UserstateBuilderDefault();
+		return userstateBuilder != null ? userstateBuilder : new GikkDefault_UserstateBuilder();
 	}	
 	
 	/**Retrieves the assigned {@link SubscriberEventBuilder}, or the default one, if none is assigned.
@@ -288,7 +288,7 @@ public class TwirkBuilder {
 	 * @return This builders current {@link SubscriberEventBuilder}
 	 */
 	public SubscriberEventBuilder getSubscriberEventBuilder() {
-		return subEventBuilder != null ? subEventBuilder : new SubscriberEventBuilderDefault();
+		return subEventBuilder != null ? subEventBuilder : new GikkDefault_SubscriberEventBuilder();
 	}
 	
 	/**Creates a Twirk object, with the parameters assigned to this

@@ -13,7 +13,7 @@ class TwitchMessageImpl implements TwitchMessage {
 	//***********************************************************
 	// 				CONSTRUCTOR
 	//***********************************************************	
-	TwitchMessageImpl(TwitchMessageBuilderDefault builder){
+	TwitchMessageImpl(GikkDefault_TwitchMessageBuilder builder){
 		this.line 	= builder.line;
 		this.tag 	= builder.tag;
 		this.prefix = builder.prefix;

@@ -4,9 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 import com.gikk.twirk.types.users.Userstate;
-import com.gikk.twirk.types.users.UserstateBuilderDefault;
+import com.gikk.twirk.types.users.GikkDefault_UserstateBuilder;
 
 public class TestUserstate {
 	private static String USERSTATE_MOD = "@color=0x255;display-name=GikkBot;emote-sets=0;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
@@ -20,8 +20,8 @@ public class TestUserstate {
 	}
 
 	private static void doTest(String STRING, String displayName, int color, USER_TYPE UserType, int[] emotes) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
-		Userstate state = new UserstateBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(STRING);
+		Userstate state = new GikkDefault_UserstateBuilder().build(message);
 		
 		assertTrue( state.getRaw().equals(STRING) );
 		assertTrue( state.getColor() == color );

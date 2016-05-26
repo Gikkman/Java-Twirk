@@ -3,7 +3,7 @@ package com.gikk.twirk.types.subscriberEvent;
 import com.gikk.twirk.types.SUB_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
+public class GikkDefault_SubscriberEventBuilder implements SubscriberEventBuilder {
 	private final String HOST_IDENTIFIER = "subscribed to";
 	private final String RESUB_IDENTIFIER = "months in a row";
 	private final String AWAY_IDENTIFIER = "you were away!";

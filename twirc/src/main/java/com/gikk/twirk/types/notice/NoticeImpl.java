@@ -8,7 +8,7 @@ class NoticeImpl implements Notice {
 	private final String rawLine;
 	private final String rawEvent;
 	
-	NoticeImpl(NoticeBuilderDefault builder) {
+	NoticeImpl(GikkDefault_NoticeBuilder builder) {
 		this.event = builder.event;
 		this.message = builder.message;
 		this.rawLine = builder.rawLine;

@@ -20,7 +20,7 @@ class TwitchUserImpl implements TwitchUser{
 	// 				CONSTRUCTOR
 	//***********************************************************
 	
-	TwitchUserImpl(TwitchUserBuilderDefault builder) {
+	TwitchUserImpl(GikkDefault_TwitchUserBuilder builder) {
 		this.displayName = builder.displayName;
 		this.isMod 		 = builder.isMod;
 		this.isSub 		 = builder.isSub;

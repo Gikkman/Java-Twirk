@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.gikk.twirk.types.SUB_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
+import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestSubscriberEvent {
 	private static final String SUB_NOTICE = ":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv PRIVMSG #gikkman :Gikkman just subscribed!";
@@ -23,8 +23,8 @@ public class TestSubscriberEvent {
 	}
 	
 	private static void testEvent(String EVENT, SUB_EVENT EVENT_TYPE, String subscriber, int value ){
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(EVENT);
-		SubscriberEvent subEvent = new SubscriberEventBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(EVENT);
+		SubscriberEvent subEvent = new GikkDefault_SubscriberEventBuilder().build(message);
 		
 		assertTrue( "Got: " + subEvent.getEventType() +" Expected: " + EVENT_TYPE, subEvent.getEventType() == EVENT_TYPE);
 		assertTrue( "Got: " + subEvent.getSubscriber() + " Expected: " + subscriber,subEvent.getSubscriber().equals( subscriber ) );

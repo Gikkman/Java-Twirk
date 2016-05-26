@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.users;
 
-import com.gikk.twirk.types.TWIRK_UTIL;
+import com.gikk.twirk.types._PARSING_UTIL;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
@@ -43,33 +43,33 @@ abstract class AbstractUserBuilder {
 		String tag = 	 message.getTag();
 		String channelOwner = message.getTarget().substring(1);	//Strip the # from the channel name
 		
-		String temp =  TWIRK_UTIL.parseFeature( NAMES_IDENTIFIER, tag );
+		String temp =  _PARSING_UTIL.parseFeature( NAMES_IDENTIFIER, tag );
 		this.displayName = temp.isEmpty()
 						   ? Character.toUpperCase( sender.charAt(1) ) + sender.substring(2, sender.indexOf("!") )
 						   : temp;
 		
-	    temp = TWIRK_UTIL.parseFeature(COLOR_IDENTIFIER, tag);
+	    temp = _PARSING_UTIL.parseFeature(COLOR_IDENTIFIER, tag);
 		this.color = temp.isEmpty() ? getDefaultColor() : Integer.decode(temp);
 		
-		temp = TWIRK_UTIL.parseFeature(MOD_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(MOD_IDENTIFIER, tag);
 		this.isMod = temp.equals("1") ? true : false;
 		
-		temp = TWIRK_UTIL.parseFeature(SUB_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(SUB_IDENTIFIER, tag);
 		this.isSub = temp.equals("1") ? true : false;
 		
-		temp = TWIRK_UTIL.parseFeature(TURBO_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(TURBO_IDENTIFIER, tag);
 		this.isTurbo = temp.equals("1") ? true : false;
 		
-		temp = TWIRK_UTIL.parseFeature(EMOTE_SET_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(EMOTE_SET_IDENTIFIER, tag);
 		this.emoteSets = parseEmoteSets( temp );
 
-		temp = TWIRK_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
 		this.userType = parseUserType( temp, displayName, channelOwner );
 		
-		temp = TWIRK_UTIL.parseFeature(BADGE_IDENTIFIER, message.getTag());
+		temp = _PARSING_UTIL.parseFeature(BADGE_IDENTIFIER, message.getTag());
 		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
 		
-		temp = TWIRK_UTIL.parseFeature(USER_ID_IDENTIFIER, message.getTag());
+		temp = _PARSING_UTIL.parseFeature(USER_ID_IDENTIFIER, message.getTag());
 		this.userID = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
 		this.rawLine = message.getRaw();

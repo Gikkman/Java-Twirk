@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.Emote.EmoteIndices;
 import com.gikk.twirk.types.users.TwitchUser;
-import com.gikk.twirk.types.users.TwitchUserBuilderDefault;
+import com.gikk.twirk.types.users.GikkDefault_TwitchUserBuilder;
 
 public class TestMessage {
 	final static String USERNAME = "gikkman";
@@ -43,8 +43,8 @@ public class TestMessage {
 									   String content, int color,
 									   String displayName, boolean hasEmotes, 
 									   LinkedList<Emote> emotes, String[] badges, USER_TYPE userType ) {
-		TwitchMessage message = new TwitchMessageBuilderDefault().build(line);
-		TwitchUser user = new TwitchUserBuilderDefault().build(message);
+		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(line);
+		TwitchUser user = new GikkDefault_TwitchUserBuilder().build(message);
 		
 		//Assert message properties
 		assertTrue( !message.getTag().isEmpty() );
