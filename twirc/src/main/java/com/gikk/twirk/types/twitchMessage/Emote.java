@@ -22,11 +22,27 @@ import com.gikk.twirk.types.EMOTE_SIZE;
 public interface Emote {
 	
 
-	/** The emotes numeric ID */
+	/** Fetches the emotes numeric ID.
+	 * 
+	 * @return The emotes numeric ID
+	 */
 	public int getEmoteID();
-	/** A list of pairs on indices. Each pair is a BEGIN-END pair of a emote occurrence in the message */
+	
+	/** A list of pairs on indices. Each pair is a BEGIN-END pair of a emote occurrence in the message.<br><br>
+	 * 
+	 * For example, if the message is: {@code Kappa PogChamp Kappa}<br> the list for emote 'Kappa' will include these pairs:<ul>
+	 * <li> (0,5)
+	 * <li> (15,20)
+	 * </ul>
+	 * 
+	 * @return The indices this emote takes up in the associated message
+	 */
 	public LinkedList<EmoteIndices> getIndices();
-	/** The emote's pattern. For example: 'Kappa' */
+	
+	/** The emote's pattern. For example: 'Kappa'
+	 * 
+	 * @return The emote's pattern
+	 */
 	public String getPattern();
 	
 	/**Emote images can be downloaded from Twitch's server, and come in three

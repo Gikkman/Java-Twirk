@@ -9,7 +9,7 @@ import com.gikk.twirk.types.notice.TestNotice;
 import com.gikk.twirk.types.roomstate.TestRoomstate;
 import com.gikk.twirk.types.subscriberEvent.TestSubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TestMessage;
-import com.gikk.twirk.types.userstate.TestUserstate;
+import com.gikk.twirk.types.users.TestUserstate;
 
 public class TestSuit {
 	

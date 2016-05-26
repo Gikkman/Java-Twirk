@@ -31,9 +31,9 @@ public class TestClearChat {
 		
 		assertTrue("Got: " + clearChat.getMode() + " Expected: " + mode, clearChat.getMode() == mode);
 		assertTrue("Got: " + clearChat.getDuration() + " Expected: " + duration, clearChat.getDuration() == duration);
-		assertTrue("Got: " + clearChat.getTarget()+ " Expected: " + target, clearChat.getTarget().contentEquals(target) );
-		assertTrue("Got: " + clearChat.getReason()+ " Expected: " + reason, clearChat.getReason().contentEquals(reason) );
+		assertTrue("Got: " + clearChat.getTarget()+ " Expected: " + target, clearChat.getTarget().equals(target) );
+		assertTrue("Got: " + clearChat.getReason()+ " Expected: " + reason, clearChat.getReason().equals(reason) );
 		String raw = clearChat.getRaw();
-		assertTrue("Got: " + clearChat.getRaw()+ " Expected: " + MESSAGE , MESSAGE.contentEquals(raw) );
+		assertTrue("Got: " + clearChat.getRaw()+ " Expected: " + MESSAGE , MESSAGE.equals(raw) );
 	}
 }

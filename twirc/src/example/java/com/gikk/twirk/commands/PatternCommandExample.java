@@ -3,7 +3,7 @@ package com.gikk.twirk.commands;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.users.TwitchUser;
 
 public class PatternCommandExample extends CommandExampleBase{
 	private static String PATTERN = "tick";

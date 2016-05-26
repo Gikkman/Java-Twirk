@@ -27,12 +27,14 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.notice.NoticeBuilder;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
+import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
+import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
-import com.gikk.twirk.types.twitchUser.TwitchUserBuilder;
-import com.gikk.twirk.types.userstate.Userstate;
-import com.gikk.twirk.types.userstate.UserstateBuilder;
+import com.gikk.twirk.types.users.TwitchUser;
+import com.gikk.twirk.types.users.TwitchUserBuilder;
+import com.gikk.twirk.types.users.Userstate;
+import com.gikk.twirk.types.users.UserstateBuilder;
 
 /**Class for communicating with the TwitchIrc chat.<br>
  * To create instances of Twirk, see {@link TwirkBuilder}.<br><br>
@@ -47,6 +49,10 @@ import com.gikk.twirk.types.userstate.UserstateBuilder;
  * This library is very basic, and only intended for simplistic bots. I would not recommend using this
  * in a advanced, long term or commercial product. For those kinds of applications, consider looking
  * into a more robust and well tested library, such as IrcAPI or PircBotX.<br><br>
+ * 
+ * For documentation about how Twitch communicates via IRC, 
+ * see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md">
+ * 				https://github.com/justintv/Twitch-API/blob/master/IRC.md </a>
  * 
  * Code inspired by <a href="http://archive.oreilly.com/pub/h/1966#code">http://archive.oreilly.com/pub/h/1966#code</a>
  * 
@@ -88,6 +94,7 @@ public class Twirk {
 	private final TwitchMessageBuilder 	twitchMessageBuilder;
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
+	private final SubscriberEventBuilder subscriberBuilder;
 	
 	//***********************************************************************************************
 	//											CONSTRUCTOR
@@ -109,6 +116,7 @@ public class Twirk {
 		this.twitchUserBuilder= builder.getTwitchUserBuilder();
 		this.userstateBuilder = builder.getUserstateBuilder();	
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder(); 	
+		this.subscriberBuilder= builder.getSubscriberEventBuilder();
 				
 		
 		this.queue = new OutputQueue();
@@ -131,7 +139,8 @@ public class Twirk {
 		outThread.quickSend(message);
 	}
 	
-	/**Enqueues a message at the end of the message queue.
+	/**Enqueues a message at the end of the message queue. The message will be
+	 * sent to the channel when all messages enqueued before it has been sent.
 	 * 
 	 * @param message The message that should be sent
 	 */
@@ -147,10 +156,20 @@ public class Twirk {
 		queue.addFirst("PRIVMSG " + channel + " :" + message);
 	}
 	
+	/**Check if this Twirk instance is currently connected to Twitch. If we are not, and we are not
+	 * {@link #isDisposed()}, then we may try to reconenct. See {@link #connect()}
+	 * 
+	 * @return <code>True</code> if we are connected
+	 */
 	public boolean isConnected() {
 		return isConnected;
 	}
 	
+	/**Check if this Twirk instance has beed disposed. If it has, no further
+	 * connect attempts will succeed.
+	 * 
+	 * @return <code>True</code> if it is disposed
+	 */
 	public boolean isDisposed() {
 		return isDisposed;
 	}
@@ -158,6 +177,9 @@ public class Twirk {
 	/**Fetches a set of all the users that are <b>currently</b> online in the joined channel. Note that this set is
 	 * <b>copy</b> of the underlying set of online users. Thus, changes to the original set will not be visible
 	 * in the returned set, and changes to the returned set will not affect the original set.<br><br>
+	 * 
+	 * For getting all users online as soon as we connect, and the server has told us who are online,
+	 * see {@link TwirkListener#onNamesList(java.util.Collection)}
 	 * 
 	 * Also worth noting is that the set only contains the users names in lower case letters.
 	 * 
@@ -407,72 +429,80 @@ public class Twirk {
 			TwitchMessage message = twitchMessageBuilder.build(line);
 			
 			//This message is a reply for a capacity request. Just ignore it
-			if( message.getCommand().matches("JOIN") ){
+			if( message.getCommand().equals("JOIN") ){
 				String userName = parseUsername( message.getPrefix() );
 				for(TwirkListener l : listeners )
 					l.onJoin( userName );
 				return;
 			}
-			else if( message.getCommand().matches("PART") ){
+			else if( message.getCommand().equals("PART") ){
 				String userName = parseUsername( message.getPrefix() );
 				for(TwirkListener l : listeners )
 					l.onPart( userName );
 				return;
 			}
-			else if( message.getCommand().matches("PRIVMSG") ){
-				TwitchUser user = twitchUserBuilder.build(message, userstateBuilder);
-				for(TwirkListener l : listeners )
-					l.onPrivMsg(user, message);
-				return;
+			else if( message.getCommand().equals("PRIVMSG") ){
+				TwitchUser user = twitchUserBuilder.build(message);
+				if( user.getName().equalsIgnoreCase("twitchnotify") )
+					handleTwitchNotify(message);	//The user 'twitchnotify' is used by Twitch to send us messages
+				else	
+					for(TwirkListener l : listeners )
+						l.onPrivMsg(user, message);
+					return;
 			}
-			else if( message.getCommand().matches("WHISPER") ) {
-				TwitchUser user = twitchUserBuilder.build(message, userstateBuilder);
+			else if( message.getCommand().equals("WHISPER") ) {
+				TwitchUser user = twitchUserBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onWhisper(user, message);
 				return;
 			}	
-			else if( message.getCommand().matches("NOTICE") ){
+			else if( message.getCommand().equals("NOTICE") ){
 				Notice notice = noticeBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onNotice( notice );
 				return;
 			}
-			else if( message.getCommand().matches("MODE") ){
+			else if( message.getCommand().equals("MODE") ){
 				Mode mode = modeBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onMode( mode );
 				return;
 			}
-			else if( message.getCommand().matches("USERSTATE") ){
+			else if( message.getCommand().equals("USERSTATE") ){
 				Userstate userstate = userstateBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onUserstate( userstate );
 			}
-			else if( message.getCommand().matches("ROOMSTATE") ){
+			else if( message.getCommand().equals("ROOMSTATE") ){
 				Roomstate roomstate = roomstateBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onRoomstate(roomstate);
 			}
-			else if( message.getCommand().matches("CLEARCHAT") ){
+			else if( message.getCommand().equals("CLEARCHAT") ){
 				ClearChat clearChat = clearChatBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onClearChat(clearChat);
 			}
-			else if( message.getCommand().matches("HOSTTARGET") ){
+			else if( message.getCommand().equals("HOSTTARGET") ){
 				HostTarget hostTarget = hostTargetBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onHost(hostTarget);
 			}
-			else if( message.getCommand().matches("CAP") )
+			else if( message.getCommand().equals("CAP") )
 				return;
 			//Twitch might in the future implement more of these...
-			else if( message.getCommand().matches("[0-9]+") ){
+			else if( message.getCommand().equals("[0-9]+") ){
 				//Code 353 is USER LIST messages, which lists users online separated by a space
-				if( message.getCommand().matches("353") ){
+				if( message.getCommand().equals("353") ){
 					List<String> users = Arrays.asList( message.getContent().split(" ") );
 					online.addAll( users );
 				} 
-				//TODO: If matches 366 we've gotten /NAMES
+				else if( message.getCommand().equals("366") ){
+					Set<String> users = Collections.unmodifiableSet(online);
+					for(TwirkListener l : listeners )
+						l.onNamesList(users);
+				}
+					
 				return;
 			}
 			else {
@@ -481,6 +511,13 @@ public class Twirk {
 					l.onUnknown( line );
 			}
 		}
+	}
+
+	private void handleTwitchNotify(TwitchMessage message) {
+		SubscriberEvent subEvent = subscriberBuilder.build(message);
+		if( subEvent != null )
+			for(TwirkListener l : listeners )
+				l.onSubscriberEvent( subEvent );
 	}
 
 	private String parseUsername(String prefix) {

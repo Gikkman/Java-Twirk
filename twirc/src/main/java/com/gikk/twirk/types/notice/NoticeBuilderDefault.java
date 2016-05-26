@@ -21,21 +21,21 @@ public class NoticeBuilderDefault implements NoticeBuilder {
 	}
 
 	private NOTICE_EVENT parseEvent(String event) {
-		if( event.equalsIgnoreCase( "subs_on" ) )
+		if( event.equals( "subs_on" ) )
 			return NOTICE_EVENT.SUB_MODE_ON;
-		else if( event.equalsIgnoreCase( "subs_off" ) )
+		else if( event.equals( "subs_off" ) )
 			return NOTICE_EVENT.SUB_MODE_OFF;
-		else if( event.equalsIgnoreCase( "slow_on" ) )
+		else if( event.equals( "slow_on" ) )
 			return NOTICE_EVENT.SLOW_MODE_ON;
-		else if( event.equalsIgnoreCase( "slow_off" ) )
+		else if( event.equals( "slow_off" ) )
 			return NOTICE_EVENT.SLOW_MODE_OFF;
-		else if( event.equalsIgnoreCase( "r9k_on" ) )
+		else if( event.equals( "r9k_on" ) )
 			return NOTICE_EVENT.R9K_MODE_ON;
-		else if( event.equalsIgnoreCase( "r9k_off" ) )
+		else if( event.equals( "r9k_off" ) )
 			return NOTICE_EVENT.R9K_MODE_OFF;
-		else if( event.equalsIgnoreCase( "host_on" ) )
+		else if( event.equals( "host_on" ) )
 			return NOTICE_EVENT.HOST_MODE_ON;
-		else if( event.equalsIgnoreCase( "host_off" ) )
+		else if( event.equals( "host_off" ) )
 			return NOTICE_EVENT.HOST_MODE_OFF;
 		else 
 			return NOTICE_EVENT.OTHER;	

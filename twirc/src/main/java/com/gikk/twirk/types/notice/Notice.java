@@ -16,7 +16,6 @@ import com.gikk.twirk.types.NOTICE_EVENT;
  * <li><code>HOST_MODE_ON / HOST_MODE_OFF</code> - We started / stopped hosting someone
  * <li><code>OTHER</code>- All notices which does not fall into any of the above notice types fall into the MISC type
  * </ul>
- * 
  * @author Gikkman
  *
  */

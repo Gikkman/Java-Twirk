@@ -16,14 +16,28 @@ import com.gikk.twirk.types.AbstractType;
  *
  */
 public interface Roomstate extends AbstractType{	
-	/** The chat language when broadcaster language mode is enabled, and empty otherwise.
-	 * Might be empty, if this ROOMSTATE had no information about it */
+	/** The chat language when broadcaster language mode is enabled, and empty otherwise. Might be empty, if this ROOMSTATE had no information about it
+	 * 
+	 * @return This ROOMSTATE's broadcasterLanguage (might be empty)
+	 */
 	public String getBroadcasterLanguage();
-	/** If 1, it means that R9K mode is enabled. 0 means it is disabled. -1 means that this ROOMSTATE did not mention r9k */
+	
+	/** If 1, it means that R9K mode is enabled. 0 means it is disabled. -1 means that this ROOMSTATE did not mention r9k
+	 * 
+	 * @return r9k mode status of this ROOMSTATE
+	 */
 	public int get9kMode();
-	/** If 1, it means that sub mode is enabled. 0 means it is disabled. -1 means that this ROOMSTATE did not mention subMode */
+	
+	/** If 1, it means that sub mode is enabled. 0 means it is disabled. -1 means that this ROOMSTATE did not mention subMode
+	 * 
+	 * @return sub mode status of this ROOMSTATE
+	 */
 	public int getSubMode();
-	/** If greater than 0, it means that users must wait more than X seconds between posting messages. -1 means that this ROOMSTATE did not mention slowMode */
+	
+	/** If greater than 0, it means that users must wait more than X seconds between posting messages. -1 means that this ROOMSTATE did not mention slowMode
+	 * 
+	 * @return slow mode status of this ROOMSTATE
+	 */
 	public int getSlowModeTimer();
 
 }

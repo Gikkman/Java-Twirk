@@ -7,6 +7,7 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 	private final String HOST_IDENTIFIER = "subscribed to";
 	private final String RESUB_IDENTIFIER = "months in a row";
 	private final String AWAY_IDENTIFIER = "you were away!";
+	private final String NEW_SUB_IDENTIFIER = "just subscribed!";
 	
 	String subscriber = "";
 	int value = 0;
@@ -38,31 +39,35 @@ public class SubscriberEventBuilderDefault implements SubscriberEventBuilder {
 		String content = message.getContent();
 		String[] parts = content.split(" ", 2);
 		
-		if( parts[1].indexOf(HOST_IDENTIFIER) >= 0 ){
+		if( parts[1].contains(HOST_IDENTIFIER) ){
 			//Sub event to host target 
-			if( parts[1].indexOf(RESUB_IDENTIFIER) >= 0 ) {
+			if( parts[1].contains(RESUB_IDENTIFIER) ) {
 				type = SUB_EVENT.HOST_RESUB;
 				subscriber = parts[0];
 				value = parseMonths( content );
 			} 
 			else {
-				type = SUB_EVENT.HOST_NEW_SUB;
+				type = SUB_EVENT.HOST_NEW;
 				subscriber = parts[0];
 			}
 		} else {
 			//Sub event to my channel
-			if( parts[1].indexOf(AWAY_IDENTIFIER) >= 0 ){
+			if( parts[1].contains(AWAY_IDENTIFIER) ){
 				type = SUB_EVENT.RESUB_AWAY;
 				value = parseAmount( content );				
 			}
-			else if( parts[1].indexOf(RESUB_IDENTIFIER) >= 0 ){
+			else if( parts[1].contains(RESUB_IDENTIFIER) ){
 				type = SUB_EVENT.RESUB;
 				subscriber = parts[0];
 				value = parseMonths( content );
 			}
-			else {
+			else if (parts[1].contains(NEW_SUB_IDENTIFIER)){
 				type = SUB_EVENT.NEW_SUB;
 				subscriber = parts[0];
+			}
+			else {
+				System.err.println("Error. Invalid TwitchMessage.\nCannot construct SubscriberEvent from " + message);
+				return null;
 			}
 		}
 		

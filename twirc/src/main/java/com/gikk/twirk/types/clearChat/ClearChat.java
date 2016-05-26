@@ -9,13 +9,13 @@ import com.gikk.twirk.types.CLEARCHAT_MODE;
  * chat was clear. CLEARCHAT comes in two forms: USER and COMPLETE. <ul>
  * <li>USER - A user has been purged. <code>target</code> tells us the name of the user whom was purged
  * <li>COMPLETE - The channel has been purged. <code>target</code> will be empty.
- * <br>
+ * <br><br>
  * @author Gikkman
  */
 public interface ClearChat extends AbstractType{
 	/** Retrieves the MODE of the CLEARCHAT. Can be USER, if a user was purged, or COMPLETE, if the entire chat was purged 
 	 * 	
-	 * @return CLEARCHAT_MODE of this CLEARCHAT
+	 * @return {@link CLEARCHAT_MODE} of this CLEARCHAT
 	 */
 	public CLEARCHAT_MODE getMode();
 	
@@ -26,7 +26,7 @@ public interface ClearChat extends AbstractType{
 	public String getTarget();
 	
 	/** Retrieves the duration of the ban/purge. Only applies to a CLEARCHAT of type USER. <br>
-	 * If the CLEARCHAT is of type COMPLETE, this will always return -1. If it is of type USER, it
+	 * If the CLEARCHAT is of type {@link CLEARCHAT_MODE#COMPLETE}, this will always return -1. If it is of type {@link CLEARCHAT_MODE#USER}, it
 	 * will return the lenght of the timout, or -1 if it was a permanent ban.
 	 * 
 	 * @return Duration on the ban in seconds, or -1 if no duration was assigned.

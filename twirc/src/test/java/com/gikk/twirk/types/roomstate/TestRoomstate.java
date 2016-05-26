@@ -28,11 +28,11 @@ public class TestRoomstate {
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
 		Roomstate room        = new RoomstateBuilderDefault().build(message);
 		
-		assertTrue("Got: " + room.getBroadcasterLanguage() + " Expected: " + lang, room.getBroadcasterLanguage().contentEquals(lang) );
+		assertTrue("Got: " + room.getBroadcasterLanguage() + " Expected: " + lang, room.getBroadcasterLanguage().equals(lang) );
 		assertTrue("Got: " + room.get9kMode() 			   + " Expected: " + r9k , room.get9kMode() == r9k);
 		assertTrue("Got: " + room.getSubMode() 			   + " Expected: " + sub  ,room.getSubMode() == sub);
 		assertTrue("Got: " + room.getSlowModeTimer() 	   + " Expected: " + slow ,room.getSlowModeTimer() == slow);
-		assertTrue("Got: " + room.getRaw()		     	   + " Expected: " + STRING,room.getRaw().contentEquals(STRING));
+		assertTrue("Got: " + room.getRaw()		     	   + " Expected: " + STRING,room.getRaw().equals(STRING));
 		
 	}
 }

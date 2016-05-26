@@ -34,9 +34,9 @@ public class TestNotice {
 		Notice notice = new NoticeBuilderDefault().build(message);
 		
 		assertTrue( notice.getEvent() == EVENT );
-		assertTrue( notice.getMessage().contentEquals(theMessage) );
-		assertTrue( notice.getRawNoticeID().contentEquals(rawNoticeID) );
-		assertTrue( line.contentEquals( notice.getRaw() ));
+		assertTrue( notice.getMessage().equals(theMessage) );
+		assertTrue( notice.getRawNoticeID().equals(rawNoticeID) );
+		assertTrue( line.equals( notice.getRaw() ));
 		
 	}
 }

@@ -6,9 +6,8 @@ import java.util.LinkedList;
 
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.Emote.EmoteIndices;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
-import com.gikk.twirk.types.twitchUser.TwitchUserBuilderDefault;
-import com.gikk.twirk.types.userstate.UserstateBuilderDefault;
+import com.gikk.twirk.types.users.TwitchUser;
+import com.gikk.twirk.types.users.TwitchUserBuilderDefault;
 
 public class TestMessage {
 	final static String USERNAME = "gikkman";
@@ -45,14 +44,14 @@ public class TestMessage {
 									   String displayName, boolean hasEmotes, 
 									   LinkedList<Emote> emotes, String[] badges, USER_TYPE userType ) {
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(line);
-		TwitchUser user = new TwitchUserBuilderDefault().build(message, new UserstateBuilderDefault() );
+		TwitchUser user = new TwitchUserBuilderDefault().build(message);
 		
 		//Assert message properties
 		assertTrue( !message.getTag().isEmpty() );
-		assertTrue( message.getPrefix().matches(":gikkman!gikkman@gikkman.tmi.twitch.tv") );
-		assertTrue( message.getCommand().matches( "PRIVMSG" ));
-		assertTrue( message.getTarget().matches( "#gikkman" ));
-		assertTrue( message.getContent() + " != " +content, message.getContent().matches( content ) );
+		assertTrue( message.getPrefix().equals(":gikkman!gikkman@gikkman.tmi.twitch.tv") );
+		assertTrue( message.getCommand().equals( "PRIVMSG" ));
+		assertTrue( message.getTarget().equals( "#gikkman" ));
+		assertTrue( message.getContent() + " != " +content, message.getContent().equals( content ) );
 		assertTrue( message.hasEmotes() == hasEmotes );
 		assertTrue( message.getEmotes().size() == emotes.size() );
 		
@@ -62,7 +61,7 @@ public class TestMessage {
 			Emote msgEmote = message.getEmotes().get(i);
 			
 			assertTrue( argEmote.getEmoteID() == msgEmote.getEmoteID() );
-			assertTrue( argEmote.getPattern().matches( msgEmote.getPattern() ) );
+			assertTrue( argEmote.getPattern().equals( msgEmote.getPattern() ) );
 			assertTrue( argEmote.getIndices().size() == msgEmote.getIndices().size() );
 			
 			for( int j = 0; j < argEmote.getIndices().size(); j++){
@@ -75,7 +74,7 @@ public class TestMessage {
 		}		
 		
 		//Assert user properties
-		assertTrue( user.getName().matches(displayName) );
+		assertTrue( user.getName().equals(displayName) );
 		assertTrue( user.getColor() == color);
 		assertTrue( user.getUserID() == userID );
 		assertTrue( user.isMod() == isMod );
@@ -86,7 +85,7 @@ public class TestMessage {
 		for( int i = 0; i < badges.length; i++){
 			String argBadge = badges[i];
 			String usrBadge = user.getBadges()[i];
-			assertTrue( argBadge.matches( usrBadge ));
+			assertTrue( argBadge.equals( usrBadge ));
 		}		
 	}
 }

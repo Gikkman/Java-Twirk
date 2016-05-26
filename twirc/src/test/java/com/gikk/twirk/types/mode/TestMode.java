@@ -21,8 +21,8 @@ public class TestMode {
 		Mode mode = new ModeBuilderDefault().build(message);
 		
 		assertTrue("Got: " + mode.getEvent() + " Expected: " + EVENT  ,mode.getEvent() == EVENT);
-		assertTrue("Got: " + mode.getUser()  + " Expected: " + target ,mode.getUser().contentEquals(target));
-		assertTrue("Got: " + mode.getRaw()   + " Expected: " + STRING ,mode.getRaw().contentEquals(STRING));
+		assertTrue("Got: " + mode.getUser()  + " Expected: " + target ,mode.getUser().equals(target));
+		assertTrue("Got: " + mode.getRaw()   + " Expected: " + STRING ,mode.getRaw().equals(STRING));
 		
 	}
 }

@@ -1,8 +1,7 @@
-package com.gikk.twirk.types.userstate;
+package com.gikk.twirk.types.users;
 
 import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.USER_TYPE;
-import com.gikk.twirk.types.twitchUser.TwitchUserImpl;
 
 /**Class for representing information about a user<br>
  * Userstate's are received in two different ways:

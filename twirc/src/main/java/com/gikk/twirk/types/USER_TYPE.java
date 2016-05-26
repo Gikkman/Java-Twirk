@@ -10,13 +10,31 @@ package com.gikk.twirk.types;
  * For example:<br>
  * <pre><code>if( user.USER_TYPE.value >= USER_TYPE.MOD.value )</code>
  * 	<code>doSomething();</code></pre>
+ * 
+ * @author Gikkman
  */
 public enum USER_TYPE{ 
+	/** Type for the owner of the channel (i.e. the user with the 
+	 * same user name as the channel's name. This type has the highest value, 9*/
 	OWNER(9),
+	/** Type for mods in the channel. This type has the second highest value, 2 */
 	MOD(2),  
-	GLOBAL_MOD(1),  ADMIN(1),  STAFF(1),
+	/** Type for Twitch's global mods. This type has a value of 1*/
+	GLOBAL_MOD(1),  
+	/** Type for Twitch's admins. This type has a value of 1*/
+	ADMIN(1),  
+	/** Type for Twitch's staff members. This type has a value of 1*/
+	STAFF(1),
+	/** Type for users that does not fit into any other classes. This type has a value of 0*/
 	DEFAULT(0);
 	
+	/** This types value. Useful for regulating which kind of users should trigger / can perform
+	 * certain actions. <br><br>
+	 * 
+	 * For example:<br>
+	 * <pre><code>if( user.USER_TYPE.value >= USER_TYPE.MOD.value )</code>
+	 * 	<code>doSomething();</code></pre>
+	 */
 	public final int value;
 	
 	private USER_TYPE(int value) {

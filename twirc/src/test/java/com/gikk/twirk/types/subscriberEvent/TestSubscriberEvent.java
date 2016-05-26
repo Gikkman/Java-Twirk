@@ -18,7 +18,7 @@ public class TestSubscriberEvent {
 		testEvent(SUB_NOTICE, SUB_EVENT.NEW_SUB, "Gikkman", 0);
 		testEvent(RESUB_NOTICE, SUB_EVENT.RESUB, "Slikkman", 12);
 		testEvent(RESUB_AWAY, SUB_EVENT.RESUB_AWAY, "", 13);
-		testEvent(SUB_HOST, SUB_EVENT.HOST_NEW_SUB, "Likkman", 0);
+		testEvent(SUB_HOST, SUB_EVENT.HOST_NEW, "Likkman", 0);
 		testEvent(RESUB_HOST, SUB_EVENT.HOST_RESUB, "Trikkman", 2);		
 	}
 	
@@ -27,9 +27,9 @@ public class TestSubscriberEvent {
 		SubscriberEvent subEvent = new SubscriberEventBuilderDefault().build(message);
 		
 		assertTrue( "Got: " + subEvent.getEventType() +" Expected: " + EVENT_TYPE, subEvent.getEventType() == EVENT_TYPE);
-		assertTrue( "Got: " + subEvent.getSubscriber() + " Expected: " + subscriber,subEvent.getSubscriber().matches( subscriber ) );
+		assertTrue( "Got: " + subEvent.getSubscriber() + " Expected: " + subscriber,subEvent.getSubscriber().equals( subscriber ) );
 		assertTrue( "Got: " + subEvent.getValue() + " Expected: " + value,subEvent.getValue() == value );
-		assertTrue( "Got: " + subEvent.getRaw() + " Expected: " + EVENT ,EVENT.matches( subEvent.getRaw() ));
+		assertTrue( "Got: " + subEvent.getRaw() + " Expected: " + EVENT ,EVENT.equals( subEvent.getRaw() ));
 	}
 	
 	

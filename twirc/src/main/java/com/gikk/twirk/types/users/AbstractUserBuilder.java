@@ -1,10 +1,18 @@
-package com.gikk.twirk.types.userstate;
+package com.gikk.twirk.types.users;
 
 import com.gikk.twirk.types.TWIRK_UTIL;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class UserstateBuilderDefault implements UserstateBuilder {
+/**Since Userstate and TwitchUser shares many fields, it is easier to have one class which does all the parsing 
+ * and then let the respective types Builder classes use it
+ * 
+ * @author Gikkman
+ *
+ */
+abstract class AbstractUserBuilder {
+	private static final String BADGE_IDENTIFIER 	= "badges=";
+	private static final String	USER_ID_IDENTIFIER  = "user-id=";
 	private static final String NAMES_IDENTIFIER 	= "display-name=";
 	private static final String COLOR_IDENTIFIER 	= "color=";
 	private static final String SUB_IDENTIFIER 		= "subscriber=";
@@ -15,18 +23,20 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 	private static final int[] default_colors = { 0xFF0000, 0x0000FF, 0x00FF00, 0xB22222, 0xFF7F50,
 												  0x9ACD32, 0xFF4500, 0x2E8B57, 0xDAA520, 0xD2691E,
 												  0x5F9EA0, 0x1E90FF, 0xFF69B4, 0x8A2BE2, 0x00FF7F };
-	
-	int 	  color;
+
 	String 	  displayName;
+	int 	  color;
+	int 	  userID;
+	int[] 	  emoteSets;
 	boolean   isMod;
 	boolean   isSub;
 	boolean   isTurbo;
 	USER_TYPE userType;
-	int[] 	  emoteSets;
+	Userstate userstate;
+	String[]  badges;
 	String 	  rawLine;
 	
-	@Override
-	public Userstate build(TwitchMessage message) {
+	void parseUserProperties(TwitchMessage message){
 		//If display-name is empty, it means that the the user name can be read from the IRC message's prefix and
 		//that it has it's first character in upper case and the rest of the characters in lower case
 		String sender = message.getPrefix().substring(1); //Strip the initial ':' from the prefix
@@ -42,13 +52,13 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 		this.color = temp.isEmpty() ? getDefaultColor() : Integer.decode(temp);
 		
 		temp = TWIRK_UTIL.parseFeature(MOD_IDENTIFIER, tag);
-		this.isMod = temp.matches("1") ? true : false;
+		this.isMod = temp.equals("1") ? true : false;
 		
 		temp = TWIRK_UTIL.parseFeature(SUB_IDENTIFIER, tag);
-		this.isSub = temp.matches("1") ? true : false;
+		this.isSub = temp.equals("1") ? true : false;
 		
 		temp = TWIRK_UTIL.parseFeature(TURBO_IDENTIFIER, tag);
-		this.isTurbo = temp.matches("1") ? true : false;
+		this.isTurbo = temp.equals("1") ? true : false;
 		
 		temp = TWIRK_UTIL.parseFeature(EMOTE_SET_IDENTIFIER, tag);
 		this.emoteSets = parseEmoteSets( temp );
@@ -56,8 +66,14 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 		temp = TWIRK_UTIL.parseFeature(USERTYPE_IDENTIFIER, tag);
 		this.userType = parseUserType( temp, displayName, channelOwner );
 		
+		temp = TWIRK_UTIL.parseFeature(BADGE_IDENTIFIER, message.getTag());
+		this.badges = temp.isEmpty() ? new String[0] : temp.split(",");
+		
+		temp = TWIRK_UTIL.parseFeature(USER_ID_IDENTIFIER, message.getTag());
+		this.userID = temp.isEmpty() ? -1 : Integer.parseInt(temp);
+		
 		this.rawLine = message.getRaw();
-		return new UserstateImpl(this);
+		
 	}
 	
 	private int[] parseEmoteSets(String emoteSet) {
@@ -76,15 +92,15 @@ public class UserstateBuilderDefault implements UserstateBuilder {
 	private USER_TYPE parseUserType(String userType, String sender, String channelOwner) {
 		if( userType.isEmpty() )
 			return USER_TYPE.DEFAULT;
-		else if( sender.toLowerCase().matches(channelOwner.toLowerCase() ) )
+		else if( sender.equalsIgnoreCase( channelOwner ) )
 			return USER_TYPE.OWNER;			
-		else if( userType.equalsIgnoreCase( "mod" ) )
+		else if( userType.equals( "mod" ) )
 			return USER_TYPE.MOD;
-		else if( userType.equalsIgnoreCase( "global_mod" ) )
+		else if( userType.equals( "global_mod" ) )
 			return USER_TYPE.GLOBAL_MOD;
-		else if( userType.equalsIgnoreCase( "admin" ) )
+		else if( userType.equals( "admin" ) )
 			return USER_TYPE.ADMIN;
-		else if( userType.equalsIgnoreCase( "staff" ) )
+		else if( userType.equals( "staff" ) )
 			return USER_TYPE.STAFF;
 		else
 			return USER_TYPE.DEFAULT;	//Safety valve

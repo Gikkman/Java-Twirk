@@ -6,7 +6,7 @@ import java.util.Date;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.users.TwitchUser;
 
 public class PrefixCommandExample extends CommandExampleBase {
 	private final static String patternA = "!timezone";
@@ -31,9 +31,9 @@ public class PrefixCommandExample extends CommandExampleBase {
 
 	@Override
 	protected void performCommand(String command, TwitchUser sender, TwitchMessage message) {
-		if( command.matches(patternA) )
+		if( command.equals(patternA) )
 			twirk.channelMessage(sender.getName() +": Local time zone is " + Calendar.getInstance().getTimeZone().getDisplayName());
-		else if( command.matches(patternB) )
+		else if( command.equals(patternB) )
 			twirk.channelMessage(sender.getName() +": Local time is " + new Date().toString() );
 			
 	}	

@@ -1,7 +1,18 @@
-package com.gikk.twirk.types.twitchUser;
+package com.gikk.twirk.types.users;
 
+import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.USER_TYPE;
 
+/**Class for representing a Twitch User's attributes<br><br>
+ * 
+ * Whenever we receive a PRIVMSG or WHISPER from Twitch (see {@link TwirkListener}, Twitch always sends us some 
+ * information about the sender, such as what color the user has in chat on Twitch, how the users name should
+ * be capitalized, if the user has Turbo, and so on. This class encapsulates all that info, and makes it easy 
+ * to work with.
+ * 
+ * @author Gikkman
+ *
+ */
 public interface TwitchUser {
 
 	/**Retrieves this users name, as displayed in Twitch chat

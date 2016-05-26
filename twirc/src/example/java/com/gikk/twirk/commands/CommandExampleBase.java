@@ -7,7 +7,7 @@ import java.util.Set;
 import com.gikk.twirk.events.TwirkListenerBaseImpl;
 import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
+import com.gikk.twirk.types.users.TwitchUser;
 
 public abstract class CommandExampleBase extends TwirkListenerBaseImpl{
 	public enum CommandType{ PREFIX_COMMAND, CONTENT_COMMAND };
@@ -47,9 +47,9 @@ public abstract class CommandExampleBase extends TwirkListenerBaseImpl{
 		 * We get the command by stripping everything but the first word away.
 		 * This is used when looking for prefix commands
 		 */
-		String content = message.getContent().trim();
+		String content = message.getContent().toLowerCase(Locale.ENGLISH).trim();
 		String[] split = content.split("\\s", 2);
-		String command = split[0].toLowerCase(Locale.ENGLISH);
+		String command = split[0];
 		
 		if( sender.getUserType().value >= minPrivilidge.value )
 			if( type == CommandType.PREFIX_COMMAND ){

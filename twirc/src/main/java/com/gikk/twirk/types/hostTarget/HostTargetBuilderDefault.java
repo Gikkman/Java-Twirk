@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.hostTarget;
 
-import com.gikk.twirk.types.hostTarget.HostTarget.HOSTTARGET_MODE;
+import com.gikk.twirk.types.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class HostTargetBuilderDefault implements HostTargetBuilder {
@@ -16,7 +16,7 @@ public class HostTargetBuilderDefault implements HostTargetBuilder {
 		this.mode = message.getContent().startsWith("-") ? HOSTTARGET_MODE.STOP : HOSTTARGET_MODE.START;
 		
 		String[] segments = message.getContent().split(" ", 2);
-		this.target = segments[0].matches("-") ? "" : segments[0];		
+		this.target = segments[0].equals("-") ? "" : segments[0];		
 		
 		try { 
 			this.viwerAmount = Integer.parseInt(segments[1]); 

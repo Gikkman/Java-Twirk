@@ -1,5 +1,7 @@
 package com.gikk.twirk.events;
 
+import java.util.Collection;
+
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.mode.Mode;
@@ -7,8 +9,8 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
-import com.gikk.twirk.types.userstate.Userstate;
+import com.gikk.twirk.types.users.TwitchUser;
+import com.gikk.twirk.types.users.Userstate;
 
 /**Convenience class.<br>
  * Instead if extending the TwirkListener interface, you can instead extend this class. That
@@ -62,6 +64,9 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	
 	@Override
 	public void onClearChat(ClearChat clearChat) { }
+	
+	@Override
+	public void onNamesList(Collection<String> namesList) { }
 
 	@Override
 	public void onUnknown(String line) { }	

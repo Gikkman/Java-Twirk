@@ -1,5 +1,7 @@
 package com.gikk.twirk.types.hostTarget;
 
+import com.gikk.twirk.types.HOSTTARGET_MODE;
+
 class HostTargetImpl implements HostTarget{
 	
 	final HOSTTARGET_MODE mode;

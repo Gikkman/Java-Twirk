@@ -2,7 +2,7 @@ package com.gikk.twirk.types.hostTarget;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.hostTarget.HostTarget.HOSTTARGET_MODE;
+import com.gikk.twirk.types.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilderDefault;
 
@@ -19,10 +19,10 @@ public class TestHostTarget {
 		TwitchMessage message = new TwitchMessageBuilderDefault().build(STRING);
 		HostTarget host = new HostTargetBuilderDefault().build(message);
 		
-		assertTrue("Got: "+ host.getTarget() 	  + " Expected: " + target,  host.getTarget().contentEquals(target));
+		assertTrue("Got: "+ host.getTarget() 	  + " Expected: " + target,  host.getTarget().equals(target));
 		assertTrue("Got: "+ host.getViewerCount() + " Expected: " + viewers, host.getViewerCount() == viewers);
 		assertTrue("Got: "+ host.getMode()		  + " Expected: " + MODE , 	 host.getMode() == MODE);
-		assertTrue("Got: "+ host.getRaw() 		  + " Expected: " + STRING , host.getRaw().contentEquals(STRING));
+		assertTrue("Got: "+ host.getRaw() 		  + " Expected: " + STRING , host.getRaw().equals(STRING));
 		
 	}
 }

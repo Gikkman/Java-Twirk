@@ -1,3 +1,15 @@
 package com.gikk.twirk.types;
 
-public enum CLEARCHAT_MODE{ USER, COMPLETE };
+/**Enum for representing different types of CLEARCHAT messages
+ * 
+ * @author Gikkman
+ *
+ */
+public enum CLEARCHAT_MODE{ 
+	/** A user has been purged/banned
+	 */
+	USER, 
+	
+	/** The entire chat has been pruged
+	 */
+	COMPLETE };

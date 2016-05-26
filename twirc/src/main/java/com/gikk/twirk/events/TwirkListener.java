@@ -1,5 +1,7 @@
 package com.gikk.twirk.events;
 
+import java.util.Collection;
+
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.mode.Mode;
@@ -7,8 +9,8 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
-import com.gikk.twirk.types.twitchUser.TwitchUser;
-import com.gikk.twirk.types.userstate.Userstate;
+import com.gikk.twirk.types.users.TwitchUser;
+import com.gikk.twirk.types.users.Userstate;
 
 public interface TwirkListener {	
 	
@@ -122,6 +124,18 @@ public interface TwirkListener {
 	 * @param clearChat The clear chat notice we received
 	 */
 	public void onClearChat( ClearChat  clearChat );
+	
+	/**Fires when we've successfully joined a channel and retrieved the list of
+	 * all users that were online. <br><br>
+	 * The <code>Collection</code> that is passed with this method contains
+	 * the names of all the users that we received by the channels names-list. All these names are in lower case.<br>
+	 * Note that this list is read-only. Trying to make changes to it will result in a <code>UnsupportedOperationException</code><br><br>
+	 * Future changes to whom are online will be noticed via {@link #onJoin(String)} and {@link #onPart(String)} events
+	 * 
+	 * @param namesList The unmodifiable collection of all users that Twitch told us were online in this channel.
+	 */
+	public void onNamesList( Collection<String> namesList );
+	
 
 	/**Fires when we received a message we could not categorize. This might happen
 	 * if Twitch changes something suddenly, so we cannot parse the incomming message.
