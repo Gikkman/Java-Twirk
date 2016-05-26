@@ -3,7 +3,7 @@ package com.gikk.twirk.types.users;
 import com.gikk.twirk.types.USER_TYPE;
 
 
-public class TwitchUserImpl implements TwitchUser{
+class TwitchUserImpl implements TwitchUser{
 	//***********************************************************
 	// 				VARIABLES
 	//***********************************************************
@@ -20,7 +20,7 @@ public class TwitchUserImpl implements TwitchUser{
 	// 				CONSTRUCTOR
 	//***********************************************************
 	
-	public TwitchUserImpl(TwitchUserBuilderDefault builder) {
+	TwitchUserImpl(TwitchUserBuilderDefault builder) {
 		this.displayName = builder.displayName;
 		this.isMod 		 = builder.isMod;
 		this.isSub 		 = builder.isSub;
