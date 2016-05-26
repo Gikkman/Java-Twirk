@@ -3,6 +3,8 @@ Small, basic library for creating an IRC connection to the Twitch chat.
 
 The library is intended to make communication via Twitch chat as easy as possible, and uses Java objects to represent most events that can occur in Twitch chat. 
 
+Java 6 compatible.
+
 ##Installation
 Include the following in your pom.xml
 
