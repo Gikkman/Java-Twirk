@@ -4,13 +4,13 @@
 
   <groupId>com.gikk</groupId>
   <artifactId>twirc</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <packaging>jar</packaging>
 
   <name>twirc</name>
   <url>http://maven.apache.org</url>
 
-<repositories>
+  	<repositories>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -60,6 +60,9 @@
 			<execution>
 				<id>attach-javadocs</id>
 				<goals> <goal>jar</goal> </goals>
+				<configuration>
+                	<additionalparam>-Xdoclint:none</additionalparam>
+            	</configuration>
 			</execution>
 		</executions>
 	</plugin>

@@ -2,7 +2,7 @@ package com.gikk.twirk.types.users;
 
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-/**Constructs a {@link TwitchUser} object. To create a {@link TwitchUser} object, call the <br>{@link #build(TwitchMessage, UserstateBuilder)} method
+/**Constructs a {@link TwitchUser} object. To create a {@link TwitchUser} object, call the <br>{@link #build(TwitchMessage)} method
  * 
  * @author Gikkman
  *

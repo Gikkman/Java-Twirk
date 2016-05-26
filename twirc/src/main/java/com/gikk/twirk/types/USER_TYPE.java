@@ -32,7 +32,7 @@ public enum USER_TYPE{
 	 * certain actions. <br><br>
 	 * 
 	 * For example:<br>
-	 * <pre><code>if( user.USER_TYPE.value >= USER_TYPE.MOD.value )</code>
+	 * <pre><code>if( user.USER_TYPE.value == USER_TYPE.MOD.value )</code>
 	 * 	<code>doSomething();</code></pre>
 	 */
 	public final int value;

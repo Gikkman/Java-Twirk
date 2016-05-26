@@ -13,7 +13,7 @@ public interface HostTargetBuilder {
 	 * is responsible for making sure that this message can actually be made into a {@link HostTarget} object.
 	 * Make sure that the COMMAND of the message equals "HOSTTARGET"
 	 * 
-	 * @param twitchMessage The message we received from Twitch
+	 * @param message The message we received from Twitch
 	 * @return A {@link HostTarget}, or <code>null</code> if a {@link HostTarget} could not be created
 	 */
 	public HostTarget build(TwitchMessage message);
