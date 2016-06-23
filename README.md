@@ -23,7 +23,7 @@ Include the following in your pom.xml
 	<dependency>
 	    <groupId>com.github.gikkman</groupId>
 	    <artifactId>Java-Twirk</artifactId>
-	    <version>0.1</version>
+	    <version>LATEST_RELEASE_VERION_HERE</version>
 	</dependency>
 ```
 Or simply download the latest version of the library jar from the release page.
