@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.notice;
 
-import com.gikk.twirk.types.NOTICE_EVENT;
+import com.gikk.twirk.enums.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class GikkDefault_NoticeBuilder implements NoticeBuilder {

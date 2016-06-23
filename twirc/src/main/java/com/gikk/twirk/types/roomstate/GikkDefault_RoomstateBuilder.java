@@ -19,16 +19,16 @@ public class GikkDefault_RoomstateBuilder implements RoomstateBuilder{
 		this.rawLine = message.getRaw();
 		String tag = message.getTag();
 		
-		String temp = _PARSING_UTIL.parseFeature(LANGUAGE_IDENTIFIER, tag);
+		String temp = _PARSING_UTIL.parseString(LANGUAGE_IDENTIFIER, tag);
 		broadcasterLanguage = temp.isEmpty() ? "" : temp;
 		
-		temp = _PARSING_UTIL.parseFeature(R9K_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseString(R9K_IDENTIFIER, tag);
 		r9kMode = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
-		temp = _PARSING_UTIL.parseFeature(SLOW_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseString(SLOW_IDENTIFIER, tag);
 		slowModeTimer = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
-		temp = _PARSING_UTIL.parseFeature(SUBS_IDENTIFIER, tag);
+		temp = _PARSING_UTIL.parseString(SUBS_IDENTIFIER, tag);
 		subMode = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 		
 		return new RoomstateImpl(this);

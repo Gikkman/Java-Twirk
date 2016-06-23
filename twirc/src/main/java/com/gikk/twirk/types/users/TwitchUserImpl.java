@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.users;
 
-import com.gikk.twirk.types.USER_TYPE;
+import com.gikk.twirk.enums.USER_TYPE;
 
 
 class TwitchUserImpl implements TwitchUser{

@@ -3,6 +3,8 @@ package com.gikk.twirk.types.twitchMessage;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.gikk.twirk.types.emote.Emote;
+
 class TwitchMessageImpl implements TwitchMessage {
 	//***********************************************************
 	// 				VARIABLES

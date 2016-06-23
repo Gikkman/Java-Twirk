@@ -1,4 +1,4 @@
-package com.gikk.twirk.types;
+package com.gikk.twirk.enums;
 
 import com.gikk.twirk.types.notice.Notice;
 

@@ -2,8 +2,8 @@ package com.gikk.twirk.types.notice;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.enums.NOTICE_EVENT;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestNotice {

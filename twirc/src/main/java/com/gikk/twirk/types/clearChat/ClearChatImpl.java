@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.clearChat;
 
-import com.gikk.twirk.types.CLEARCHAT_MODE;
+import com.gikk.twirk.enums.CLEARCHAT_MODE;
 
 class ClearChatImpl implements ClearChat{
 

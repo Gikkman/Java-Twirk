@@ -31,6 +31,8 @@ import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
+import com.gikk.twirk.types.usernotice.Usernotice;
+import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.Userstate;
@@ -95,6 +97,7 @@ public class Twirk {
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
 	private final SubscriberEventBuilder subscriberBuilder;
+	private final UsernoticeBuilder		usernoticeBuilder;
 	
 	//***********************************************************************************************
 	//											CONSTRUCTOR
@@ -117,6 +120,7 @@ public class Twirk {
 		this.userstateBuilder = builder.getUserstateBuilder();	
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder(); 	
 		this.subscriberBuilder= builder.getSubscriberEventBuilder();
+		this.usernoticeBuilder= builder.getUsernoticeBuilder();
 				
 		
 		this.queue = new OutputQueue();
@@ -472,6 +476,11 @@ public class Twirk {
 				Userstate userstate = userstateBuilder.build(message);
 				for(TwirkListener l : listeners )
 					l.onUserstate( userstate );
+			}
+			else if( message.getCommand().equals("USERNOTICE") ){
+				Usernotice usernotice = usernoticeBuilder.build(message);
+				for(TwirkListener l : listeners )
+					l.onUsernotice( usernotice );
 			}
 			else if( message.getCommand().equals("ROOMSTATE") ){
 				Roomstate roomstate = roomstateBuilder.build(message);

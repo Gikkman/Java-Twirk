@@ -1,7 +1,7 @@
 package com.gikk.twirk.types.notice;
 
+import com.gikk.twirk.enums.NOTICE_EVENT;
 import com.gikk.twirk.types.AbstractType;
-import com.gikk.twirk.types.NOTICE_EVENT;
 
 /**Class for representing a NOTICE from Twitch.<br><br>
  * 

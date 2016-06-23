@@ -1,7 +1,7 @@
 package com.gikk.twirk.types.users;
 
+import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.events.TwirkListener;
-import com.gikk.twirk.types.USER_TYPE;
 
 /**Class for representing a Twitch User's attributes<br><br>
  * 

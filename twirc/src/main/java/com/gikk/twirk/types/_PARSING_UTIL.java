@@ -1,7 +1,7 @@
 package com.gikk.twirk.types;
 
 public class _PARSING_UTIL {
-	public static String parseFeature(String IDENTIFIER, String tag) {
+	public static String parseString(String IDENTIFIER, String tag) {
 		int begin = tag.indexOf( IDENTIFIER );
 		int end =   tag.indexOf(';', begin);	
 		//If begin == -1, it means this tag was not present. If begin + IDENTIFIER.lenght() == end, it means that the tag was empty

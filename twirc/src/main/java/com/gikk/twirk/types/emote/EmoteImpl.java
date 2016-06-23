@@ -1,11 +1,11 @@
-package com.gikk.twirk.types.twitchMessage;
+package com.gikk.twirk.types.emote;
 
 import java.util.LinkedList;
 
-import com.gikk.twirk.types.EMOTE_SIZE;
+import com.gikk.twirk.enums.EMOTE_SIZE;
 
 
-class EmoteImpl implements Emote{
+public class EmoteImpl implements Emote{
 	private final static String EMOTE_URL_BASE 	= "http://static-cdn.jtvnw.net/emoticons/v1/";	
 	
 	private int emoteID;

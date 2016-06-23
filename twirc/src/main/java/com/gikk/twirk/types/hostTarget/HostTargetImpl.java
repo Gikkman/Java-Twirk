@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.hostTarget;
 
-import com.gikk.twirk.types.HOSTTARGET_MODE;
+import com.gikk.twirk.enums.HOSTTARGET_MODE;
 
 class HostTargetImpl implements HostTarget{
 	
