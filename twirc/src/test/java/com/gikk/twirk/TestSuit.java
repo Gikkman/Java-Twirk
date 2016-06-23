@@ -9,6 +9,7 @@ import com.gikk.twirk.types.notice.TestNotice;
 import com.gikk.twirk.types.roomstate.TestRoomstate;
 import com.gikk.twirk.types.subscriberEvent.TestSubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TestMessage;
+import com.gikk.twirk.types.usernotice.TestUsernotice;
 import com.gikk.twirk.types.users.TestUserstate;
 
 public class TestSuit {
@@ -52,5 +53,10 @@ public class TestSuit {
 	@Test
 	public void testUserstate(){
 		TestUserstate.test();
+	}
+	
+	@Test
+	public void testUsernotice(){
+		TestUsernotice.test();
 	}
 }

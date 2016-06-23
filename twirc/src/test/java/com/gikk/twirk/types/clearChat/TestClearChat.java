@@ -2,8 +2,8 @@ package com.gikk.twirk.types.clearChat;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.CLEARCHAT_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.enums.CLEARCHAT_MODE;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestClearChat {

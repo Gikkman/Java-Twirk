@@ -2,8 +2,8 @@ package com.gikk.twirk.types.users;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 import com.gikk.twirk.types.users.Userstate;
 import com.gikk.twirk.types.users.GikkDefault_UserstateBuilder;

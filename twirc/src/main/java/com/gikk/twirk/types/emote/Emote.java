@@ -1,8 +1,8 @@
-package com.gikk.twirk.types.twitchMessage;
+package com.gikk.twirk.types.emote;
 
 import java.util.LinkedList;
 
-import com.gikk.twirk.types.EMOTE_SIZE;
+import com.gikk.twirk.enums.EMOTE_SIZE;
 
 /**Class for representing a Twitch emote, which can be embedded into chat messages.<br><br>
  * 

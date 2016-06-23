@@ -1,7 +1,7 @@
 package com.gikk.twirk.types.hostTarget;
 
+import com.gikk.twirk.enums.HOSTTARGET_MODE;
 import com.gikk.twirk.types.AbstractType;
-import com.gikk.twirk.types.HOSTTARGET_MODE;
 
 /**Class for representing a HOSTTARGET from Twitch.<br><br>
  * 

@@ -4,8 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
 
-import com.gikk.twirk.types.USER_TYPE;
-import com.gikk.twirk.types.twitchMessage.Emote.EmoteIndices;
+import com.gikk.twirk.enums.USER_TYPE;
+import com.gikk.twirk.types.emote.Emote;
+import com.gikk.twirk.types.emote.EmoteImpl;
+import com.gikk.twirk.types.emote.Emote.EmoteIndices;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.GikkDefault_TwitchUserBuilder;
 

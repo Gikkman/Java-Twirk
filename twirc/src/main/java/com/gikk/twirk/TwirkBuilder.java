@@ -2,22 +2,24 @@ package com.gikk.twirk;
 
 import com.gikk.twirk.types.clearChat.ClearChatBuilder;
 import com.gikk.twirk.types.clearChat.GikkDefault_ClearChatBuilder;
-import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.hostTarget.GikkDefault_HostTargetBuilder;
-import com.gikk.twirk.types.mode.ModeBuilder;
+import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.mode.GikkDefault_ModeBuilder;
-import com.gikk.twirk.types.notice.NoticeBuilder;
+import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.GikkDefault_NoticeBuilder;
-import com.gikk.twirk.types.roomstate.RoomstateBuilder;
+import com.gikk.twirk.types.notice.NoticeBuilder;
 import com.gikk.twirk.types.roomstate.GikkDefault_RoomstateBuilder;
-import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
+import com.gikk.twirk.types.roomstate.RoomstateBuilder;
 import com.gikk.twirk.types.subscriberEvent.GikkDefault_SubscriberEventBuilder;
-import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
+import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
-import com.gikk.twirk.types.users.TwitchUserBuilder;
+import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
+import com.gikk.twirk.types.usernotice.GikkDefault_UsernoticeBuilder;
+import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
 import com.gikk.twirk.types.users.GikkDefault_TwitchUserBuilder;
-import com.gikk.twirk.types.users.UserstateBuilder;
 import com.gikk.twirk.types.users.GikkDefault_UserstateBuilder;
+import com.gikk.twirk.types.users.TwitchUserBuilder;
+import com.gikk.twirk.types.users.UserstateBuilder;
 
 /**Class for creating instances of {@link Twirk}.<br>
  * To build an instance of {@link Twirk}, the user has to supply the bot's nick and 
@@ -54,6 +56,7 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;   
 	private UserstateBuilder 	userstateBuilder;
 	private SubscriberEventBuilder subEventBuilder;
+	private UsernoticeBuilder	usernoticeBuilder;
 
 	//***********************************************************
 	// 				CONSTRUCTOR
@@ -291,6 +294,13 @@ public class TwirkBuilder {
 		return subEventBuilder != null ? subEventBuilder : new GikkDefault_SubscriberEventBuilder();
 	}
 	
+	/**Retrieves the assigned {@link UsernoticeBuilder}, or the default one, if none is assigned.
+	 * 
+	 * @return This builders current {@link UsernoticeBuilder}
+	 */
+	public UsernoticeBuilder getUsernoticeBuilder() {
+		return usernoticeBuilder != null ? usernoticeBuilder : new GikkDefault_UsernoticeBuilder();
+	}
 	/**Creates a Twirk object, with the parameters assigned to this
 	 * builder.
 	 * 
@@ -300,5 +310,4 @@ public class TwirkBuilder {
 		return new Twirk(this);
 	}
 
-	
 }

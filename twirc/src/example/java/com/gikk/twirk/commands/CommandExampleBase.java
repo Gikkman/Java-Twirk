@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.events.TwirkListenerBaseImpl;
-import com.gikk.twirk.types.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.users.TwitchUser;
 

@@ -1,4 +1,4 @@
-package com.gikk.twirk.types;
+package com.gikk.twirk.enums;
 
 /** Enum for representing different types of users, as labeled by Twitch. <br>
  * DEFAULT in this case means that no information was given, and it can be assumed that a user

@@ -9,6 +9,7 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.usernotice.Usernotice;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.Userstate;
 
@@ -67,6 +68,9 @@ public abstract class TwirkListenerBaseImpl implements TwirkListener{
 	
 	@Override
 	public void onNamesList(Collection<String> namesList) { }
+	
+	@Override
+	public void onUsernotice(Usernotice usernotice) { }
 
 	@Override
 	public void onUnknown(String line) { }	

@@ -2,9 +2,9 @@ package com.gikk.twirk.types.subscriberEvent;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.SUB_EVENT;
-import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.enums.SUB_EVENT;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class TestSubscriberEvent {
 	private static final String SUB_NOTICE = ":twitchnotify!twitchnotify@twitchnotify.tmi.twitch.tv PRIVMSG #gikkman :Gikkman just subscribed!";

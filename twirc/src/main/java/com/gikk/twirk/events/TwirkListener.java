@@ -9,6 +9,7 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.subscriberEvent.SubscriberEvent;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.usernotice.Usernotice;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.Userstate;
 
@@ -135,6 +136,14 @@ public interface TwirkListener {
 	 * @param namesList The unmodifiable collection of all users that Twitch told us were online in this channel.
 	 */
 	public void onNamesList( Collection<String> namesList );
+	
+	/**Fires when we receive a USERNOTICE from Twitch. See {@link Usernotice }<br>
+	 * A Usernotice tells us about a re-subscription event, either to our channel or to the channel
+	 * we are hosting.
+	 * 
+	 * @param usernotice The Usernotice we received
+	 */
+	public void onUsernotice(Usernotice usernotice);
 	
 
 	/**Fires when we received a message we could not categorize. This might happen

@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.clearChat;
 
-import com.gikk.twirk.types.CLEARCHAT_MODE;
+import com.gikk.twirk.enums.CLEARCHAT_MODE;
 import com.gikk.twirk.types._PARSING_UTIL;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
@@ -26,10 +26,10 @@ public class GikkDefault_ClearChatBuilder implements ClearChatBuilder{
 			this.mode = CLEARCHAT_MODE.USER;
 			this.target = twitchMessage.getContent();
 			
-			String temp = _PARSING_UTIL.parseFeature(DURATION_TAG, twitchMessage.getTag());
+			String temp = _PARSING_UTIL.parseString(DURATION_TAG, twitchMessage.getTag());
 			this.duration = temp.isEmpty() ? -1 : Integer.parseInt(temp);
 			
-			temp = _PARSING_UTIL.parseFeature(REASON_TAG, twitchMessage.getTag());
+			temp = _PARSING_UTIL.parseString(REASON_TAG, twitchMessage.getTag());
 			this.reason = temp.replace("\\s", " ");
 		}
 		

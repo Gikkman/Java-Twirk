@@ -2,8 +2,8 @@ package com.gikk.twirk.types.hostTarget;
 
 import static org.junit.Assert.assertTrue;
 
-import com.gikk.twirk.types.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.enums.HOSTTARGET_MODE;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 
 public class TestHostTarget {

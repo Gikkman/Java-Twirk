@@ -3,6 +3,8 @@ package com.gikk.twirk.types.twitchMessage;
 import java.util.List;
 
 import com.gikk.twirk.types.AbstractType;
+import com.gikk.twirk.types.emote.Emote;
+import com.gikk.twirk.types.emote.EmoteImpl;
 
 /**An encapsulation of a message sent via Twitch chat. <br><br>
  * 

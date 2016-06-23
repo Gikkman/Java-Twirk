@@ -1,7 +1,7 @@
 package com.gikk.twirk.types.clearChat;
 
+import com.gikk.twirk.enums.CLEARCHAT_MODE;
 import com.gikk.twirk.types.AbstractType;
-import com.gikk.twirk.types.CLEARCHAT_MODE;
 
 /**Class for representing a CLEARCHAT from Twitch.<br><br>
  * 

@@ -1,6 +1,6 @@
 package com.gikk.twirk.types.subscriberEvent;
 
-import com.gikk.twirk.types.SUB_EVENT;
+import com.gikk.twirk.enums.SUB_EVENT;
 
 class SubscriberEventImpl implements SubscriberEvent{
 	private final String subscriber;

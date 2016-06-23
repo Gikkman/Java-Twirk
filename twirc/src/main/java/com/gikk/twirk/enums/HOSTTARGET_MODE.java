@@ -1,4 +1,4 @@
-package com.gikk.twirk.types;
+package com.gikk.twirk.enums;
 
 /**Enum for representing different types of HOSTTARGET events
  * 
