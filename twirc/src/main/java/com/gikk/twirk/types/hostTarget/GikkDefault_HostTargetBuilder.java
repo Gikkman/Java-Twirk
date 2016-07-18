@@ -22,7 +22,6 @@ public class GikkDefault_HostTargetBuilder implements HostTargetBuilder {
 			this.viwerAmount = Integer.parseInt(segments[1]); 
 		} 
 		catch(Exception e){ 
-			System.err.println("Could not parse " + segments[1] +" in HostTargetBuilderDefault");
 			this.viwerAmount = 0; 
 		}
 		

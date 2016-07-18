@@ -1,6 +1,10 @@
 package com.gikk.twirk.types.notice;
 
+
+
 import com.gikk.twirk.enums.NOTICE_EVENT;
+import com.gikk.twirk.types._IDENTIFIERS;
+import com.gikk.twirk.types._TagReader;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
 public class GikkDefault_NoticeBuilder implements NoticeBuilder {
@@ -11,8 +15,8 @@ public class GikkDefault_NoticeBuilder implements NoticeBuilder {
 	
 	@Override
 	public Notice build(TwitchMessage message) {
-		//The event is posted after the '@msg-id=' part of the tag
-		this.rawEvent = message.getTag().substring( message.getTag().indexOf('=') + 1 );
+		_TagReader r = new _TagReader(message.getTag());
+		this.rawEvent = r.getAsString(_IDENTIFIERS.MESSAGE_ID);
 		this.event = parseEvent( rawEvent );
 		this.message = message.getContent();
 		this.rawLine = message.getRaw();
