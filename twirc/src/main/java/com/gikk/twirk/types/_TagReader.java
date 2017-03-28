@@ -56,6 +56,21 @@ public class _TagReader {
 			return -1;
 		}
 	}
+    
+    /**Fetches a certain field value that might have been present in the tag, and
+	 * tries to parse it into a <code>long</code>. If the field was not present in the tag, 
+	 * or the field's value was empty, this method returns <code>-1</code>
+	 * 
+	 * @param identifier  The fields identifier. See {@link _IDENTIFIERS}
+	 * @return  The fields value, if it was present and a long. <code>-1</code> otherwise
+	 */
+    long getAsLong(String identifier) {
+       try{
+			return Long.decode(map.getOrDefault(identifier, "-1"));
+		} catch (NumberFormatException e){
+			return -1;
+		} 
+    }
 	
 	/**Fetches a certain field value that might have been present in the tag, and
 	 * tries to parse it into a <code>boolean</code>. For parsing purpose, <code>1</code> is interpreted
@@ -66,7 +81,7 @@ public class _TagReader {
 	 * @return  The fields value, if it was present and could be parsed to a boolean. <code>false</code> otherwise
 	 */
 	public boolean getAsBoolean(String identifier) {
-		return map.getOrDefault(identifier, "0").equals("1") ? true : false;
+		return map.getOrDefault(identifier, "0").equals("1");
 	}
 	
 	//***********************************************************

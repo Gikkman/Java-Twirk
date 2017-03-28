@@ -1,9 +1,8 @@
 package com.gikk.twirk.types.usernotice;
 
-import java.util.List;
-
 import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.emote.Emote;
+import java.util.List;
 
 class UsernoticeImpl implements Usernotice{
 	private final String rawLine;
@@ -12,7 +11,7 @@ class UsernoticeImpl implements Usernotice{
 	private final boolean isSub;
 	private final boolean isTurbo;
 	private final int color;
-	private final int userID;
+	private final long userID;
 	private final USER_TYPE userType;
 	private final String[] badges;
 	private final String loginName;
@@ -81,7 +80,7 @@ class UsernoticeImpl implements Usernotice{
 	}
 
 	@Override
-	public int getUserID() {
+	public long getUserID() {
 		return userID;
 	}
 

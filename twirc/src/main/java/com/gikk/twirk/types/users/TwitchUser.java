@@ -14,12 +14,19 @@ import com.gikk.twirk.events.TwirkListener;
  *
  */
 public interface TwitchUser {
-
-	/**Retrieves this users name, as displayed in Twitch chat
+    
+    /**Retrieves this user's user name. This is the name the user logs in to
+     * Twitch with
 	 * 
-	 * @return The user name
+	 * @return The user's user name
 	 */
-	public String getName();
+	public String getUserName();
+
+	/**Retrieves this user's display name, as displayed in Twitch chat
+	 * 
+	 * @return The user's display name
+	 */
+	public String getDisplayName();
 	
 	/**Retrieves info whether this user is a mod in this channel or not
 	 * 
@@ -70,5 +77,5 @@ public interface TwitchUser {
 	 * 
 	 * @return The users unique user ID
 	 */
-	public int getUserID();
+	public long getUserID();
 }

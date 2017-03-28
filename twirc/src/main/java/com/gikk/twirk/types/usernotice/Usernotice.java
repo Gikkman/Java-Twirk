@@ -1,11 +1,10 @@
 package com.gikk.twirk.types.usernotice;
 
-import java.util.List;
-
 import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.AbstractType;
 import com.gikk.twirk.types.emote.Emote;
 import com.gikk.twirk.types.emote.EmoteImpl;
+import java.util.List;
 
 public interface Usernotice extends AbstractType {
 	
@@ -64,7 +63,7 @@ public interface Usernotice extends AbstractType {
 	 * 
 	 * @return The users unique user ID
 	 */
-	public int getUserID();
+	public long getUserID();
 	
 	/**Retrieves the re-subscribing users login name. At the moment, this is the users display name in lower cases. It might
 	 * change in the future, if Twitch implements name changes.
