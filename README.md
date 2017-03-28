@@ -1,5 +1,6 @@
 # Java-Twirk
-[![](https://jitpack.io/v/gikkman/java-twirk.svg)](https://jitpack.io/#gikkman/java-twirk)
+[![](https://jitpack.io/v/Gikkman/Java-Twirk.svg)](https://jitpack.io/#Gikkman/Java-Twirk)
+[![](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/Java-Twirk/Twirk#)
 
 Small, basic library for creating an IRC connection to the Twitch chat.
 
@@ -26,6 +27,16 @@ Include the following in your pom.xml
 </dependencies>
 ```
 Or simply download the latest version of the library jar from the release page.
+
+## Changes
+There has been some changes between Java-Twirk 0.2 and Java-Twirk 0.3:
+* TwitchUser.getUserId() now returns long (was int)
+* TwitchUser.getName() is now called TwitchUser.getDisplayName()
+* TwitchUser.getUserName() added (retrieves the users login name)
+* USER_TYPE now has type SUBSCRIBER
+* USER_TYPE.value changed for most types
+* TwirkListener.onWhisper is now depricated (Twitch uses a new whisper system)
+* TwirkListener.onMode is now depricated (User TwitchUser.isMod() instead)
 
 # Usage
 #### Basic usage
