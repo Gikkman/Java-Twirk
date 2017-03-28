@@ -27,13 +27,13 @@ public interface Notice extends AbstractType{
 	 */
 	public NOTICE_EVENT getEvent();
 	
-	/** The message that came with this NOTICE. Useful when we get a {@link NOTICE_EVENT} of type MISC 
+	/** The message that came with this NOTICE. Might contain useful information, such as number of hosts left this hour or if we receive an error notice.
 	 * 
 	 * @return The message
 	 */
 	public String getMessage();
 	
-	/** Fetches the raw Notice ID exactly as Twitch formats it. In case the {@link NOTICE_EVENT} is of type {@link NOTICE_EVENT#OTHER}, this
+	/** Fetches the raw Notice exactly as Twitch formats it. In case the {@link NOTICE_EVENT} is of type {@link NOTICE_EVENT#OTHER}, this
 	 * field might be useful for checking what id this EVENT had.
 	 * 
 	 * @return The raw Notice ID

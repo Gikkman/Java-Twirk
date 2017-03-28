@@ -447,7 +447,7 @@ public class Twirk {
 			}
 			else if( message.getCommand().equals("PRIVMSG") ){
 				TwitchUser user = twitchUserBuilder.build(message);
-				if( user.getName().equalsIgnoreCase("twitchnotify") )
+				if( user.getDisplayName().equalsIgnoreCase("twitchnotify") )
 					handleTwitchNotify(message);	//The user 'twitchnotify' is used by Twitch to send us messages
 				else	
 					for(TwirkListener l : listeners )

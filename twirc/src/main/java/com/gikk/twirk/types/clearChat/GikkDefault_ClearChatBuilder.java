@@ -1,13 +1,11 @@
 package com.gikk.twirk.types.clearChat;
 
 import com.gikk.twirk.enums.CLEARCHAT_MODE;
-import com.gikk.twirk.types._PARSING_UTIL;
+import com.gikk.twirk.types._IDENTIFIERS;
+import com.gikk.twirk.types._TagReader;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 
-public class GikkDefault_ClearChatBuilder implements ClearChatBuilder{
-	private static String DURATION_TAG = "ban-duration=";
-	private static String REASON_TAG   = "ban-reason=";
-	
+public class GikkDefault_ClearChatBuilder implements ClearChatBuilder{	
 	CLEARCHAT_MODE mode;
 	String target = "";
 	int duration = -1;
@@ -25,12 +23,10 @@ public class GikkDefault_ClearChatBuilder implements ClearChatBuilder{
 		else{
 			this.mode = CLEARCHAT_MODE.USER;
 			this.target = twitchMessage.getContent();
-			
-			String temp = _PARSING_UTIL.parseString(DURATION_TAG, twitchMessage.getTag());
-			this.duration = temp.isEmpty() ? -1 : Integer.parseInt(temp);
-			
-			temp = _PARSING_UTIL.parseString(REASON_TAG, twitchMessage.getTag());
-			this.reason = temp.replace("\\s", " ");
+
+			_TagReader r = new _TagReader(twitchMessage.getTag());		
+			this.duration = r.getAsInt(_IDENTIFIERS.BAN_DURATION);			
+			this.reason = r.getAsString(_IDENTIFIERS.BAN_REASON);
 		}
 		
 		return new ClearChatImpl(this);

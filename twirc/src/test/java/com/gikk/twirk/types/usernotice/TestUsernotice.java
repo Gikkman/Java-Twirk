@@ -1,15 +1,14 @@
 package com.gikk.twirk.types.usernotice;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.LinkedList;
-
 import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.emote.Emote;
 import com.gikk.twirk.types.emote.Emote.EmoteIndices;
 import com.gikk.twirk.types.emote.EmoteImpl;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import java.util.LinkedList;
+
+import static org.junit.Assert.*;
 
 public class TestUsernotice {
 	//***********************************************************
@@ -25,7 +24,7 @@ public class TestUsernotice {
 		
 		LinkedList<Emote> emotes = new LinkedList<Emote>();
 		emotes.add( new EmoteImpl().setPattern("Kappa").setEmoteID(12).addIndices(0, 5));
-		testMessage(m3_with_Emote, "Kappa", 						4, "TWITCH_UserName", "twitch_username", 1336, 0x008001, "TWITCH_UserName has subscribed for 4 months!", USER_TYPE.DEFAULT, emotes, new String[]{});
+		testMessage(m3_with_Emote, "Kappa", 						4, "TWITCH_UserName", "twitch_username", 1336, 0x008001, "TWITCH_UserName has subscribed for 4 months!", USER_TYPE.SUBSCRIBER, emotes, new String[]{});
 	}
 
 	private static void testMessage(String line, String subMessage, int months, String displayName, String loginName, 

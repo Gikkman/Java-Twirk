@@ -1,7 +1,5 @@
 package com.gikk.twirk.events;
 
-import java.util.Collection;
-
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.mode.Mode;
@@ -12,6 +10,7 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.usernotice.Usernotice;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.Userstate;
+import java.util.Collection;
 
 public interface TwirkListener {	
 	
@@ -28,7 +27,8 @@ public interface TwirkListener {
 	 */
 	public void onPrivMsg( TwitchUser  sender, TwitchMessage  message );
 	
-	/**Fires for incoming WHISPERS directed at the bot
+	/**@deprecated 
+     * Fires for incoming WHISPERS directed at the bot
 	 * 
 	 * @param sender The user who sent the whisper. Parsed from the incoming message's tag
 	 * @param message The whisper that was sent, with the tag removed
@@ -87,7 +87,8 @@ public interface TwirkListener {
 	 */
 	public void onSubscriberEvent( SubscriberEvent subscriberEvent );
 	
-	/**Fires whenever we receive a MODE from Twitch. See {@link Mode}.<br>
+	/**@deprecated 
+     * Fires whenever we receive a MODE from Twitch. See {@link Mode}.<br>
 	 * A mode means that a user gained or lost moderator status. However, this
 	 * is unreliable, and you should consider looking at the {@link TwitchUser } you
 	 * receive in the {@link #onPrivMsg(TwitchUser , TwitchMessage )} instead. Twitch sends

@@ -1,17 +1,15 @@
 package com.gikk.twirk.types.users;
 
-import static org.junit.Assert.assertTrue;
-
-import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
-import com.gikk.twirk.types.users.Userstate;
-import com.gikk.twirk.types.users.GikkDefault_UserstateBuilder;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+
+import static org.junit.Assert.*;
 
 public class TestUserstate {
-	private static String USERSTATE_MOD = "@color=0x255;display-name=GikkBot;emote-sets=0;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
-	private static String USERSTATE_USER = "@color=0x1234;display-name=GikkBot;emote-sets=0;mod=0;subscriber=0;turbo=0;user-type= :tmi.twitch.tv USERSTATE #gikkman";
-	private static String USERSTATE_OWNER = "@color=#FF69B4;display-name=Gikkman;emote-sets=0,1454;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
+	private static final String USERSTATE_MOD = "@color=0x255;display-name=GikkBot;emote-sets=0;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
+	private static final String USERSTATE_USER = "@color=0x1234;display-name=GikkBot;emote-sets=0;mod=0;subscriber=0;turbo=0;user-type= :tmi.twitch.tv USERSTATE #gikkman";
+	private static final String USERSTATE_OWNER = "@color=#FF69B4;display-name=Gikkman;emote-sets=0,1454;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
 	
 	public static void test(){
 		doTest(USERSTATE_MOD, "GikkBot", 0x255, USER_TYPE.MOD, new int[] {0} );
