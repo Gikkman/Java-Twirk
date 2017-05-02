@@ -69,7 +69,7 @@ You can make Twirk use your own implementation of all event types by using custo
 This will make the Twirk instance build instances of your custom implementation of `SubscriberEvent`
 
 # Contribute
-If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me on [Twitter](twitter.com/gikkman) or on [Twitch](twitch.com/gikkman)
+If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
 
 
 # License
