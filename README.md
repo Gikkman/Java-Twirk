@@ -1,7 +1,7 @@
 # Java-Twirk
 [![](https://jitpack.io/v/Gikkman/Java-Twirk.svg)](https://jitpack.io/#Gikkman/Java-Twirk)
 [![](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/Java-Twirk/Twirk#)
-You can also chat contact us via the [Discord Server](https://discord.gg/8NXaEyV)
+You can also contact us via the [Discord Server](https://discord.gg/8NXaEyV)
 
 Small, basic library for creating an IRC connection to the Twitch chat.
 
