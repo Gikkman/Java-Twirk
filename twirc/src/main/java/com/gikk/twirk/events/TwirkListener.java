@@ -27,11 +27,12 @@ public interface TwirkListener {
 	 */
 	public void onPrivMsg( TwitchUser  sender, TwitchMessage  message );
 	
-	/**@deprecated 
+	/**
      * Fires for incoming WHISPERS directed at the bot
 	 * 
 	 * @param sender The user who sent the whisper. Parsed from the incoming message's tag
 	 * @param message The whisper that was sent, with the tag removed
+     * @deprecated Use Twitch's PubSub system instead
 	 */
 	public void onWhisper( TwitchUser  sender, TwitchMessage  message );
 	
@@ -81,13 +82,15 @@ public interface TwirkListener {
 	 */
 	public void onHost( HostTarget  hostNotice );
 	
-	/**Fires whenever we receive information about a subscriber event from Twitch. See {@link SubscriberEvent}
+	/**
+     * Fires whenever we receive information about a subscriber event from Twitch. See {@link SubscriberEvent}
 	 * 
 	 * @param subscriberEvent The event we received.
+     * @deprecated Subscription events will be handled via {@link Usernotice} events instead. <a href="https://dev.twitch.tv/docs/v5/guides/irc/#usernotice-twitch-tags">Twitch Doc</a>
 	 */
 	public void onSubscriberEvent( SubscriberEvent subscriberEvent );
 	
-	/**@deprecated 
+	/**
      * Fires whenever we receive a MODE from Twitch. See {@link Mode}.<br>
 	 * A mode means that a user gained or lost moderator status. However, this
 	 * is unreliable, and you should consider looking at the {@link TwitchUser } you
@@ -95,6 +98,7 @@ public interface TwirkListener {
 	 * mode notices every now and then, and does not reliably reflect a users current status
 	 * 
 	 * @param mode The mode notice
+     * @deprecated Use the {@link TwitchUser#isMod()} method to track moderator status instead
 	 */
 	public void onMode( Mode  mode );
 

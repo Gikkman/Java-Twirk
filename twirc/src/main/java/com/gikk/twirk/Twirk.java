@@ -1,21 +1,5 @@
 package com.gikk.twirk;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.net.ssl.SSLSocketFactory;
-
 import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.clearChat.ClearChatBuilder;
@@ -37,6 +21,21 @@ import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.Userstate;
 import com.gikk.twirk.types.users.UserstateBuilder;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.net.ssl.SSLSocketFactory;
 
 /**Class for communicating with the TwitchIrc chat.<br>
  * To create instances of Twirk, see {@link TwirkBuilder}.<br><br>
@@ -339,15 +338,16 @@ public class Twirk {
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************	
 	private void createResources() throws IOException{
-        if( useSSL )
-        	socket = SSLSocketFactory.getDefault().createSocket(server, port);      
-    	else 
-    		socket = new Socket(server, port);
+        if( useSSL ) {
+            socket = SSLSocketFactory.getDefault().createSocket(server, port);
+        } else {
+            socket = new Socket(server, port);
+        }
     	
     	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
    
-		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
-		reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
+		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+		reader = new BufferedReader( new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 	
 		this.outThread = new OutputThread(this, queue, reader, writer);
 		this.inThread  = new InputThread(this, reader, writer);
