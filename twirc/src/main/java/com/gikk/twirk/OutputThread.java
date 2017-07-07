@@ -23,7 +23,7 @@ class OutputThread extends Thread{
 	
 	private boolean isConnected = true;
 	
-	private int MESSAGE_GAP_MILLIS = 1500;	//We may not send more than 20 messages to the Twitch server / 30 seconds
+	private int messageGapMillis = 1500;	//We may not send more than 20 messages to the Twitch server / 30 seconds
 	
 	//***********************************************************************************************
 	//											CONSTRUCTOR
@@ -50,7 +50,7 @@ class OutputThread extends Thread{
 	        		// and wants us to shut down.
 	        		isConnected = connection.isConnected();	
 	        	}        	
-	        	 Thread.sleep(MESSAGE_GAP_MILLIS); } 
+	        	 Thread.sleep(messageGapMillis); } 
         	catch (Exception ignored) { 
         		/* Being interrupted probably means that we are about to shut down.
         		 * If the socket is closed, it also means that we are about to shut down.
@@ -85,7 +85,20 @@ class OutputThread extends Thread{
 		isConnected = false;
 		this.queue.releaseWaitingThreads();
 	}
-	
+    
+    //***********************************************************************************************
+	//											PACKAGE
+	//***********************************************************************************************
+    
+    /**Tells the OutputThread how long we should wait, at minimum, in between
+     * each message sent to Twitch.
+     * 
+     * @param millis the delay
+     */
+	void setMessageDelay(int millis){
+        this.messageGapMillis = millis;
+    }
+    
 	//***********************************************************************************************
 	//											PRIVATE
 	//***********************************************************************************************

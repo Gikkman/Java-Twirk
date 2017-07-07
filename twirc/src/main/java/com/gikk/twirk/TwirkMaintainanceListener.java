@@ -3,6 +3,7 @@ package com.gikk.twirk;
 import com.gikk.twirk.events.TwirkListenerBaseImpl;
 import com.gikk.twirk.types.mode.Mode;
 import com.gikk.twirk.types.mode.Mode.MODE_EVENT;
+import com.gikk.twirk.types.users.Userstate;
 
 /**Class for taking care of basic tasks that our bot should do. However, writing all 
  * of these methods directly in the {@link Twirk} class would get messy. Instead, these simple
@@ -45,6 +46,17 @@ class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
 			instance.moderators.remove( mode.getUser() );
 		}
 	}
+
+    @Override
+    public void onUserstate(Userstate userstate) {
+        //If the bot is a Mod, it may send 100 messages per 30 seconds
+        //None Mods may send 20 messages per 30 seconds
+        if(userstate.isMod()) {
+            instance.setOutputMessageDelay(30000/100);
+        } else {
+            instance.setOutputMessageDelay(30000/20);
+        }
+    }
 
 	@Override
 	public void onDisconnect() {

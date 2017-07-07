@@ -411,6 +411,15 @@ public class Twirk {
 		serverMessage("CAP REQ :twitch.tv/tags");
 	}
     
+    /**Tells the OutputThread how long we should wait, at minimum, in between
+     * each message sent to Twitch.
+     * 
+     * @param millis the delay
+     */
+    void setOutputMessageDelay(int millis){
+        this.outThread.setMessageDelay(millis);
+    }
+    
 	void incommingMessage(String line){		
 		//PING is a bit strange, so we need to handle it separately. And also, we want to respond to a ping
 		//before we do anything else.
