@@ -9,6 +9,7 @@ class TwitchUserImpl implements TwitchUser{
 	//***********************************************************
     private final String userName;
 	private final String displayName;
+    private final boolean isOwner;
 	private final boolean isMod;
 	private final boolean isSub;
 	private final boolean isTurbo;
@@ -24,6 +25,7 @@ class TwitchUserImpl implements TwitchUser{
 	TwitchUserImpl(GikkDefault_TwitchUserBuilder builder) {
         this.userName    = builder.userName;
 		this.displayName = builder.displayName;
+        this.isOwner     = builder.isOwner;
 		this.isMod 		 = builder.isMod;
 		this.isSub 		 = builder.isSub;
 		this.isTurbo 	 = builder.isTurbo;
@@ -46,6 +48,11 @@ class TwitchUserImpl implements TwitchUser{
 	public String getDisplayName(){
 		return displayName;
 	}
+
+    @Override
+    public boolean isOwner() {
+        return isOwner;
+    }
 	
     @Override
 	public boolean isMod(){

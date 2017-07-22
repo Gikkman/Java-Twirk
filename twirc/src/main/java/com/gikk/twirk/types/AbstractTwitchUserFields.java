@@ -11,7 +11,7 @@ import com.gikk.twirk.types.users.Userstate;
  *
  */
 public abstract class AbstractTwitchUserFields {
-	private static final int[] default_colors = { 0xFF0000, 0x0000FF, 0x00FF00, 0xB22222, 0xFF7F50,
+	private static final int[] DEFAULT_COLORS = { 0xFF0000, 0x0000FF, 0x00FF00, 0xB22222, 0xFF7F50,
 												  0x9ACD32, 0xFF4500, 0x2E8B57, 0xDAA520, 0xD2691E,
 												  0x5F9EA0, 0x1E90FF, 0xFF69B4, 0x8A2BE2, 0x00FF7F };
     public  String    userName;
@@ -19,6 +19,7 @@ public abstract class AbstractTwitchUserFields {
 	public  int 	  color;
 	public  long 	  userID;
 	public  int[] 	  emoteSets;
+    public  boolean   isOwner;
 	public  boolean   isMod;
 	public  boolean   isSub;
 	public  boolean   isTurbo;
@@ -54,47 +55,54 @@ public abstract class AbstractTwitchUserFields {
 		this.emoteSets = parseEmoteSets( r.getAsString(_IDENTIFIERS.EMOTE_SET) );
 		this.userType  = parseUserType(  r.getAsString(_IDENTIFIERS.USERTYPE), displayName, channelOwner, isSub );
 		
+        this.isOwner = this.userType == USER_TYPE.OWNER;
 		this.rawLine = message.getRaw();
 	}
 	
 	private int[] parseEmoteSets(String emoteSet) {
-		if( emoteSet.isEmpty() )
-			return new int[0];
+		if( emoteSet.isEmpty() ) {
+            return new int[0];
+        }
 		
 		String[] sets = emoteSet.split(",");
 		int[] out = new int[ sets.length ];
 		
-		for( int i = 0; i < sets.length; i++ )
-			out[i] = Integer.parseInt( sets[i] );
+		for( int i = 0; i < sets.length; i++ ) {
+            out[i] = Integer.parseInt( sets[i] );
+        }
 		
 		return out;
 	}
 
 	private USER_TYPE parseUserType(String userType, String sender, String channelOwner, boolean isSub) {
-		if( sender.equalsIgnoreCase( channelOwner ) )
-			return USER_TYPE.OWNER;			
-		else if( userType.equals( "mod" ) )
-			return USER_TYPE.MOD;
-		else if( userType.equals( "global_mod" ) )
-			return USER_TYPE.GLOBAL_MOD;
-		else if( userType.equals( "admin" ) )
-			return USER_TYPE.ADMIN;
-		else if( userType.equals( "staff" ) )
-			return USER_TYPE.STAFF;
-        else if( isSub )
+		if( sender.equalsIgnoreCase( channelOwner ) ) {
+            return USER_TYPE.OWNER;
+        } else if( userType.equals( "mod" ) ) {
+            return USER_TYPE.MOD;
+        } else if( userType.equals( "global_mod" ) ) {
+            return USER_TYPE.GLOBAL_MOD;
+        } else if( userType.equals( "admin" ) ) {
+            return USER_TYPE.ADMIN;
+        } else if( userType.equals( "staff" ) ) {
+            return USER_TYPE.STAFF;
+        } else if( isSub ) {
             return USER_TYPE.SUBSCRIBER;
-        if( userType.isEmpty() )
-			return USER_TYPE.DEFAULT;
-		else
-			return USER_TYPE.DEFAULT;	//Safety valve
+        }
+        
+        if( userType.isEmpty() ) {
+            return USER_TYPE.DEFAULT;
+        } else {
+            return USER_TYPE.DEFAULT;	//Safety valve
+        }
 	}
 
 	private int getDefaultColor(){
 		//If display name is empty, just semi-random a color
-		if( displayName.isEmpty() )
-			return default_colors[ ((int) (System.currentTimeMillis()) % default_colors.length) ];
+		if( displayName.isEmpty() ) {
+            return DEFAULT_COLORS[ ((int) (System.currentTimeMillis()) % DEFAULT_COLORS.length) ];
+        }
 		
 		int n = displayName.charAt(0) + displayName.charAt(displayName.length() - 1);
-        return default_colors[n % default_colors.length];
+        return DEFAULT_COLORS[n % DEFAULT_COLORS.length];
 	}
 }

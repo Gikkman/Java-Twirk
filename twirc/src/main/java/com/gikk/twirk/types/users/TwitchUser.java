@@ -27,6 +27,12 @@ public interface TwitchUser {
 	 * @return The user's display name
 	 */
 	public String getDisplayName();
+    
+    /**Retrieves info whether this user is the owner of this channel or not
+	 * 
+	 * @return {@code true} if the user is the owner, {@code false} if not
+	 */
+    public boolean isOwner();
 	
 	/**Retrieves info whether this user is a mod in this channel or not
 	 * 
