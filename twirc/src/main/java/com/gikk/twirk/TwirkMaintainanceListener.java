@@ -1,6 +1,6 @@
 package com.gikk.twirk;
 
-import com.gikk.twirk.events.TwirkListenerBaseImpl;
+import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.mode.Mode;
 import com.gikk.twirk.types.mode.Mode.MODE_EVENT;
 import com.gikk.twirk.types.users.Userstate;
@@ -12,7 +12,7 @@ import com.gikk.twirk.types.users.Userstate;
  * @author Gikkman
  *
  */
-class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
+class TwirkMaintainanceListener implements TwirkListener{
 	private final Twirk instance;
 	
 	TwirkMaintainanceListener(Twirk twirk) {
@@ -21,20 +21,23 @@ class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
 	
 	@Override
 	public void onAnything(String line) {
-		if( instance.verboseMode )
-			System.out.println("IN  "+line );
+		if( instance.verboseMode ) {
+            System.out.println("IN  "+line );
+        }
 	}
 
 	@Override
 	public void onJoin(String joinedNick) {
-		if( !instance.online.add( joinedNick ) )
-			System.out.println("\tUser " + joinedNick + " was already listed as online....");
+		if( !instance.online.add( joinedNick ) ) {
+            System.out.println(" was already listed as online...." + "\tUser " + joinedNick);
+        }
 	}
 
 	@Override
 	public void onPart(String partedNick) {
-		if( !instance.online.remove( partedNick ) )
-			System.out.println("\tUser " + partedNick + " was not listed as online....");
+		if( !instance.online.remove( partedNick ) ) {
+            System.out.println("\tUser " + partedNick + " was not listed as online....");
+        }
 	}
 
 	@Override
@@ -50,7 +53,7 @@ class TwirkMaintainanceListener extends TwirkListenerBaseImpl{
     @Override
     public void onUserstate(Userstate userstate) {
         //If the bot is a Mod, it may send 100 messages per 30 seconds
-        //None Mods may send 20 messages per 30 seconds
+        //None-Mods may send 20 messages per 30 seconds
         if(userstate.isMod()) {
             instance.setOutputMessageDelay(30000/100);
         } else {

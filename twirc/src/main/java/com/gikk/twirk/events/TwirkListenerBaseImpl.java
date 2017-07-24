@@ -1,7 +1,5 @@
 package com.gikk.twirk.events;
 
-import java.util.Collection;
-
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.mode.Mode;
@@ -12,6 +10,7 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.usernotice.Usernotice;
 import com.gikk.twirk.types.users.TwitchUser;
 import com.gikk.twirk.types.users.Userstate;
+import java.util.Collection;
 
 /**Convenience class.<br>
  * Instead if extending the TwirkListener interface, you can instead extend this class. That
@@ -20,7 +19,8 @@ import com.gikk.twirk.types.users.Userstate;
  * {@code .super()} methods at all.
  * 
  * @author Gikkman
- *
+ * @deprecated Since moving to Java 8 in Twirk 0.4, please extend TwirkListener directly 
+ * (and overwrite any methods you wish to use), rather than extending this class.<br>
  */
 public abstract class TwirkListenerBaseImpl implements TwirkListener{
 

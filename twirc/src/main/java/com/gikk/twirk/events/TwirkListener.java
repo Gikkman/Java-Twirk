@@ -18,14 +18,14 @@ public interface TwirkListener {
 	 * 
 	 * @param unformatedMessage The incoming message exactly as it looks from Twitch
 	 */
-	public void onAnything( String unformatedMessage );
+    default public void onAnything( String unformatedMessage ) {}
 	
 	/**Fires for incoming PRIVMSG to the channel the bot is joined in
 	 * 
 	 * @param sender The user who sent the message. Parsed from the incoming message's tag
 	 * @param message The message that was sent, with the tag removed
 	 */
-	public void onPrivMsg( TwitchUser  sender, TwitchMessage  message );
+    default public void onPrivMsg( TwitchUser  sender, TwitchMessage  message ) {}
 	
 	/**
      * Fires for incoming WHISPERS directed at the bot
@@ -34,7 +34,7 @@ public interface TwirkListener {
 	 * @param message The whisper that was sent, with the tag removed
      * @deprecated Use Twitch's PubSub system instead
 	 */
-	public void onWhisper( TwitchUser  sender, TwitchMessage  message );
+    default public void onWhisper( TwitchUser  sender, TwitchMessage  message ) {};
 	
 	/**Fires when the bot receives a JOIN from Twitch. Note that Twitch sometimes drops
 	 * PART messages, so we might receive a JOIN from a user who we never saw PART. Another
@@ -46,7 +46,7 @@ public interface TwirkListener {
 	 * 
 	 * @param joinedNick The joining users Twitch user name, in lower case
 	 */
-	public void onJoin( String joinedNick );
+    default public void onJoin( String joinedNick ) {}
 	
 	/**Fires when the bot receives a PART from Twitch. Note that Twitch sometimes drops
 	 * JOIN messages, so we might receive a PART from a user who we never saw JOIN. Another
@@ -58,29 +58,29 @@ public interface TwirkListener {
 	 * 
 	 * @param partedNick The parting users Twitch user name, in lower case
 	 */
-	public void onPart( String partedNick );
+    default public void onPart( String partedNick ) {}
 
 	/**Fires when we've successfully connected to Twitch's server and joined the channel
 	 */
-	public void onConnect();
+    default public void onConnect() {}
 	
 	/**Fires when we've disconnected from Twitch's server. <br>
 	 * We can try to reconnect onDisconnect
 	 */
-	public void onDisconnect();
+    default public void onDisconnect() {}
 	
 	/**Fires whenever we receive a NOTICE from Twitch. See {@link Notice }<br>
 	 * NOTICE tells us about certain events, such as being Timed Out, 
 	 * 
 	 * @param notice The notice we received.
 	 */
-	public void onNotice( Notice  notice );
+    default public void onNotice( Notice  notice ) {}
 	
 	/**Fires whenever we receive a HOSTTARGET from Twitch. See {@link HostTarget }
 	 * 
 	 * @param hostNotice The host notice we received.
 	 */
-	public void onHost( HostTarget  hostNotice );
+    default public void onHost( HostTarget  hostNotice ) {}
 	
 	/**
      * Fires whenever we receive information about a subscriber event from Twitch. See {@link SubscriberEvent}
@@ -88,7 +88,7 @@ public interface TwirkListener {
 	 * @param subscriberEvent The event we received.
      * @deprecated Subscription events will be handled via {@link Usernotice} events instead. <a href="https://dev.twitch.tv/docs/v5/guides/irc/#usernotice-twitch-tags">Twitch Doc</a>
 	 */
-	public void onSubscriberEvent( SubscriberEvent subscriberEvent );
+    default public void onSubscriberEvent( SubscriberEvent subscriberEvent ) {};
 	
 	/**
      * Fires whenever we receive a MODE from Twitch. See {@link Mode}.<br>
@@ -100,7 +100,7 @@ public interface TwirkListener {
 	 * @param mode The mode notice
      * @deprecated Use the {@link TwitchUser#isMod()} method to track moderator status instead
 	 */
-	public void onMode( Mode  mode );
+    default public void onMode( Mode  mode ) {};
 
 	/**Fires whenever we receive a USERSTATE from Twitch. See {@link Userstate }<br>
 	 * USERSTATE is sent whenever the bot sends a message to Twirk. You should <b>never</b> respond
@@ -109,7 +109,7 @@ public interface TwirkListener {
 	 * 
 	 * @param userstate The user state we received
 	 */
-	public void onUserstate( Userstate  userstate );
+    default public void onUserstate( Userstate  userstate ) {}
 
 	/**Fires whenever we receive a ROOMSTATE from Twitch. See {@link Roomstate }<br>
 	 * ROOMSTATE is sent when joining a channel and every time one of the chat room settings, 
@@ -119,7 +119,7 @@ public interface TwirkListener {
 	 * 
 	 * @param roomstate The room state we received
 	 */
-	public void onRoomstate( Roomstate  roomstate );
+    default public void onRoomstate( Roomstate  roomstate ) {}
 	
 	/**Fires when we receive a CLEARCHAT from Twitch. See {@link ClearChat }<br>
 	 * CLEARCHAT comes in two modes: <ul>
@@ -129,7 +129,7 @@ public interface TwirkListener {
 	 * 
 	 * @param clearChat The clear chat notice we received
 	 */
-	public void onClearChat( ClearChat  clearChat );
+    default public void onClearChat( ClearChat  clearChat ) {}
 	
 	/**Fires when we've successfully joined a channel and retrieved the list of
 	 * all users that were online. <br><br>
@@ -140,7 +140,7 @@ public interface TwirkListener {
 	 * 
 	 * @param namesList The unmodifiable collection of all users that Twitch told us were online in this channel.
 	 */
-	public void onNamesList( Collection<String> namesList );
+    default public void onNamesList( Collection<String> namesList ) {}
 	
 	/**Fires when we receive a USERNOTICE from Twitch. See {@link Usernotice }<br>
 	 * A Usernotice tells us about a re-subscription event, either to our channel or to the channel
@@ -148,7 +148,7 @@ public interface TwirkListener {
 	 * 
 	 * @param usernotice The Usernotice we received
 	 */
-	public void onUsernotice(Usernotice usernotice);
+    default public void onUsernotice(Usernotice usernotice) {}
 	
 
 	/**Fires when we received a message we could not categorize. This might happen
@@ -156,5 +156,5 @@ public interface TwirkListener {
 	 * 
 	 * @param unformatedMessage The incoming message exactly as it looks from Twitch
 	 */
-	public void onUnknown( String unformatedMessage );
+    default public void onUnknown( String unformatedMessage ) {}
 }
