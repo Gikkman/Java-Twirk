@@ -2,6 +2,7 @@ package com.gikk.twirk.types.twitchMessage;
 
 import com.gikk.twirk.types.AbstractEmoteMessage;
 import com.gikk.twirk.types.TagMap;
+import com.gikk.twirk.types.TwitchTags;
 import com.gikk.twirk.types.cheer.Cheer;
 import java.util.List;
 
@@ -100,9 +101,8 @@ public interface TwitchMessage extends AbstractEmoteMessage {
      */
     public int getBits();
 
-    /**Fetches the {@link TagPerser} that has parsed the message's tag into a key-value map.
-     * For a list of different identifiers that can occur in a tag, check the {@link TagIdentifiers} class.
-     *
+    /**Fetches the {@link TagMap} that has parsed the message's tag into a key-value map.
+     * For a list of different identifiers that can occur in a tag, check the {@link TwitchTags} class.
      */
     public TagMap getTagMap();
 }

@@ -36,7 +36,7 @@ public enum SubscriptionPlan {
      * subscription notice message.
      * <p>
      * If no match is found (i.e. the input parameter is unknown) this defaults
-     * to returning {@link SUB_LOW}
+     * to returning {@link SubscriptionPlan#SUB_LOW}
      *
      * @param paramSubPlan the sub-plan message
      * @return a SubscriptionPlan

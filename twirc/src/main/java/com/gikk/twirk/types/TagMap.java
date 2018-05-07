@@ -14,7 +14,7 @@ public interface TagMap extends Map<String, String>{
 	 * If the field was not present in the tag, or the field's value was empty,
 	 * this method returns <code>NULL</code>
 	 *
-	 * @param identifier  The fields identifier. See {@link TwitchTag}
+	 * @param identifier  The fields identifier. See {@link TwitchTags}
 	 * @return  The fields value, if there was any. <code>NULL</code> otherwise
 	 */
 	public String getAsString(String identifier);
@@ -23,7 +23,7 @@ public interface TagMap extends Map<String, String>{
 	 * tries to parse it into an <code>int</code>. If the field was not present in the tag,
 	 * or the field's value was empty, this method returns <code>-1</code>
 	 *
-	 * @param identifier  The fields identifier. See {@link TwitchTag}
+	 * @param identifier  The fields identifier. See {@link TwitchTags}
 	 * @return  The fields value, if it was present and an int. <code>-1</code> otherwise
 	 */
 	public int getAsInt(String identifier);
@@ -32,7 +32,7 @@ public interface TagMap extends Map<String, String>{
 	 * tries to parse it into a <code>long</code>. If the field was not present in the tag,
 	 * or the field's value was empty, this method returns <code>-1</code>
 	 *
-	 * @param identifier  The fields identifier. See {@link TwitchTag}
+	 * @param identifier  The fields identifier. See {@link TwitchTags}
 	 * @return  The fields value, if it was present and a long. <code>-1</code> otherwise
 	 */
     long getAsLong(String identifier);
@@ -42,7 +42,7 @@ public interface TagMap extends Map<String, String>{
 	 * as <code>true</code>, anything else as <code>false</code>.
 	 * If the field was not present in the tag, or the field's value was empty, this method returns <code>false</code>
 	 *
-	 * @param identifier  The fields identifier. See {@link TwitchTag}
+	 * @param identifier  The fields identifier. See {@link TwitchTags}
 	 * @return  The fields value, if it was present and could be parsed to a boolean. <code>false</code> otherwise
 	 */
 	public boolean getAsBoolean(String identifier);
@@ -50,7 +50,7 @@ public interface TagMap extends Map<String, String>{
     /**Creates a new TagMap using the default TagMap implementation.
      *
      * @param tag
-     * @return
+     * @return the default tag map
      */
     static TagMap getDefault(String tag){
         return new TagMapImpl(tag);

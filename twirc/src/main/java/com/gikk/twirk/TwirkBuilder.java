@@ -219,7 +219,7 @@ public class TwirkBuilder {
     /**Sets the {@link Socket}. Useful if you want to use your custom implementations of a {@link Socket}. If
 	 * no {@link Socket} is assigned, the created {@link Twirk} object will chose a suitable {@link Socket} implementation.
 	 *
-	 * @param socketFactory The {@link SocketFactory} you want the {@link Twirk} object to use
+	 * @param socket The {@link Socket} that Twirk should use
 	 * @return this
 	 */
 	public TwirkBuilder setSocket(Socket socket) {
