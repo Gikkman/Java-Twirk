@@ -47,7 +47,8 @@ class TypeParser {
             return null;
         }
         long receiverID = map.getAsLong(TwitchTags.PARAM_RECIPIANT_ID);
-        String receivedName = map.getAsString(TwitchTags.PARAM_RECIPIANT_DISPLAY_NAME);
-        return new SubscriptionGiftImpl(receivedName, receiverID);
+        String recipientDisplayName = map.getAsString(TwitchTags.PARAM_RECIPIANT_DISPLAY_NAME);
+        String recipientUserName = map.getAsString(TwitchTags.PARAM_RECIPIANT_NAME);
+        return new SubscriptionGiftImpl(recipientUserName, recipientDisplayName, receiverID);
     }
 }

@@ -40,7 +40,7 @@ class SubscriptionImpl implements Subscription{
 
     @Override
     public boolean isResub() {
-        return months > 0;
+        return months > 1;
     }
 
     @Override

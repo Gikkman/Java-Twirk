@@ -151,6 +151,10 @@ public class TwitchTags {
 
     /** The display name of the subscriber gift receiver.
      */
+    public static String PARAM_RECIPIANT_NAME = "msg-param-recipient-name";
+
+    /** The display name of the subscriber gift receiver.
+     */
     public static String PARAM_RECIPIANT_DISPLAY_NAME = "msg-param-recipient-display-name";
 
     /** The user ID of the subscriber gift receiver.

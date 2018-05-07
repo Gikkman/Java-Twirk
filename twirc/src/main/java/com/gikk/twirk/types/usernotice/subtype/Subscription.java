@@ -2,7 +2,7 @@ package com.gikk.twirk.types.usernotice.subtype;
 
 import java.util.Optional;
 
-/**Object for representing a Subscription (or re-subscription) event.
+/**Interface for representing a Subscription (or re-subscription) event.
  *
  * @author Gikkman
  */
