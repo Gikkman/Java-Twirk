@@ -68,10 +68,10 @@ For a more complex example, which shows how to connect properly and how to write
 You can make Twirk use your own implementation of all event types by using custom builder classes. By extending the types Builder interface, and then passing an instance of your custom builder to the TwirkBuilder, you can use your own custom implementation of whichever type you want.
 ```Java
   final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-    .setSubscriberEventBuilder( new MySubscriberEventBuilder() )
+    .setClearChatBuilder( new MyClearChatBuilder() )
     .build();
 ```
-This will make the Twirk instance build instances of your custom implementation of `SubscriberEvent`
+This will make the Twirk instance build instances of your custom implementation of `ClearChat` events
 
 # Contribute
 If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
