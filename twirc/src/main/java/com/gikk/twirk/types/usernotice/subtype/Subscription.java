@@ -39,7 +39,7 @@ public interface Subscription {
      * gift and the recipiant of the gift. The Optional object wraps the
      * SubscriptionGift object (as an alternative to returning {@code null}).
      *
-     * @return
+     * @return the subscription gift, wrapped in a {@link Optional}
      */
     public Optional<SubscriptionGift> getSubscriptionGift();
 }
