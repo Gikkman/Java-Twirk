@@ -1,116 +1,112 @@
 package com.gikk.twirk.types.usernotice;
 
-import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.types.emote.Emote;
+import com.gikk.twirk.types.usernotice.subtype.Raid;
+import com.gikk.twirk.types.usernotice.subtype.Ritual;
+import com.gikk.twirk.types.usernotice.subtype.Subscription;
 import java.util.List;
+import java.util.Optional;
 
 class UsernoticeImpl implements Usernotice{
-	private final String rawLine;
-	private final String displayName;
-	private final boolean isMod;
-	private final boolean isSub;
-	private final boolean isTurbo;
-	private final int color;
-	private final long userID;
-	private final USER_TYPE userType;
-	private final String[] badges;
-	private final String loginName;
-	private final List<Emote> emotes;
-	private final boolean hasEmotes;
-	private final int months;
-	private final String subMessage;
-	private final String systemMessage;
-	
-	public UsernoticeImpl(GikkDefault_UsernoticeBuilder builder){
-		this.rawLine 		= builder.rawLine;
-		this.displayName 	= builder.displayName;
-		this.isSub 			= builder.isSub;
-		this.isMod 			= builder.isMod;
-		this.isTurbo 		= builder.isTurbo;
-		this.color 			= builder.color;
-		this.userID 		= builder.userID;
-		this.userType 		= builder.userType;
-		this.badges 		= builder.badges;
-		this.loginName 		= builder.loginName;
-		this.emotes 		= builder.emotes;
-		this.hasEmotes 		= builder.hasEmotes;
-		this.months 		= builder.months;
-		this.subMessage 	= builder.subMessage;
-		this.systemMessage 	= builder.systemMessage;
-	}
 
-	@Override
-	public String getRaw() {
-		return rawLine;
-	}
+    private final String raw;
 
-	@Override
-	public String getName() {
-		return displayName;
-	}
+    private final Optional<Raid> raid;
+    private final Optional<Subscription> subscription;
+    private final Optional<Ritual> ritual;
 
-	@Override
-	public boolean isMod() {
-		return isMod;
-	}
+    private final String systemMessage;
+    private final String message;
+    private final List<Emote> emotes;
 
-	@Override
-	public boolean isTurbo() {
-		return isTurbo;
-	}
+    private final long sentTimestamp;
+    private final int roomID;
+    private final String messageID;
 
-	@Override
-	public boolean isSub() {
-		return isSub;
-	}
+    UsernoticeImpl(DefaultUsernoticeBuilder builder){
+        this.raw = builder.rawLine;
 
-	@Override
-	public USER_TYPE getUserType() {
-		return userType;
-	}
+        this.raid = Optional.ofNullable(builder.raid);
+        this.subscription = Optional.ofNullable(builder.subscription);
+        this.ritual = Optional.ofNullable(builder.ritual);
 
-	@Override
-	public int getColor() {
-		return color;
-	}
+        this.systemMessage = builder.systemMessage;
+        this.message = builder.message;
+        this.emotes = builder.emotes;
 
-	@Override
-	public String[] getBadges() {
-		return badges;
-	}
+        this.sentTimestamp = builder.sentTimestamp;
+        this.roomID = builder.roomID;
+        this.messageID = builder.messageID;
+    }
 
-	@Override
-	public long getUserID() {
-		return userID;
-	}
+    @Override
+    public String getSystemMessage() {
+        return systemMessage;
+    }
 
-	@Override
-	public String getMessage() {
-		return subMessage;
-	}
+    @Override
+    public boolean isSubscription() {
+        return subscription.isPresent();
+    }
 
-	@Override
-	public int getMonths() {
-		return months;
-	}
+    @Override
+    public Optional<Subscription> getSubscription() {
+        return subscription;
+    }
 
-	@Override
-	public String getSystemMessage() {
-		return systemMessage;
-	}
+    @Override
+    public boolean isRaid() {
+        return raid.isPresent();
+    }
 
-	@Override
-	public boolean hasEmotes() {
-		return hasEmotes;
-	}
+    @Override
+    public Optional<Raid> getRaid() {
+        return raid;
+    }
 
-	@Override
-	public List<Emote> getEmotes() {
-		return emotes;
-	}
+    @Override
+    public boolean isRitual() {
+        return ritual.isPresent();
+    }
 
-	@Override
-	public String getLogin() {
-		return loginName;
-	}
+    @Override
+    public Optional<Ritual> getRitual() {
+        return ritual;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public boolean hasEmotes() {
+        return !emotes.isEmpty();
+    }
+
+    @Override
+    public List<Emote> getEmotes() {
+        return emotes;
+    }
+
+    @Override
+    public long getSentTimestamp() {
+        return sentTimestamp;
+    }
+
+    @Override
+    public long getRoomID() {
+        return roomID;
+    }
+
+    @Override
+    public String getMessageID() {
+        return messageID;
+    }
+
+    @Override
+    public String getRaw() {
+        return raw;
+    }
+
 }

@@ -21,8 +21,8 @@ class TwitchUserImpl implements TwitchUser{
 	//***********************************************************
 	// 				CONSTRUCTOR
 	//***********************************************************
-	
-	TwitchUserImpl(GikkDefault_TwitchUserBuilder builder) {
+
+	TwitchUserImpl(DefaultTwitchUserBuilder builder) {
         this.userName    = builder.userName;
 		this.displayName = builder.displayName;
         this.isOwner     = builder.isOwner;
@@ -43,7 +43,7 @@ class TwitchUserImpl implements TwitchUser{
     public String getUserName() {
         return userName;
     }
-    
+
     @Override
 	public String getDisplayName(){
 		return displayName;
@@ -53,32 +53,32 @@ class TwitchUserImpl implements TwitchUser{
     public boolean isOwner() {
         return isOwner;
     }
-	
+
     @Override
 	public boolean isMod(){
 		return isMod;
 	}
-	
+
     @Override
 	public boolean isTurbo(){
 		return isTurbo;
 	}
-	
+
     @Override
 	public boolean isSub(){
 		return isSub;
 	}
-	
+
     @Override
 	public USER_TYPE getUserType(){
 		return userType;
 	}
-	
+
     @Override
 	public int getColor(){
 		return color;
 	}
-	
+
     @Override
 	public String[] getBadges(){
 		return badges;

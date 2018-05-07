@@ -5,14 +5,14 @@ class RoomstateImpl implements Roomstate {
 	private static final String R9K_IDENTIFIER = "r9k=";
 	private static final String SUBS_IDENTIFIER = "subs-only=";
 	private static final String SLOW_IDENTIFIER = "slow=";
-	
+
 	private final String broadcasterLanguage;
 	private final  int r9kMode;
 	private final  int subMode;
 	private final  int slowModeTimer;
 	private final String rawLine;
-	
-	RoomstateImpl(GikkDefault_RoomstateBuilder builder){
+
+	RoomstateImpl(DefaultRoomstateBuilder builder){
 		this.broadcasterLanguage = builder.broadcasterLanguage;
 		this.r9kMode = builder.r9kMode;
 		this.subMode = builder.subMode;
@@ -39,9 +39,9 @@ class RoomstateImpl implements Roomstate {
 	public int getSlowModeTimer() {
 		return slowModeTimer;
 	}
-	
+
 	public String toString(){
-		return LANGUAGE_IDENTIFIER + broadcasterLanguage 
+		return LANGUAGE_IDENTIFIER + broadcasterLanguage
 			   + " " +
 			   (r9kMode == 0 ? "" : (R9K_IDENTIFIER + r9kMode))
 			   + " " +

@@ -1,39 +1,76 @@
 package com.gikk.twirk.types.clearChat;
 
-import static org.junit.Assert.assertTrue;
-
-import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.TestConsumer;
+import com.gikk.twirk.TestResult;
 import com.gikk.twirk.enums.CLEARCHAT_MODE;
-import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
+import java.util.function.Consumer;
+
+import static org.junit.Assert.*;
 
 public class TestClearChat {
-	private static String CLEAR_CHAT_TOTAL = ":tmi.twitch.tv CLEARCHAT #gikkman";
-	private static String CLEAR_CHAT_USER_1 = "@ban-duration=1;ban-reason= :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
-	private static String CLEAR_CHAT_USER_2 = "@ban-duration=2;ban-reason= :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
-	private static String CLEAR_CHAT_USER_3 = "@ban-duration=1;ban-reason=Bad :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
-	private static String CLEAR_CHAT_USER_4 = "@ban-duration=1;ban-reason=Bad\\sargument :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
-	
-	
-	
-	public static void test(){
-		testMessage(CLEAR_CHAT_TOTAL, CLEARCHAT_MODE.COMPLETE, "", -1, "");
-		testMessage(CLEAR_CHAT_USER_1, CLEARCHAT_MODE.USER, "gikkbot", 1, "");
-		testMessage(CLEAR_CHAT_USER_2, CLEARCHAT_MODE.USER, "gikkbot", 2, "");
-		testMessage(CLEAR_CHAT_USER_3, CLEARCHAT_MODE.USER, "gikkbot", 1, "Bad");
-		testMessage(CLEAR_CHAT_USER_4, CLEARCHAT_MODE.USER, "gikkbot", 1, "Bad argument");
+	private static final String COMPLETE = ":tmi.twitch.tv CLEARCHAT #gikkman";
+	private static final String DURATION_NO_REASON = "@ban-duration=20;ban-reason= :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
+	private static final String NO_DURATION_NO_REASON = "@ban-reason= :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
+	private static final String DURATION_REASON = "@ban-duration=10;ban-reason=Bad :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
+	private static final String NO_DURATION_REASON = "@ban-reason=Bad\\sargument :tmi.twitch.tv CLEARCHAT #gikkman :gikkbot";
+
+	public static void test(Consumer<String> twirkInput, TestConsumer<ClearChat> test ) throws Exception{
+        TestResult resComplete = test.assign(TestClearChat::testComplete);
+		twirkInput.accept(COMPLETE);
+        resComplete.await();
+
+        TestResult resDNR = test.assign(TestClearChat::testDurationNoReason);
+		twirkInput.accept(DURATION_NO_REASON);
+        resDNR.await();
+
+        TestResult resNDNR = test.assign(TestClearChat::testNoDurationNoReason);
+		twirkInput.accept(NO_DURATION_NO_REASON);
+        resNDNR.await();
+
+        TestResult resDR = test.assign(TestClearChat::testDurationReason);
+		twirkInput.accept(DURATION_REASON);
+        resDR.await();
+
+        TestResult resNDR = test.assign(TestClearChat::testNoDurationReason);
+		twirkInput.accept(NO_DURATION_REASON);
+        resNDR.await();
 	}
 
+    static boolean testComplete(ClearChat c){
+        test(c, CLEARCHAT_MODE.COMPLETE, "", -1, "");
+        System.out.println("--- --- Complete clear OK");
+        return true;
+    }
 
+    static boolean testDurationNoReason(ClearChat c){
+        test(c, CLEARCHAT_MODE.USER, "gikkbot", 20, "");
+        System.out.println("--- --- Duration No Reason OK");
+        return true;
+    }
 
-	private static void testMessage(String MESSAGE, CLEARCHAT_MODE mode, String target, int duration, String reason) {
-		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(MESSAGE);
-		ClearChat clearChat   = new GikkDefault_ClearChatBuilder().build(message);
-		
-		assertTrue("Got: " + clearChat.getMode() + " Expected: " + mode, clearChat.getMode() == mode);
-		assertTrue("Got: " + clearChat.getDuration() + " Expected: " + duration, clearChat.getDuration() == duration);
-		assertTrue("Got: " + clearChat.getTarget()+ " Expected: " + target, clearChat.getTarget().equals(target) );
-		assertTrue("Got: " + clearChat.getReason()+ " Expected: " + reason, clearChat.getReason().equals(reason) );
-		String raw = clearChat.getRaw();
-		assertTrue("Got: " + clearChat.getRaw()+ " Expected: " + MESSAGE , MESSAGE.equals(raw) );
+    static boolean testNoDurationNoReason(ClearChat c){
+        test(c, CLEARCHAT_MODE.USER, "gikkbot", -1, "");
+        System.out.println("--- --- No Duration No Reason OK");
+        return true;
+    }
+
+    static boolean testDurationReason(ClearChat c){
+        test(c, CLEARCHAT_MODE.USER, "gikkbot", 10, "Bad");
+        System.out.println("--- --- Duration w/ Reason OK");
+        return true;
+    }
+
+    static boolean testNoDurationReason(ClearChat c){
+        test(c, CLEARCHAT_MODE.USER, "gikkbot", -1, "Bad argument");
+        System.out.println("--- --- No Duration w/ Reason OK");
+        return true;
+    }
+
+	private static void test(ClearChat clearChat, CLEARCHAT_MODE mode,
+                             String target, int duration, String reason) {
+		assertEquals(mode, clearChat.getMode());
+		assertEquals(duration, clearChat.getDuration());
+		assertEquals(target, clearChat.getTarget());
+		assertEquals(reason, clearChat.getReason());
 	}
 }

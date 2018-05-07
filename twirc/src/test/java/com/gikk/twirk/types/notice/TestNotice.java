@@ -1,42 +1,91 @@
 package com.gikk.twirk.types.notice;
 
-import static org.junit.Assert.assertTrue;
-
-import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.TestConsumer;
+import com.gikk.twirk.TestResult;
 import com.gikk.twirk.enums.NOTICE_EVENT;
-import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
+import java.util.function.Consumer;
+
+import static org.junit.Assert.*;
 
 public class TestNotice {
 	private final static String SUB_MODE_ON_MESSAGE = "@msg-id=subs_on :tmi.twitch.tv NOTICE #gikkman :This room is now in subscribers-only mode.";
 	private final static String SUB_MODE_OFF_MESSAGE = "@msg-id=subs_off :tmi.twitch.tv NOTICE #gikkman :This room is no longer in subscribers-only mode.";
 	private final static String R9K_MODE_ON_MESSAGE = "@msg-id=r9k_on :tmi.twitch.tv NOTICE #gikkman :This room is now in r9k mode.";
 	private final static String R9K_MODE_OFF_MESSAGE = "@msg-id=r9k_off :tmi.twitch.tv NOTICE #gikkman :This room is no longer in r9k mode.";
-	private final static String SLOW_MODE_120_MESSAGE = "@msg-id=slow_on :tmi.twitch.tv NOTICE #gikkman :This room is now in slow mode. You may send messages every 120 seconds.";
-	private final static String SLOW_MODE_OFF_MESSAGE = "@msg-id=slow_off :tmi.twitch.tv NOTICE #gikkman :This room is no longer in slow mode.";
-	private final static String HOST_MODE_ON = "@msg-id=host_on :tmi.twitch.tv NOTICE #gikkman :Now hosting GikkBot.";
-	private final static String HOST_MODE_OFF = "@msg-id=host_off :tmi.twitch.tv NOTICE #gikkman :Exited host mode.";
-	private final static String UNRECOGNIZED = "@msg-id=unrecognized_cmd :tmi.twitch.tv NOTICE #gikkman :Unrecognized command: /do";
-	
-	public static void test(){
-		doTest(SUB_MODE_ON_MESSAGE, NOTICE_EVENT.SUB_MODE_ON, "This room is now in subscribers-only mode.", "subs_on");
-		doTest(SUB_MODE_OFF_MESSAGE, NOTICE_EVENT.SUB_MODE_OFF, "This room is no longer in subscribers-only mode.", "subs_off");
-		doTest(R9K_MODE_ON_MESSAGE, NOTICE_EVENT.R9K_MODE_ON, "This room is now in r9k mode.", "r9k_on");
-		doTest(R9K_MODE_OFF_MESSAGE, NOTICE_EVENT.R9K_MODE_OFF, "This room is no longer in r9k mode.", "r9k_off");
-		doTest(SLOW_MODE_120_MESSAGE, NOTICE_EVENT.SLOW_MODE_ON, "This room is now in slow mode. You may send messages every 120 seconds.", "slow_on");
-		doTest(SLOW_MODE_OFF_MESSAGE, NOTICE_EVENT.SLOW_MODE_OFF, "This room is no longer in slow mode.", "slow_off");
-		doTest(HOST_MODE_ON, NOTICE_EVENT.HOST_MODE_ON, "Now hosting GikkBot.", "host_on");
-		doTest(HOST_MODE_OFF, NOTICE_EVENT.HOST_MODE_OFF, "Exited host mode.", "host_off");
-		doTest(UNRECOGNIZED, NOTICE_EVENT.OTHER, "Unrecognized command: /do", "unrecognized_cmd");
+	private final static String CUSTOM_MESSAGE = "@msg-id=msg_channel_suspended :tmi.twitch.tv NOTICE #gikkman :This ma' message now.";
+
+	public static void test(Consumer<String> twirkInput, TestConsumer<Notice> test ) throws Exception{
+        TestResult res1 = test.assign(TestNotice::testSubModeOn);
+        twirkInput.accept(SUB_MODE_ON_MESSAGE);
+        res1.await();
+
+        TestResult res2 = test.assign(TestNotice::testSubModeOff);
+        twirkInput.accept(SUB_MODE_OFF_MESSAGE);
+        res2.await();
+
+        TestResult res3 = test.assign(TestNotice::testR9KOn);
+        twirkInput.accept(R9K_MODE_ON_MESSAGE);
+        res3.await();
+
+        TestResult res4 = test.assign(TestNotice::testR9KOff);
+        twirkInput.accept(R9K_MODE_OFF_MESSAGE);
+        res4.await();
+
+        TestResult res5 = test.assign(TestNotice::testCustom);
+        twirkInput.accept(CUSTOM_MESSAGE);
+        res5.await();
 	}
 
-	private static void doTest(String line, NOTICE_EVENT EVENT, String theMessage, String rawNoticeID) {
-		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(line);
-		Notice notice = new GikkDefault_NoticeBuilder().build(message);
-		
-		assertTrue( notice.getEvent() == EVENT );
-		assertTrue( notice.getMessage().equals(theMessage) );
-		assertTrue( notice.getRawNoticeID().equals(rawNoticeID) );
-		assertTrue( line.equals( notice.getRaw() ));
-		
+    private static boolean testSubModeOn(Notice n){
+        doTest(n, SUB_MODE_ON_MESSAGE,
+                  NOTICE_EVENT.SUBSCRIBER_MODE_ON,
+                  "This room is now in subscribers-only mode.",
+                  "subs_on");
+        System.out.println("--- --- Sub only On OK");
+        return true;
+    }
+
+    private static boolean testSubModeOff(Notice n){
+        doTest(n, SUB_MODE_OFF_MESSAGE,
+                  NOTICE_EVENT.SUBSCRIBER_MODE_OFF,
+                  "This room is no longer in subscribers-only mode.",
+                  "subs_off");
+        System.out.println("--- --- Sub only Off OK");
+        return true;
+    }
+
+    private static boolean testR9KOn(Notice n){
+        doTest(n, R9K_MODE_ON_MESSAGE,
+                  NOTICE_EVENT.R9K_ON,
+                  "This room is now in r9k mode.",
+                  "r9k_on");
+        System.out.println("--- --- R9K On OK");
+        return true;
+    }
+
+    private static boolean testR9KOff(Notice n){
+        doTest(n, R9K_MODE_OFF_MESSAGE,
+                  NOTICE_EVENT.R9K_OFF,
+                  "This room is no longer in r9k mode.",
+                  "r9k_off");
+        System.out.println("--- --- R9K Off OK");
+        return true;
+    }
+
+    private static boolean testCustom(Notice n){
+        doTest(n, CUSTOM_MESSAGE,
+                  NOTICE_EVENT.MESSAGE_CHANNEL_SUSPENDED,
+                  "This ma' message now.",
+                  "msg_channel_suspended");
+        System.out.println("--- --- Custom test OK");
+        return true;
+    }
+
+	private static void doTest(Notice notice, String raw, NOTICE_EVENT event, String message, String noticeID) {
+		assertEquals( event, notice.getEvent() );
+		assertEquals( message, notice.getMessage() );
+		assertEquals( noticeID, notice.getRawNoticeID() );
+		assertEquals( raw, notice.getRaw());
+
 	}
 }

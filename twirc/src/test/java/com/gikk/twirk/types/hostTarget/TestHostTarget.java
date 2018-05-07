@@ -1,28 +1,54 @@
 package com.gikk.twirk.types.hostTarget;
 
-import static org.junit.Assert.assertTrue;
-
-import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.TestConsumer;
+import com.gikk.twirk.TestResult;
 import com.gikk.twirk.enums.HOSTTARGET_MODE;
-import com.gikk.twirk.types.twitchMessage.GikkDefault_TwitchMessageBuilder;
+import java.util.function.Consumer;
+
+import static org.junit.Assert.*;
 
 public class TestHostTarget {
-	private final static String START_HOST = ":tmi.twitch.tv HOSTTARGET #gikkman :gikkbot 1";	//Gikkman host Gikkbot for 1 viewer
-	private final static String STOP_HOST = ":tmi.twitch.tv HOSTTARGET #gikkman :- 0";			//Gikkbot stopped hosting for 0 viewers
-	
-	public static void test(){
-		doTest(START_HOST, HOSTTARGET_MODE.START, 1, "gikkbot" );
-		doTest(STOP_HOST, HOSTTARGET_MODE.STOP, 0, "");
+	private final static String START_HOST = ":tmi.twitch.tv HOSTTARGET #gikkman :gikkbot 1";   //Gikkman host Gikkbot for 1 viewer
+	private final static String STOP_HOST_NO_VIEWERS = ":tmi.twitch.tv HOSTTARGET #gikkman :-";	//Gikkbot stopped hosting for 0 viewers
+	private final static String STOP_HOST_VIEWERS = ":tmi.twitch.tv HOSTTARGET #gikkman :- 5";  //Gikkbot stopped hosting for 0 viewers
+
+	public static void test(Consumer<String> twirkInput, TestConsumer<HostTarget> test ) throws Exception{
+        TestResult resStart = test.assign(TestHostTarget::testStart);
+        twirkInput.accept(START_HOST);
+        resStart.await();
+
+        TestResult resStopNoView = test.assign(TestHostTarget::testStopNoView);
+        twirkInput.accept(STOP_HOST_NO_VIEWERS);
+        resStopNoView.await();
+
+        TestResult resStopView = test.assign(TestHostTarget::testStopView);
+        twirkInput.accept(STOP_HOST_VIEWERS);
+        resStopView.await();
 	}
 
-	private static void doTest(String STRING, HOSTTARGET_MODE MODE, int viewers, String target) {
-		TwitchMessage message = new GikkDefault_TwitchMessageBuilder().build(STRING);
-		HostTarget host = new GikkDefault_HostTargetBuilder().build(message);
-		
-		assertTrue("Got: "+ host.getTarget() 	  + " Expected: " + target,  host.getTarget().equals(target));
-		assertTrue("Got: "+ host.getViewerCount() + " Expected: " + viewers, host.getViewerCount() == viewers);
-		assertTrue("Got: "+ host.getMode()		  + " Expected: " + MODE , 	 host.getMode() == MODE);
-		assertTrue("Got: "+ host.getRaw() 		  + " Expected: " + STRING , host.getRaw().equals(STRING));
-		
+    static boolean testStart(HostTarget host){
+        doTest(host, START_HOST, HOSTTARGET_MODE.START, 1, "gikkbot" );
+        System.out.println("--- --- Host Start OK");
+        return true;
+    }
+
+    static boolean testStopNoView(HostTarget host){
+        doTest(host, STOP_HOST_NO_VIEWERS, HOSTTARGET_MODE.STOP, 0, "" );
+        System.out.println("--- --- Stop Host No Viewers OK");
+        return true;
+    }
+
+    static boolean testStopView(HostTarget host){
+        doTest(host, STOP_HOST_VIEWERS, HOSTTARGET_MODE.STOP, 5, "" );
+        System.out.println("--- --- Stop Host With Viewers OK");
+        return true;
+    }
+
+	private static void doTest(HostTarget host, String raw, HOSTTARGET_MODE MODE, int viewers, String target) {
+		assertEquals(target, host.getTarget());
+		assertEquals(viewers, host.getViewerCount());
+		assertEquals(MODE, host.getMode());
+		assertEquals(raw, host.getRaw());
+
 	}
 }
