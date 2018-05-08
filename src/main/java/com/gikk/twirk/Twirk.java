@@ -11,7 +11,6 @@ import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.notice.NoticeBuilder;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
-import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.usernotice.Usernotice;
@@ -89,7 +88,6 @@ public final class Twirk {
 	private final TwitchMessageBuilder 	twitchMessageBuilder;
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
-	private final SubscriberEventBuilder subscriberBuilder;
 	private final UsernoticeBuilder		usernoticeBuilder;;
 	private final Socket socket;
 
@@ -110,7 +108,6 @@ public final class Twirk {
 		this.twitchUserBuilder= builder.getTwitchUserBuilder();
 		this.userstateBuilder = builder.getUserstateBuilder();
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder();
-		this.subscriberBuilder= builder.getSubscriberEventBuilder();
 		this.usernoticeBuilder= builder.getUsernoticeBuilder();
 
         this.socket = builder.getSocket();

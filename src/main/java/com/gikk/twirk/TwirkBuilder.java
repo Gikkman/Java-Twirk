@@ -5,7 +5,6 @@ import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.NoticeBuilder;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
-import com.gikk.twirk.types.subscriberEvent.SubscriberEventBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
@@ -48,7 +47,6 @@ public class TwirkBuilder {
 	private TwitchMessageBuilder twitchMessageBuilder;
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
-	private SubscriberEventBuilder subEventBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
     private Socket              socket;
 
@@ -205,17 +203,6 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/**Sets the {@link SubscriberEventBuilder}. Useful if you want to use your custom implementations of a {@link SubscriberEventBuilder}. If
-	 * no {@link SubscriberEventBuilder} is assigned, the created {@link Twirk} object will use the default implementation.
-	 *
-	 * @param subEventBuilder The {@link SubscriberEventBuilder} you want the {@link Twirk} object to use
-	 * @return this
-	 */
-	public TwirkBuilder setSubscriberEventBuilder(SubscriberEventBuilder subEventBuilder) {
-		this.subEventBuilder = subEventBuilder;
-		return this;
-	}
-
     /**Sets the {@link Socket}. Useful if you want to use your custom implementations of a {@link Socket}. If
 	 * no {@link Socket} is assigned, the created {@link Twirk} object will chose a suitable {@link Socket} implementation.
 	 *
@@ -289,14 +276,6 @@ public class TwirkBuilder {
 	 */
 	public UserstateBuilder getUserstateBuilder() {
 		return userstateBuilder != null ? userstateBuilder : UserstateBuilder.getDefault();
-	}
-
-	/**Retrieves the assigned {@link SubscriberEventBuilder}, or the default one, if none is assigned.
-	 *
-	 * @return This builders current {@link SubscriberEventBuilder}
-	 */
-	public SubscriberEventBuilder getSubscriberEventBuilder() {
-		return subEventBuilder != null ? subEventBuilder : SubscriberEventBuilder.getDefault();
 	}
 
 	/**Retrieves the assigned {@link UsernoticeBuilder}, or the default one, if none is assigned.
