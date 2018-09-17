@@ -474,6 +474,14 @@ public final class Twirk {
                     }
                     break;
                 }
+				case "WHISPER":
+				{
+					TwitchUser user = twitchUserBuilder.build(message);
+					for(TwirkListener l : listeners ) {
+						l.onWhisper(user, message);
+					}
+					break;
+				}
                 case "NOTICE":
                 {
                     Notice notice = noticeBuilder.build(message);

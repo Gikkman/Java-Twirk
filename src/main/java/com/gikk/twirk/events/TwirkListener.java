@@ -26,6 +26,13 @@ public interface TwirkListener {
 	 */
     default public void onPrivMsg( TwitchUser  sender, TwitchMessage  message ) {}
 
+	/**Fires for incoming WHISPER to the bot
+	 *
+	 * @param sender The user who sent the message. Parsed from the incoming message's tag
+	 * @param message The message that was sent, with the tag removed
+	 */
+	default public void onWhisper( TwitchUser  sender, TwitchMessage  message ) {}
+
 	/**Fires when the bot receives a JOIN from Twitch. Note that Twitch sometimes drops
 	 * PART messages, so we might receive a JOIN from a user who we never saw PART. Another
 	 * important thing to note is that for large channels (1k chatters +), Twitch only sends
