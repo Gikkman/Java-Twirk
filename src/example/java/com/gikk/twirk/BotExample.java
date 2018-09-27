@@ -1,12 +1,10 @@
 package com.gikk.twirk;
 
-import java.io.IOException;
-import java.util.Scanner;
-
 import com.gikk.twirk.commands.PatternCommandExample;
 import com.gikk.twirk.commands.PrefixCommandExample;
 import com.gikk.twirk.events.TwirkListener;
-import com.gikk.twirk.events.TwirkListenerBaseImpl;
+import java.io.IOException;
+import java.util.Scanner;
 
 /**Simple example of how Twirk can be used. <br><br>
  * 
@@ -48,7 +46,7 @@ public class BotExample {
 
 	private static TwirkListener getOnDisconnectListener(final Twirk twirk) {
 		
-		return new TwirkListenerBaseImpl() {
+		return new TwirkListener() {
 			@Override
 			public void onDisconnect() {
 				//Twitch might sometimes disconnects us from chat. If so, try to reconnect. 

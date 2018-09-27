@@ -4,7 +4,6 @@ import com.gikk.twirk.TestBiConsumer;
 import com.gikk.twirk.TestResult;
 import com.gikk.twirk.types.users.TwitchUser;
 import java.util.function.Consumer;
-
 import static org.junit.Assert.*;
 
 public class TestMessage {
