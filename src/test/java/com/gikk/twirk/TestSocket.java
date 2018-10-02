@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**A socket which fakes a remote server. This implementation allows us to send
  * Strings, which will "come out" the Socket's input stream. This allows us to
@@ -28,7 +29,7 @@ class TestSocket extends Socket{
     TestSocket() throws IOException {
         is = new PipedInputStream(PIPE_BUFFER);
         os = new PipedOutputStream(is);
-        writer = new BufferedWriter( new OutputStreamWriter(os) );
+        writer = new BufferedWriter( new OutputStreamWriter(os, StandardCharsets.UTF_8) );
 
         // Incase the one using the socket writes data to it, that data ends up here
         voidStream = new OutputStream() {

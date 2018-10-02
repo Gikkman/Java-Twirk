@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -336,8 +337,8 @@ public final class Twirk {
 	private void createResources() throws IOException{
     	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
 
-		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
-		reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
+		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+		reader = new BufferedReader( new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 
 		this.outThread = new OutputThread(this, queue, reader, writer);
 		this.inThread  = new InputThread(this, reader, writer);

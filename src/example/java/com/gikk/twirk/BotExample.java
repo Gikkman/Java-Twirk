@@ -4,6 +4,8 @@ import com.gikk.twirk.commands.PatternCommandExample;
 import com.gikk.twirk.commands.PrefixCommandExample;
 import com.gikk.twirk.events.TwirkListener;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**Simple example of how Twirk can be used. <br><br>
@@ -22,7 +24,7 @@ public class BotExample {
 				         + "to send and receive messages from a Twitch chat channel. You will \n"
 				         + "make all input directly here in the command prompt. \n\n"
 				         + "Enter channel to join (leave out the #):");
-		Scanner scanner = new Scanner( System.in );
+		Scanner scanner = new Scanner(new InputStreamReader(System.in, "UTF-8"));
 		String channel = "#" + scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
