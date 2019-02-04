@@ -36,7 +36,7 @@ class DefaultUsernoticeBuilder implements UsernoticeBuilder{
 		this.systemMessage = map.getAsString(TwitchTags.SYSTEM_MESSAGE);
 
         String type = map.get(TwitchTags.MESSAGE_ID);
-        if(type.equals("sub") || type.equals("resub") || type.equals("subgift")){
+        if(type.equals("sub") || type.equals("resub") || type.equals("subgift") || type.equals("anonsubgift")){
             this.subscription = TypeParser.parseSubscription(map);
         }
         else if(type.equals("raid")){
