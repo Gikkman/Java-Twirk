@@ -24,6 +24,11 @@ class TypeParser {
         // New subs doesn't send the number of consecutive months, so I though
         // 1 month made sense (since the first re-sub begins at 2).
         int months = map.getAsInt(TwitchTags.PARAM_MONTHS);
+        int streak = 0;
+        boolean shareStreak = map.getAsBoolean(TwitchTags.PARAM_SHARE_STREAK);
+        if(shareStreak) {
+            streak = map.getAsInt(TwitchTags.PARAM_STREAK);
+        }
         if(months <= 0) {
             months = 1;
         }
@@ -34,7 +39,7 @@ class TypeParser {
 
         SubscriptionGift sg = parseSubscriptionGift(map);
 
-        return new SubscriptionImpl(subPlan, months, planName, sg);
+        return new SubscriptionImpl(subPlan, months, streak, shareStreak, planName, sg);
     }
 
     static Ritual parseRitual(TagMap map){

@@ -16,6 +16,18 @@ public interface Subscription {
      */
     public int getMonths();
 
+    /**Get the number of month's the subscription's been active consecutive.
+     *
+     * @return number of months
+     */
+    public int getStreak();
+
+    /** Returns if user decide to share the streak, this decide if the value of {@code getStreak} its zero or another.
+     *
+     * @return {@code true} if user share the streak
+     */
+    public boolean isSharedStreak();
+
     /**Returns the name of the purchased subscription plan.  This may be a
      * default name or one created by the channel owner.
      *

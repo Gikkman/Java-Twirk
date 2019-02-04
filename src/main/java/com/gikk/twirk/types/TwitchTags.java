@@ -84,9 +84,17 @@ public class TwitchTags {
 	 */
 	public final static String SYSTEM_MESSAGE = "system-msg";
 
+	/** The number of cumulative months the user has subscribed for in a resub notice.
+	 */
+	public final static String PARAM_MONTHS = "msg-param-cumulative-months";
+
 	/** The number of consecutive months the user has subscribed for in a resub notice.
 	 */
-	public final static String PARAM_MONTHS 		= "msg-param-months";
+	public final static String PARAM_STREAK = "msg-param-streak-months";
+
+	/** Denotes if the user share the streak or not. <code>1</code> for <code>true</code>, <code>0</code> for <code>false</code>
+	 */
+	public final static String PARAM_SHARE_STREAK = "msg-param-should-share-streak";
 
     /** The type of subscription plan being used.
      * Valid values: Prime, 1000, 2000, 3000. 1000, 2000, and 3000 refer to the
