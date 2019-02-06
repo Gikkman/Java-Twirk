@@ -59,7 +59,11 @@ public interface TwirkListener {
 
 	/**Fires when we've successfully connected to Twitch's server and joined the channel
 	 */
-    default public void onConnect() {}
+	default public void onConnect() {}
+
+	/**Fires when we've received a request from Twitch, which asks us to reconnect to them
+	 */
+	default public void onReconnect() {}
 
 	/**Fires when we've disconnected from Twitch's server. <br>
 	 * We can try to reconnect onDisconnect

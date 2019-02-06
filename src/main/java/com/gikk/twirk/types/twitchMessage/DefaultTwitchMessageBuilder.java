@@ -88,7 +88,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 		//The command is everything up till the second space
 		do {
             build.append(c);
-        } while( (c = line.charAt(i++)) != ' ' );
+        } while( i < line.length() && (c = line.charAt(i++)) != ' ' );
 		this.command = build.toString().trim();
 		build.setLength(0);
 

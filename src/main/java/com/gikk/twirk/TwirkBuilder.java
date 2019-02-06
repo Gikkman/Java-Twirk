@@ -4,6 +4,7 @@ import com.gikk.twirk.types.clearChat.ClearChatBuilder;
 import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.NoticeBuilder;
+import com.gikk.twirk.types.reconnect.ReconnectBuilder;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
@@ -48,6 +49,7 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
+	private ReconnectBuilder	reconnectBuilder;
     private Socket              socket;
 
 	//***********************************************************
@@ -192,6 +194,28 @@ public class TwirkBuilder {
 		return this;
 	}
 
+	/**Sets the {@link UsernoticeBuilder}. Useful if you want to use your custom implementations of a {@link UsernoticeBuilder}. If
+	 * no {@link UsernoticeBuilder} is assigned, the created {@link Twirk} object will use the default implementation.
+	 *
+	 * @param usernoticeBuilder The {@link UsernoticeBuilder} you want the {@link Twirk} object to use
+	 * @return this
+	 */
+	public TwirkBuilder setUsernoticeBuilder(UsernoticeBuilder usernoticeBuilder) {
+		this.usernoticeBuilder = usernoticeBuilder;
+		return this;
+	}
+
+	/**Sets the {@link ReconnectBuilder}. Useful if you want to use your custom implementations of a {@link ReconnectBuilder}. If
+	 * no {@link ReconnectBuilder} is assigned, the created {@link Twirk} object will use the default implementation.
+	 *
+	 * @param reconnectBuilder The {@link ReconnectBuilder} you want the {@link Twirk} object to use
+	 * @return this
+	 */
+	public TwirkBuilder setReconnectBuilder(ReconnectBuilder reconnectBuilder) {
+		this.reconnectBuilder = reconnectBuilder;
+		return this;
+	}
+
 	/**Sets the {@link UserstateBuilder}. Useful if you want to use your custom implementations of a {@link UserstateBuilder}. If
 	 * no {@link UserstateBuilder} is assigned, the created {@link Twirk} object will use the default implementation.
 	 *
@@ -286,6 +310,14 @@ public class TwirkBuilder {
 		return usernoticeBuilder != null ? usernoticeBuilder : UsernoticeBuilder.getDefault();
 	}
 
+	/**Retrieves the assigned {@link ReconnectBuilder}, or the default one, if none is assigned.
+	 *
+	 * @return This builders current {@link ReconnectBuilder}
+	 */
+	public ReconnectBuilder getReconnectBuilder() {
+		return reconnectBuilder != null ? reconnectBuilder : ReconnectBuilder.getDefault();
+	}
+
     /**Retrives the assigned {@link Socket}, or a default one.
      * The default one depends on whether you've decided to use SSL or not
      * (ssl defaults to true).
@@ -314,5 +346,4 @@ public class TwirkBuilder {
 
 		return new Twirk(this);
 	}
-
 }

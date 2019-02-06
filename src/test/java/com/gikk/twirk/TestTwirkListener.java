@@ -21,6 +21,7 @@ public class TestTwirkListener implements TwirkListener{
     TestConsumer<String>    joinTest = new TestConsumer<>();
     TestConsumer<String>    partTest = new TestConsumer<>();
     TestConsumer<Void>      connectTest = new TestConsumer<>();
+    TestConsumer<Void>      reconnectTest = new TestConsumer<>();
     TestConsumer<String>    disconnectTest = new TestConsumer<>();
     TestConsumer<Notice>    noticeTest = new TestConsumer<>();
     TestConsumer<HostTarget> hostTest = new TestConsumer<>();
@@ -56,6 +57,11 @@ public class TestTwirkListener implements TwirkListener{
     @Override
     public void onConnect() {
         connectTest.consume(null);
+    }
+
+    @Override
+    public void onReconnect() {
+        reconnectTest.consume(null);
     }
 
     @Override

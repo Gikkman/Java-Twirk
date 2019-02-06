@@ -89,6 +89,28 @@ public class TestSuit {
         System.out.println("--- Connect test completed");
     }
 
+    @Test
+    public void testReconnect() throws Exception{
+        System.out.println("--- Reconnect test started");
+        //Make sure the onReconnect method was called
+        TestResult res = tl.reconnectTest.assign((v) -> {
+            return true;
+        });
+        // We want to make sure the RECONNECT command does not throw an exception
+        Thread t = new Thread( () -> {
+            try {
+                Thread.sleep(100); //So we have the time to reach the res.await() bellow
+                twirkIn.accept(":tmi.twitch.tv RECONNECT");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        t.start();
+
+        Assert.assertTrue("Reconnect test", res.await());
+        System.out.println("--- Reconnect test completed");
+    }
+
 	@Test
 	public void testClearChat() throws Exception{
         System.out.println("--- Clearchat test started");

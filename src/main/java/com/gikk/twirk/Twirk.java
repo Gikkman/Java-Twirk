@@ -9,6 +9,7 @@ import com.gikk.twirk.types.mode.Mode;
 import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.notice.NoticeBuilder;
+import com.gikk.twirk.types.reconnect.ReconnectBuilder;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
@@ -88,7 +89,8 @@ public final class Twirk {
 	private final TwitchMessageBuilder 	twitchMessageBuilder;
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
-	private final UsernoticeBuilder		usernoticeBuilder;;
+	private final UsernoticeBuilder		usernoticeBuilder;
+	private final ReconnectBuilder		reconnectBuilder;
 	private final Socket socket;
 
 	//***********************************************************************************************
@@ -109,6 +111,7 @@ public final class Twirk {
 		this.userstateBuilder = builder.getUserstateBuilder();
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder();
 		this.usernoticeBuilder= builder.getUsernoticeBuilder();
+		this.reconnectBuilder = builder.getReconnectBuilder();
 
         this.socket = builder.getSocket();
 
@@ -523,6 +526,13 @@ public final class Twirk {
                     }
                     break;
                 }
+				case "RECONNECT":
+				{
+					for(TwirkListener l : listeners ) {
+						l.onReconnect();
+					}
+					break;
+				}
                 case "353":
                 {
                     //Code 353 is USER LIST messages, which lists users online separated by a space
