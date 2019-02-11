@@ -5,7 +5,6 @@ import com.gikk.twirk.commands.PrefixCommandExample;
 import com.gikk.twirk.events.TwirkListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**Simple example of how Twirk can be used. <br><br>

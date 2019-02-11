@@ -134,6 +134,32 @@ public final class Twirk {
     public void serverMessage(String message) {
 		outThread.quickSend(message);
 	}
+    
+        /**Enqueues a whisper at the end of the message queue. The whisper will
+         * be sent when all messages enqueued before it has been sent.
+         * <br>
+         * Be aware that too frequent use of whispers might get your bot rate 
+         * limited.
+         *
+         * @param receiver The user that should receive the message
+         * @param message The message to whisper
+         */
+       public void whisper(TwitchUser receiver, String message){
+               whisper(receiver.getUserName(), message);
+       }
+       
+       /**Enqueues a whisper at the end of the message queue. The whisper will
+         * be sent when all messages enqueued before it has been sent.
+         * <br>
+         * Be aware that too frequent use of whispers might get your bot rate 
+         * limited.
+         *
+         * @param userName The name of the user that should receive the message.
+         * @param message The message to whisper
+         */
+       public void whisper(String userName, String message){
+               queue.add("PRIVMSG " + channel + " :/w " + userName + " " + message);
+       }
 
 	/**Enqueues a message at the end of the message queue. The message will be
 	 * sent to the channel when all messages enqueued before it has been sent.

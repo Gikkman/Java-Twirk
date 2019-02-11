@@ -26,7 +26,12 @@ public interface TwirkListener {
 	 */
     default public void onPrivMsg( TwitchUser  sender, TwitchMessage  message ) {}
 
-	/**Fires for incoming WHISPER to the bot
+	/**Fires for incoming WHISPER to the bot. Please note that a whisper does
+         * not target a channel, and does not come from a channel. Thus, the flags
+         * for whether a users is a subscriber or not cannot be looked at, since
+         * the message didn't come through a channel chat room. Also, the 
+         * {@link TwitchMessage#getTarget()} will always return the bot's name, since
+         * the target of the whisper was the bot.
 	 *
 	 * @param sender The user who sent the message. Parsed from the incoming message's tag
 	 * @param message The message that was sent, with the tag removed
