@@ -1,9 +1,8 @@
 # Java-Twirk
 [![](https://jitpack.io/v/Gikkman/Java-Twirk.svg)](https://jitpack.io/#Gikkman/Java-Twirk)
-[![](https://img.shields.io/gitter/room/gitterHQ/gitter.svg)](https://gitter.im/Java-Twirk/Twirk#)
-You can also contact us via the [Discord Server](https://discord.gg/8NXaEyV)
+You can contact us via the [Discord Server](https://discord.gg/8NXaEyV)
 
-Small, basic library for creating an IRC connection to the Twitch chat.
+Small, library for creating an IRC connection to the Twitch chat.
 
 The library is intended to make communication via Twitch chat as easy as possible, and uses Java objects to represent most events that can occur in Twitch chat. 
 
@@ -23,25 +22,21 @@ Include the following in your pom.xml
     <dependency>
         <groupId>com.github.gikkman</groupId>
 	<artifactId>Java-Twirk</artifactId>
-	<version>LATEST_RELEASE_VERION_HERE</version>
+	<version>0.5</version>
     </dependency>
 </dependencies>
 ```
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
-There has beenmajor changes from Java-Twirk 0.3 to Java-Twirk 0.4. I am sorry for the hassle, but it was a necessity. Changes include (but is not limited to)
-* Added support for Subscription Gift
-* Added support for Raid
-* Encapsulated all default factories (previously all public under GikkDefault_<NAME HERE>)
-* TwirkListenerBaseImpl has been removed, please implement TwirkListener instead
-* Mode-events has been depricated (please use the TwitchUser.isMod() instead)
-* Subscriber-event has been removed. It is now found under Usernotice-event instead (Twitch has changed their grouping)
-* USER_TYPES now has category SUBSCRIBER, which is given to regular subs and turbo subs.
-* USER_TYPES now has ranks, which allows you to do if( user.getUserType().value >= USER_TYPE.SUBSCRIBER.value )
-* Added the isOwner() status on TwichUser
+There has been some new features in version 0.5, but nothing that is breaking backwards compability. New features include:
+* Whispers (This was removed in 0.4, but is now back. Twitch said they'd remove it , but they haven't so far so...)
+* Support for new sub-streak logic
+* Updated the example
+* Added even more tests
+* Touched up on some JavaDoc
 
-And probably some more. Thankfully, Java is a strongly typed language :D
+And probably some more...
 
 # Usage
 #### Basic usage
