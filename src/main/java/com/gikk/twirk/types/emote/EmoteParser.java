@@ -75,6 +75,7 @@ public class EmoteParser {
 		int end   = Integer.parseInt( endIndex ) + 1;	//The end index we receive from Twitch is inclusive, but Java is almost always exclusive
 		emote.addIndices(begin, end);
 
+                if(emoteID.contains("_")) emoteID = emoteID.substring(0, emoteID.indexOf("_"));
 		emote.setEmoteID( Integer.parseInt( emoteID ) );
 		emote.setPattern( content.substring(begin, end) );
 		emotes.add(emote);
