@@ -33,7 +33,9 @@ public class BotExample {
 		twirk.addIrcListener( getOnDisconnectListener(twirk) );
 		twirk.addIrcListener( new PatternCommandExample(twirk) );
 		twirk.addIrcListener( new PrefixCommandExample(twirk) );
-		
+
+		System.out.println("\nTo exit this example, type .quit and press Enter\n");
+
 		twirk.connect();	//Connect to Twitch
 		
 		//As long as we don't type .quit into the command prompt, send everything we type as a message to twitch
