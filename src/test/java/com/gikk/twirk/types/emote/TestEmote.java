@@ -20,7 +20,7 @@ public class TestEmote {
     static final String NO_EMOTES = "@badges=;color=;display-name=Gikkman;emotes=;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :userMessage";
     static final String ONE_EMOTE = "@badges=;color=#FF69B4;display-name=Gikklol;emotes=86:10-19;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :gikklol!gikklol@gikklol.tmi.twitch.tv PRIVMSG #gikkman :beefin it BibleThump";
     static final String MULTIPLE_EMOTES = "@badges=broadcaster/1;color=#FF69B4;display-name=Gikkman;emotes=4685:4-9,11-16/15614:18-24;mod=1;room-id=27658385;subscriber=0;turbo=0;user-id=27658385;user-type=mod :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :Yo! tmrHat tmrHat tmrToad";
-
+    static final String MODIFIED_EMOTE = "@emotes=301292996_BW:0-13; :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :gikkmaThink_BW";
 
     public static void test(Consumer<String> twirkInput, TestBiConsumer<TwitchUser, TwitchMessage> test ) throws Exception{
         TestResult noEmotesRes = test.assign(TestEmote::noEmotesTest);
@@ -34,6 +34,10 @@ public class TestEmote {
         TestResult multiEmotesRes = test.assign(TestEmote::multipleEmotesTest);
         twirkInput.accept(MULTIPLE_EMOTES);
         multiEmotesRes.await();
+
+        TestResult modifiedEmoteRes = test.assign(TestEmote::modifiedEmoteTest);
+        twirkInput.accept(MODIFIED_EMOTE);
+        modifiedEmoteRes.await();
     }
 
     private static boolean noEmotesTest(TwitchUser user, TwitchMessage message){
@@ -57,6 +61,14 @@ public class TestEmote {
         List<Emote> emotes = Arrays.asList(e1, e2);
         checkEmotes(emotes, message);
         System.out.println("--- --- Multiple Emotes OK");
+        return true;
+    }
+
+    private static boolean modifiedEmoteTest(TwitchUser user, TwitchMessage message) {
+        Emote e = new EmoteImpl().setPattern("gikkmaThink_BW").setEmoteID(301292996).addIndices(0, 14);
+        List<Emote> emotes = Arrays.asList(e);
+        checkEmotes(emotes, message);
+        System.out.println("--- --- Modified Emote OK");
         return true;
     }
 
