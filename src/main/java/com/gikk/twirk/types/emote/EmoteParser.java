@@ -17,7 +17,7 @@ public class EmoteParser {
 		return parseEmotes(tagMap, content);
 	}
 
-	public static List<Emote> parseEmotes(TagMap tagMap, String content) {
+	static List<Emote> parseEmotes(TagMap tagMap, String content) {
 		/* Emotes come in sets formatted like this:
 		 *
 		 * emotes=15614:0-6/4685:8-13,15-21		(Message = tmrToad tmrHat tmrHat)
