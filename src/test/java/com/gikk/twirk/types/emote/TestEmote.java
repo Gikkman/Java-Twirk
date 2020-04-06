@@ -1,18 +1,9 @@
 package com.gikk.twirk.types.emote;
 
-import com.gikk.twirk.TestBiConsumer;
-import com.gikk.twirk.TestResult;
-import com.gikk.twirk.types.AbstractEmoteMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
-import com.gikk.twirk.types.users.TwitchUser;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
 
@@ -68,7 +59,7 @@ public class TestEmote {
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
         // Then
-        checkEmotes(Arrays.asList(e), message);
+        checkEmotes(message, e);
     }
 
     @Test
@@ -81,7 +72,7 @@ public class TestEmote {
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
         // Then
-        checkEmotes(Arrays.asList(e), message);
+        checkEmotes(message, e);
     }
 
     @Test
@@ -95,7 +86,7 @@ public class TestEmote {
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
         //Then
-        checkEmotes(Arrays.asList(e1, e2), message);
+        checkEmotes(message, e1, e2);
     }
 
     @Test
@@ -108,13 +99,13 @@ public class TestEmote {
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
         // Then
-        checkEmotes(Arrays.asList(e), message);
+        checkEmotes(message, e);
     }
 
-    private static void checkEmotes(List<Emote> emotes, AbstractEmoteMessage message){
+    private static void checkEmotes(TwitchMessage message, Emote... emotes){
         //Assert emote properties
-		for( int i = 0; i < emotes.size(); i++){
-			Emote argEmote = emotes.get(i);
+		for( int i = 0; i < emotes.length; i++){
+			Emote argEmote = emotes[i];
 			Emote msgEmote = message.getEmotes().get(i);
 
 			assertEquals( argEmote.getEmoteID(), msgEmote.getEmoteID() );
