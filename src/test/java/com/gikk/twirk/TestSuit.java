@@ -30,7 +30,7 @@ public class TestSuit {
     static TestSocket socket;
 
     public static int WAIT_TIME = 2;
-    public static TimeUnit UNIT = TimeUnit.HOURS;
+    public static TimeUnit UNIT = TimeUnit.SECONDS;
 
     @BeforeClass
     public static void create() throws IOException, InterruptedException {
