@@ -29,12 +29,18 @@ Include the following in your pom.xml
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
-There has been some new features in version 0.5, but nothing that is breaking backwards compability. New features include:
-* Whispers (This was removed in 0.4, but is now back. Twitch said they'd remove it , but they haven't so far so...)
-* Support for new sub-streak logic
-* Updated the example
-* Added even more tests
-* Touched up on some JavaDoc
+There has only been minor changes between 0.5 and 0.6. Nothing that should break backwards compatibility. Fixes include:
+* Fixed NumberFormatException on modified emotes
+  * Twitch changed the emote IDs from always being a number to sometimes being a number_string -.-' Its fixed now
+* Fixed SockerClosedException stacktrace printing on some locales
+  * I think I fixed it at least, but this one is hard to test since there are so many locales.
+* Updated the emotes parse for a safer and faster implementation.
+  * This deprecates a previously public method (`EmoteParse.parseEmote(String, String)`), and the new method is package private. There isn't really any need to call these methods from outside the library
+* Twirk will not only show the "User X was not online" or "User X was already online", when in verbose mode.
+  * This happened when we see a leave/part message but didn't track the user correctly. I felt like it was not needed unless you want the verbose output
+* Updated the example a bit
+* Started to move towards proper JUnit tests
+  * My home rolled test setup wasn't very user friendly, so now I started moving to user regular `@Test` tests. I'll eventually convert all tests to this format 
 
 And probably some more...
 
