@@ -30,7 +30,7 @@ public class TestSuit {
     static TestSocket socket;
 
     public static int WAIT_TIME = 2;
-    public static TimeUnit UNIT = TimeUnit.SECONDS;
+    public static TimeUnit UNIT = TimeUnit.HOURS;
 
     @BeforeClass
     public static void create() throws IOException, InterruptedException {
@@ -116,13 +116,6 @@ public class TestSuit {
         System.out.println("--- Clearchat test started");
 		TestClearChat.test(twirkIn, tl.clearchatTest);
         System.out.println("--- Clearchat test completed");
-	}
-
-     @Test
-	public void testEmote() throws Exception{
-        System.out.println("--- Emote test started");
-		TestEmote.test(twirkIn, tl.privMsgTest);
-        System.out.println("--- Emote test completed");
 	}
 
 	@Test

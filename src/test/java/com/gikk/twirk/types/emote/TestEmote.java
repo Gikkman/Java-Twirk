@@ -4,7 +4,11 @@ import com.gikk.twirk.TestBiConsumer;
 import com.gikk.twirk.TestResult;
 import com.gikk.twirk.types.AbstractEmoteMessage;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.users.TwitchUser;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,59 +21,94 @@ import static org.junit.Assert.*;
  * @author Gikkman
  */
 public class TestEmote {
-    static final String NO_EMOTES = "@badges=;color=;display-name=Gikkman;emotes=;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :userMessage";
-    static final String ONE_EMOTE = "@badges=;color=#FF69B4;display-name=Gikklol;emotes=86:10-19;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :gikklol!gikklol@gikklol.tmi.twitch.tv PRIVMSG #gikkman :beefin it BibleThump";
-    static final String MULTIPLE_EMOTES = "@badges=broadcaster/1;color=#FF69B4;display-name=Gikkman;emotes=4685:4-9,11-16/15614:18-24;mod=1;room-id=27658385;subscriber=0;turbo=0;user-id=27658385;user-type=mod :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :Yo! tmrHat tmrHat tmrToad";
-    static final String MODIFIED_EMOTE = "@emotes=301292996_BW:0-13; :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :gikkmaThink_BW";
 
-    public static void test(Consumer<String> twirkInput, TestBiConsumer<TwitchUser, TwitchMessage> test ) throws Exception{
-        TestResult noEmotesRes = test.assign(TestEmote::noEmotesTest);
-        twirkInput.accept(NO_EMOTES);
-        noEmotesRes.await();
+    @Test
+    public void noEmotesTest_whenNoEmotesNodeInTag_thenParsesNoEmotes(){
+        // Given
+        String input = "@badges=;color=;display-name=Gikkman;mod=0;room-id=1;subscriber=0;turbo=0;user-id=1;user-type= :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :userMessage";
 
-        TestResult oneEmoteRes = test.assign(TestEmote::oneEmoteTest);
-        twirkInput.accept(ONE_EMOTE);
-        oneEmoteRes.await();
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
-        TestResult multiEmotesRes = test.assign(TestEmote::multipleEmotesTest);
-        twirkInput.accept(MULTIPLE_EMOTES);
-        multiEmotesRes.await();
-
-        TestResult modifiedEmoteRes = test.assign(TestEmote::modifiedEmoteTest);
-        twirkInput.accept(MODIFIED_EMOTE);
-        modifiedEmoteRes.await();
+        // Then
+        Assert.assertTrue("Expected empty emotes array", message.getEmotes().isEmpty());
     }
 
-    private static boolean noEmotesTest(TwitchUser user, TwitchMessage message){
-        List<Emote> emotes = new ArrayList<>();
-        checkEmotes(emotes, message);
-        System.out.println("--- --- No Emtoes OK");
-        return true;
+    @Test
+    public void noEmotesTest_whenFullTagIsPresent_thenParsesNoEmotes(){
+        // Given
+        String input = "@badges=;color=;display-name=Gikkman;emotes=;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :userMessage";
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        Assert.assertTrue("Expected empty emotes array", message.getEmotes().isEmpty());
     }
 
-    private static boolean oneEmoteTest(TwitchUser user, TwitchMessage message){
+    @Test
+    public void noEmotesTest_whenShortTagIsPresent_thenGivesNoEmotes(){
+        // Given
+        String input = "@emotes= :gikkman!gikkman@gikkman.tmi.twitch.tv PRIVMSG #gikkman :userMessage";
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        Assert.assertTrue("Expected empty emotes array", message.getEmotes().isEmpty());
+    }
+
+    @Test
+    public void oneEmoteTest_whenFullTagIsPresent_thenParsesTheEmote(){
+        //Given
+        String input = "@badges=;color=#FF69B4;display-name=Gikklol;emotes=86:10-19;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :nn!nn@nn.tmi.twitch.tv PRIVMSG #tv :beefin it BibleThump";
         Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteID(86).addIndices(10, 20);
-        List<Emote> emotes = Arrays.asList(e);
-        checkEmotes(emotes, message);
-        System.out.println("--- --- One Emote OK");
-        return true;
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(Arrays.asList(e), message);
     }
 
-    private static boolean multipleEmotesTest(TwitchUser user, TwitchMessage message){
+    @Test
+    public void oneEmoteTest_whenShortTagIsPresent_thenParsesTheEmote(){
+        //Given
+        String input = "@emotes=86:10-19 :nn!nn@nn.tmi.twitch.tv PRIVMSG #tv :beefin it BibleThump";
+        Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteID(86).addIndices(10, 20);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(Arrays.asList(e), message);
+    }
+
+    @Test
+    public void multipleEmotesTest(){
+        // Given
+        String input = "@emotes=4685:4-9,11-16/15614:18-24; :anom!anon@anon.tmi.twitch.tv PRIVMSG #tv :Yo! tmrHat tmrHat tmrToad";
         Emote e1 = new EmoteImpl().setPattern("tmrHat").setEmoteID(4685).addIndices(4, 10).addIndices(11, 17);
         Emote e2 = new EmoteImpl().setPattern("tmrToad").setEmoteID(15614).addIndices(18, 25);
-        List<Emote> emotes = Arrays.asList(e1, e2);
-        checkEmotes(emotes, message);
-        System.out.println("--- --- Multiple Emotes OK");
-        return true;
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        //Then
+        checkEmotes(Arrays.asList(e1, e2), message);
     }
 
-    private static boolean modifiedEmoteTest(TwitchUser user, TwitchMessage message) {
-        Emote e = new EmoteImpl().setPattern("gikkmaThink_BW").setEmoteID(301292996).addIndices(0, 14);
-        List<Emote> emotes = Arrays.asList(e);
-        checkEmotes(emotes, message);
-        System.out.println("--- --- Modified Emote OK");
-        return true;
+    @Test
+    public void modifiedEmoteTest() {
+        // Given
+        String input = "@emotes=123_BW:0-12 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink_BW what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink_BW").setEmoteID(123).addIndices(0, 13);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(Arrays.asList(e), message);
     }
 
     private static void checkEmotes(List<Emote> emotes, AbstractEmoteMessage message){

@@ -1,13 +1,24 @@
 package com.gikk.twirk.types.emote;
 
+import com.gikk.twirk.types.TagMap;
+import com.gikk.twirk.types.TwitchTags;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class EmoteParser {
-	private static final String EMOTES_IDENTIFIER = "emotes=";
-
+	/**
+	 * @deprecated Use {{@link #parseEmotes(TagMap, String)} instead. This will be removed in a future release}
+	 */
+	@Deprecated
 	public static List<Emote> parseEmotes(String content, String tag) {
-		/* Emotes come in sets formated like this:
+		TagMap tagMap = TagMap.getDefault(tag);
+		return parseEmotes(tagMap, content);
+	}
+
+	public static List<Emote> parseEmotes(TagMap tagMap, String content) {
+		/* Emotes come in sets formatted like this:
 		 *
 		 * emotes=15614:0-6/4685:8-13,15-21		(Message = tmrToad tmrHat tmrHat)
 		 *
@@ -15,17 +26,8 @@ public class EmoteParser {
 		 * The numbers separated by a - indicates the indices in the message that makes up the emote.
 		 *     If an emote appears several times in a message, the different index ranges are separated by a ,
 		 *
-		 * So we find the begining of the emotes section and the end of the section.
-		 * Then, check that the message actually contains an emotes section and that
-		 * the emote section actually contains data.
+		 * Thankfully the tagmap does the extraction for us, but this piece of information is left here for reference
 		 */
-		List<Emote> emotes = new LinkedList<>();
-
-		int begin = tag.indexOf( EMOTES_IDENTIFIER );
-		int end =   tag.indexOf(';', begin );
-		if( begin == -1 || begin + EMOTES_IDENTIFIER.length() == end){
-			return emotes;
-		}
 
 		/* This segment is a head ache, but here is a basic idea of what it is doing:
 		 * Iterate through the emotes-section.
@@ -36,7 +38,9 @@ public class EmoteParser {
 		 *       If terminated by a / there is another emote in the message. The next part is a new emote ID
 		 *       If terminated by the segment ending we simply finish the last begin-end pair and we are done
 		 */
-		String emotesString = tag.substring( begin + EMOTES_IDENTIFIER.length(), end);
+		List<Emote> emotes = new ArrayList<>();
+		String emotesString = tagMap.getAsString(TwitchTags.EMOTES);
+		if(emotesString == null || emotesString.isEmpty()) return emotes;
 
 		EmoteImpl emote = new EmoteImpl();
 		StringBuilder str = new StringBuilder();
