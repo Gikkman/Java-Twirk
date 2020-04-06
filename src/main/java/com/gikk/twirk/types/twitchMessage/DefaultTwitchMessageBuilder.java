@@ -26,7 +26,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 	public TwitchMessage build(String chatLine) {
 		if( chatLine.startsWith("@") ) {
             parseWithTag(chatLine);
-        } else{
+        } else {
 			parseWithoutTag(chatLine);
 		}
 
@@ -53,17 +53,17 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 		}
 		if( parts.length >= 4) {
 			target = parts[3];
-		}else {
+		} else {
 			target = "";
 		}
 		if( parts.length >= 3) {
 			command = parts[2];
-		}else {
+		} else {
 			command = "";
 		}
 		if( parts.length >= 2) {
 			prefix = parts[1];
-		}else {
+		} else {
 			prefix = "";
 		}
 		if( parts.length >= 1) {
