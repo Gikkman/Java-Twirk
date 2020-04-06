@@ -17,6 +17,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 	List<Emote> emotes;
     List<Cheer> cheers;
     TagMap tagMap;
+    EmoteParser emoteParser = EmoteParser.getDefaultImplementation();
 
 	//***********************************************************
 	// 				PUBLIC
@@ -33,7 +34,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
         this.tagMap = TagMap.getDefault(tag);
         this.id = tagMap.getAsString(TwitchTags.ID);
         this.roomID = tagMap.getAsInt(TwitchTags.ROOM_ID);
-		this.emotes = EmoteParser.parseEmotes(tagMap, content);
+		this.emotes = emoteParser.parseEmotes(tagMap, content);
         this.cheers = CheerParser.parseCheer(tagMap, content);
 
 		return new TwitchMessageImpl(this);
