@@ -6,7 +6,7 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.users.TwitchUser;
 
 public class PatternCommandExample extends CommandExampleBase{
-	private static String PATTERN = "tick";
+	private static String PATTERN = "!tick";
 	
 	private final Twirk twirk;
 	
@@ -27,6 +27,6 @@ public class PatternCommandExample extends CommandExampleBase{
 
 	@Override
 	protected void performCommand(String command, TwitchUser sender, TwitchMessage message) {
-		twirk.channelMessage("Tock");
+		twirk.channelMessage("tock");
 	}
 }
