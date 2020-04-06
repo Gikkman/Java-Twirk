@@ -17,6 +17,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 	List<Emote> emotes;
     List<Cheer> cheers;
     TagMap tagMap;
+    EmoteParser emoteParser = EmoteParser.getDefaultImplementation();
 
 	//***********************************************************
 	// 				PUBLIC
@@ -25,7 +26,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 	public TwitchMessage build(String chatLine) {
 		if( chatLine.startsWith("@") ) {
             parseWithTag(chatLine);
-        } else{
+        } else {
 			parseWithoutTag(chatLine);
 		}
 
@@ -33,7 +34,7 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
         this.tagMap = TagMap.getDefault(tag);
         this.id = tagMap.getAsString(TwitchTags.ID);
         this.roomID = tagMap.getAsInt(TwitchTags.ROOM_ID);
-		this.emotes = EmoteParser.parseEmotes(content, tag);
+		this.emotes = emoteParser.parseEmotes(tagMap, content);
         this.cheers = CheerParser.parseCheer(tagMap, content);
 
 		return new TwitchMessageImpl(this);
@@ -52,17 +53,17 @@ class DefaultTwitchMessageBuilder implements TwitchMessageBuilder{
 		}
 		if( parts.length >= 4) {
 			target = parts[3];
-		}else {
+		} else {
 			target = "";
 		}
 		if( parts.length >= 3) {
 			command = parts[2];
-		}else {
+		} else {
 			command = "";
 		}
 		if( parts.length >= 2) {
 			prefix = parts[1];
-		}else {
+		} else {
 			prefix = "";
 		}
 		if( parts.length >= 1) {

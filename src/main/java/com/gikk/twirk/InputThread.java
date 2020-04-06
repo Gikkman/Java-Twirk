@@ -63,10 +63,10 @@ class InputThread extends Thread{
 	            }
 	            catch (IOException e) {
 	            	//This probably means we force closed the socket. In case something else occurred, we print the StackTrace
-	            	String message = e.getMessage();
-	            	if( (message.contains("Socket Closed")) ){
+	            	String message = e.getMessage().toLowerCase();
+	            	if( (message.toLowerCase().contains("socket closed")) ){
 	            		//Ignore
-	            	} else if ( message.contains("Connection reset") || message.contains("Stream closed")) {
+	            	} else if ( message.contains("connection reset") || message.contains("stream closed")) {
 	            		System.err.println( message );
 	            	}
 	            	else {

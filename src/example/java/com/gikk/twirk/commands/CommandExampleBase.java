@@ -9,6 +9,10 @@ import java.util.Locale;
 import java.util.Set;
 
 public abstract class CommandExampleBase implements TwirkListener {
+	/**
+	 * A PREFIX_COMMAND are the classical commands that starts with a certain pattern (e.g. !time)
+	 * A CONTENT_COMMAND is a command that looks for a certain pattern in the message (e.g. this is !tick)
+	 */
 	public enum CommandType{ PREFIX_COMMAND, CONTENT_COMMAND };
 	
 	//***********************************************************************************************

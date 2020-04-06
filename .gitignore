@@ -132,3 +132,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 .idea/
+
+# IntelliJ Idea
+/twirc.iml

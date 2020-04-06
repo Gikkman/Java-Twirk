@@ -118,13 +118,6 @@ public class TestSuit {
         System.out.println("--- Clearchat test completed");
 	}
 
-     @Test
-	public void testEmote() throws Exception{
-        System.out.println("--- Emote test started");
-		TestEmote.test(twirkIn, tl.privMsgTest);
-        System.out.println("--- Emote test completed");
-	}
-
 	@Test
 	public void testHost() throws Exception{
         System.out.println("--- Hosttarget test started");
