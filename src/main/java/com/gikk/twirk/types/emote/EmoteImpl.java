@@ -8,8 +8,14 @@ class EmoteImpl implements Emote{
 	private final static String EMOTE_URL_BASE 	= "http://static-cdn.jtvnw.net/emoticons/v1/";
 
 	private int emoteID;
+	private String emoteIDString;
 	private final LinkedList<EmoteIndices> indices = new LinkedList<>();
 	private String pattern;
+
+	public EmoteImpl setEmoteIDString(String emoteIDString){
+		this.emoteIDString = emoteIDString;
+		return this;
+	}
 
 	public EmoteImpl setEmoteID(int emoteID){
 		this.emoteID = emoteID;
@@ -32,6 +38,11 @@ class EmoteImpl implements Emote{
 	}
 
 	@Override
+	public String getEmoteIDString() {
+		return emoteIDString;
+	}
+
+	@Override
 	public String getPattern() {
 		return pattern;
 	}
@@ -50,7 +61,7 @@ class EmoteImpl implements Emote{
 
     @Override
 	public String toString(){
-		StringBuilder out = new StringBuilder(emoteID + " " + ( pattern == null ? "NULL" : pattern) + "[ ");
+		StringBuilder out = new StringBuilder(emoteIDString + " " + ( pattern == null ? "NULL" : pattern) + "[ ");
 
 		for( EmoteIndices index : indices ) {
             out.append(index.toString());
