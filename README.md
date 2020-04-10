@@ -22,14 +22,14 @@ Include the following in your pom.xml
     <dependency>
         <groupId>com.github.gikkman</groupId>
 	<artifactId>Java-Twirk</artifactId>
-	<version>0.6.1</version>
+	<version>0.6.2</version>
     </dependency>
 </dependencies>
 ```
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
-### 0.6.1
+### 0.6.2
 Hotfix release since some emote IDs were still not parsed correctly (see #22). This hotfix should hopefully fix this issue.
 Please report any further issues with parsing emotes.
 
