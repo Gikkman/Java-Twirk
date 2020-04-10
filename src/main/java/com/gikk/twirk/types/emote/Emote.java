@@ -20,13 +20,20 @@ import com.gikk.twirk.enums.EMOTE_SIZE;
  *
  */
 public interface Emote {
-	
-
 	/** Fetches the emotes numeric ID.
 	 * 
 	 * @return The emotes numeric ID
+	 * @deprecated use {@link #getEmoteIDString()} instead
 	 */
 	public int getEmoteID();
+
+
+	/** Fetches the emotes ID as String. This became necessary after Twitch start
+	 * including other characters than numbers in emote IDs
+	 *
+	 * @return The emotes ID
+	 */
+	public String getEmoteIDString();
 	
 	/** A list of pairs on indices. Each pair is a BEGIN-END pair of a emote occurrence in the message.<br><br>
 	 * 

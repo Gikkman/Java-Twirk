@@ -53,7 +53,7 @@ public class TestEmote {
     public void oneEmoteTest_whenFullTagIsPresent_thenParsesTheEmote(){
         //Given
         String input = "@badges=;color=#FF69B4;display-name=Gikklol;emotes=86:10-19;mod=0;room-id=31974228;subscriber=0;turbo=0;user-id=27658385;user-type= :nn!nn@nn.tmi.twitch.tv PRIVMSG #tv :beefin it BibleThump";
-        Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteID(86).addIndices(10, 20);
+        Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteIDString("86").setEmoteID(86).addIndices(10, 20);
 
         // When
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
@@ -66,7 +66,7 @@ public class TestEmote {
     public void oneEmoteTest_whenShortTagIsPresent_thenParsesTheEmote(){
         //Given
         String input = "@emotes=86:10-19 :nn!nn@nn.tmi.twitch.tv PRIVMSG #tv :beefin it BibleThump";
-        Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteID(86).addIndices(10, 20);
+        Emote e = new EmoteImpl().setPattern("BibleThump").setEmoteIDString("86").setEmoteID(86).addIndices(10, 20);
 
         // When
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
@@ -79,8 +79,8 @@ public class TestEmote {
     public void multipleEmotesTest(){
         // Given
         String input = "@emotes=4685:4-9,11-16/15614:18-24; :anom!anon@anon.tmi.twitch.tv PRIVMSG #tv :Yo! tmrHat tmrHat tmrToad";
-        Emote e1 = new EmoteImpl().setPattern("tmrHat").setEmoteID(4685).addIndices(4, 10).addIndices(11, 17);
-        Emote e2 = new EmoteImpl().setPattern("tmrToad").setEmoteID(15614).addIndices(18, 25);
+        Emote e1 = new EmoteImpl().setPattern("tmrHat").setEmoteIDString("4685").setEmoteID(4685).addIndices(4, 10).addIndices(11, 17);
+        Emote e2 = new EmoteImpl().setPattern("tmrToad").setEmoteIDString("15614").setEmoteID(15614).addIndices(18, 25);
 
         // When
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
@@ -93,13 +93,92 @@ public class TestEmote {
     public void modifiedEmoteTest() {
         // Given
         String input = "@emotes=123_BW:0-12 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink_BW what is that?";
-        Emote e = new EmoteImpl().setPattern("doggoThink_BW").setEmoteID(123).addIndices(0, 13);
+        Emote e = new EmoteImpl().setPattern("doggoThink_BW").setEmoteIDString("123_BW").setEmoteID(123).addIndices(0, 13);
 
         // When
         TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
 
         // Then
         checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenStartsAndEndsWithLetter() {
+        // Given
+        String input = "@emotes=A123A:0-11 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :1oggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("1oggoThink2").setEmoteIDString("A123A").setEmoteID(123).addIndices(0, 12);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenEndsWithLetter() {
+        // Given
+        String input = "@emotes=123BW:0-12 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink_BW what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink_BW").setEmoteIDString("123BW").setEmoteID(123).addIndices(0, 13);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenEndsWithUnderscore() {
+        // Given
+        String input = "@emotes=123_BW:0-10 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("123_BW").setEmoteID(123).addIndices(0, 11);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenNoNumbers() {
+        // Given
+        String input = "@emotes=ABC_BW:0-10 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("ABC_BW").setEmoteID(0).addIndices(0, 11);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenMissingCompletely() {
+        // Given
+        String input = "@emotes=:0-10 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("").setEmoteID(0).addIndices(0, 11);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenMultipleOccurrences() {
+        // Given
+        String input = "@emotes=X123X:0-10,25-35/A1_B:12-15 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that doggoThink2";
+        Emote e1 = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("X123X").setEmoteID(123).addIndices(0, 11).addIndices(25,36);
+        Emote e2 = new EmoteImpl().setPattern("what").setEmoteIDString("A1_B").setEmoteID(1).addIndices(12, 16);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e1, e2);
     }
 
     private static void checkEmotes(TwitchMessage message, Emote... emotes){
