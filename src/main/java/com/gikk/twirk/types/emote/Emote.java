@@ -23,7 +23,7 @@ public interface Emote {
 	/** Fetches the emotes numeric ID.
 	 * 
 	 * @return The emotes numeric ID
-	 * @deprecated use {@link #getEmoteStringID()} instead
+	 * @deprecated use {@link #getEmoteIDString()} instead
 	 */
 	public int getEmoteID();
 
