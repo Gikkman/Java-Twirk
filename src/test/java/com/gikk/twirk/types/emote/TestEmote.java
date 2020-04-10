@@ -142,6 +142,32 @@ public class TestEmote {
     }
 
     @Test
+    public void oddEmoteIdTest_whenNoNumbers() {
+        // Given
+        String input = "@emotes=ABC_BW:0-10 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("ABC_BW").setEmoteID(0).addIndices(0, 11);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
+    public void oddEmoteIdTest_whenMissingCompletely() {
+        // Given
+        String input = "@emotes=:0-10 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that?";
+        Emote e = new EmoteImpl().setPattern("doggoThink2").setEmoteIDString("").setEmoteID(0).addIndices(0, 11);
+
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+
+        // Then
+        checkEmotes(message, e);
+    }
+
+    @Test
     public void oddEmoteIdTest_whenMultipleOccurrences() {
         // Given
         String input = "@emotes=X123X:0-10,25-35/A1_B:12-15 :anon!anon@anon.tmi.twitch.tv PRIVMSG #tv :doggoThink2 what is that doggoThink2";
