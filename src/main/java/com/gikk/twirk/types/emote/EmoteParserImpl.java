@@ -5,8 +5,11 @@ import com.gikk.twirk.types.TwitchTags;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EmoteParserImpl implements EmoteParser {
+	private static Pattern integerIdPattern = Pattern.compile("([0-9]+)");
 
 	@Override
 	public List<Emote> parseEmotes(TagMap tagMap, String content) {
@@ -71,10 +74,26 @@ public class EmoteParserImpl implements EmoteParser {
 		int end   = Integer.parseInt( endIndex ) + 1;	//The end index we receive from Twitch is inclusive, but Java is almost always exclusive
 		emote.addIndices(begin, end);
 
-                if(emoteID.contains("_")) emoteID = emoteID.substring(0, emoteID.indexOf("_"));
-		emote.setEmoteID( Integer.parseInt( emoteID ) );
-		emote.setPattern( content.substring(begin, end) );
+		emote.setEmoteIDString(emoteID);
+		emote.setPattern( content.substring(begin, end).trim() );
 		emotes.add(emote);
+
+		// Emote IDs should be strings, but for backwards compatibility in Twirk's API we calculate
+		// a integer ID as well, as good we can. In case no numbers are part of the ID, we just set
+		// it to 0.
+		// Should this STILL fail somehow, we just set this to 0 (I've had too much problem with this
+		// already!)
+		String emoteIntegerID;
+		Matcher matcher = integerIdPattern.matcher(emoteID);
+		if(matcher.find())
+			emoteIntegerID = matcher.group(0);
+		else
+			emoteIntegerID = "0";
+		try { emote.setEmoteID( Integer.parseInt( emoteIntegerID ) ); }
+		catch (NumberFormatException e) {
+			System.out.println("\tProblem parsing emote ID for string " + emoteID + " - Defaulting to 0");
+			emote.setEmoteID(0);
+		}
 	}
 
 	private static void addIndices(EmoteImpl emote, String beginIndex, String endIndex){
