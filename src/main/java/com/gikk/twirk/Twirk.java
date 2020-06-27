@@ -446,7 +446,9 @@ public final class Twirk {
     		// A PING contains the message "PING MESSAGE", and we want to reply with MESSAGE as well
     		// Hence, we reply "PONG MESSAGE" . That's where the substring(5) comes from bellow, we strip
     		//out everything but the message
-			System.out.println("IN  " + line );
+			if (verboseMode) {
+				System.out.println("IN  " + line);
+			}
     		serverMessage("PONG " + line.substring(5) ); //Remove the "PING " part, and send the rest back
     		return;
 		}
