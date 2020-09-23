@@ -36,9 +36,9 @@ public class TwirkBuilder {
 	int 	port  = 6697;
 	boolean useSSL = true;
 
-	String nick = "";
-	String oauth = "";
-	String channel = "";
+	String nick;
+	String oauth;
+	String channel;
 
 	private ClearChatBuilder 	clearChatBuilder;
 	private HostTargetBuilder 	hostTargetBuilder;
@@ -50,6 +50,7 @@ public class TwirkBuilder {
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
     private Socket              socket;
+    private int					pingIntervalSeconds = 15 + (5 * 60);	// Twitch recommends pinging them every >5 minutes
 
 	//***********************************************************
 	// 				CONSTRUCTOR
@@ -73,7 +74,7 @@ public class TwirkBuilder {
 	//***********************************************************
 	/**Sets the server which {@link Twirk} will try to connect to Twitch via
 	 *
-	 * @param server The server adress
+	 * @param server The server address
 	 * @return this
 	 */
 	public TwirkBuilder setServer(String server){
@@ -238,6 +239,30 @@ public class TwirkBuilder {
 		return this;
 	}
 
+	/**Sets the interval at which we will ping Twitch's chat interface, in case we haven't heard anything from it in a
+	 * while. Twitch recommends setting this value to >5 minutes, so it defaults to 5:15.
+	 * <br>
+	 * A ping will only fire in case we haven't heard anything from Twitch for more than the set interval. Twitch also
+	 * pings us every ~5 minutes, hence why they recommend setting this to more than 5 minutes. However, sometimes there
+	 * are connection issues with Twitch, and someone using this library might want to ping Twitch more regularly to
+	 * ensure connectivity.
+	 * <br>
+	 * Once the ping interval has passed, and we haven't seen a message from Twitch, we will send a PING message. If we
+	 * the ping interval then passes again without a reply, the Twirk instance will issue a disconnect. Hence, if Twitch
+	 * drops our connection somehow, we will disconnect after two times the ping interval.
+	 * <br>
+	 *  Note that this might upset Twitch, if done excessively. Do not set this value too low.
+	 *
+	 * @param intervalSeconds Ping interval, in seconds
+	 * @return this
+	 * @throws IllegalArgumentException If intervalSeconds <= 0
+	 */
+	public TwirkBuilder setPingInterval(int intervalSeconds) {
+		if(intervalSeconds <= 0) throw new IllegalArgumentException("Timeout cannot be 0 or less");
+		this.pingIntervalSeconds = intervalSeconds;
+		return this;
+	}
+
 	/**Retrieves the assigned {@link ClearChatBuilder}, or the default one, if none is assigned.
 	 *
 	 * @return This builders current {@link ClearChatBuilder}
@@ -320,7 +345,7 @@ public class TwirkBuilder {
 		return ReconnectBuilder.getDefault();
 	}
 
-    /**Retrives the assigned {@link Socket}, or a default one.
+    /**Retrieves the assigned {@link Socket}, or a default one.
      * The default one depends on whether you've decided to use SSL or not
      * (ssl defaults to true).
      *
@@ -329,6 +354,14 @@ public class TwirkBuilder {
     public Socket getSocket() {
         return this.socket;
     }
+
+	/**Retrieves the assigned ping interval (in seconds). Defaults to 5:15 is not set by the user
+	 *
+	 * @return ping interval
+	 */
+	public int getPingInterval() {
+    	return this.pingIntervalSeconds;
+	}
 
 	/**Creates a Twirk object, with the parameters assigned to this
 	 * builder.

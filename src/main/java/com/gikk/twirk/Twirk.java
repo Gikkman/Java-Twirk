@@ -90,7 +90,7 @@ public final class Twirk {
 	private final UserstateBuilder 		userstateBuilder;
 	private final UsernoticeBuilder		usernoticeBuilder;
 	private final Socket socket;
-
+	private final int pingIntervalSeconds;
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************
@@ -111,6 +111,7 @@ public final class Twirk {
 		this.usernoticeBuilder= builder.getUsernoticeBuilder();
 
         this.socket = builder.getSocket();
+        this.pingIntervalSeconds = builder.getPingInterval();
 
 		this.queue = new OutputQueue();
 
@@ -353,7 +354,7 @@ public final class Twirk {
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************
 	private void createResources() throws IOException{
-    	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
+    	socket.setSoTimeout(this.pingIntervalSeconds * 1000);
 
 		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 		reader = new BufferedReader( new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
