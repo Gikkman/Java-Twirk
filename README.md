@@ -1,6 +1,5 @@
 # Java-Twirk
 [![](https://jitpack.io/v/Gikkman/Java-Twirk.svg)](https://jitpack.io/#Gikkman/Java-Twirk)
-You can contact us via the [Discord Server](https://discord.gg/8NXaEyV)
 
 Small, library for creating an IRC connection to the Twitch chat.
 
@@ -78,6 +77,11 @@ You can make Twirk use your own implementation of all event types by using custo
     .build();
 ```
 This will make the Twirk instance build instances of your custom implementation of `ClearChat` events
+
+# Known / Verified bot
+If your bot requires a very high message rate limit, you can request a verified bot account. It will increase the bots message rate limits: https://dev.twitch.tv/docs/irc/guide#known-and-verified-bots
+This isn't strictly necessary if you are just making a bot for your own account, as you might not reach the message limits. For larger/more frequently used bots, it might
+be necessary.
 
 # Contribute
 If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
