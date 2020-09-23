@@ -208,13 +208,9 @@ public final class Twirk {
 	 * @return A copy of the Set of online users.
 	 */
 	public Set<String> getUsersOnline(){
-		Set<String> out = new HashSet<>();
 		synchronized (online) {
-			for( String s : online ) {
-                out.add(s);
-            }
+			return new HashSet<>(online);
 		}
-		return out;
 	}
 
 	/**Fetches a set of all the moderators that are <b>currently</b> online in the joined channel. Note that this set is
@@ -226,13 +222,9 @@ public final class Twirk {
 	 * @return A copy of the Set of online moderators.
 	 */
 	public Set<String> getModsOnline(){
-		Set<String> out = new HashSet<>();
 		synchronized (moderators) {
-			for( String s : moderators ) {
-                out.add(s);
-            }
+			return new HashSet<>(moderators);
 		}
-		return out;
 	}
 
 	/**Fetches the nick of the bot, which it will use to connect to an IRC server
@@ -382,13 +374,13 @@ public final class Twirk {
 		inThread.end();
 
 		try { socket.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 
 		try { reader.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 
 		try { writer.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 	}
 
 
