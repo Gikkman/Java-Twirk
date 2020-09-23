@@ -2,7 +2,6 @@ package com.gikk.twirk;
 
 import com.gikk.twirk.types.TestNamelist;
 import com.gikk.twirk.types.clearChat.TestClearChat;
-import com.gikk.twirk.types.emote.TestEmote;
 import com.gikk.twirk.types.hostTarget.TestHostTarget;
 import com.gikk.twirk.types.mode.TestMode;
 import com.gikk.twirk.types.notice.TestNotice;
@@ -12,6 +11,7 @@ import com.gikk.twirk.types.twitchMessage.TestMessage;
 import com.gikk.twirk.types.usernotice.TestUsernotice;
 import com.gikk.twirk.types.users.TestTwitchUser;
 import com.gikk.twirk.types.users.TestUserstate;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -33,12 +33,12 @@ public class TestSuit {
     public static TimeUnit UNIT = TimeUnit.SECONDS;
 
     @BeforeClass
-    public static void create() throws IOException, InterruptedException {
+    public static void create() throws IOException {
         System.out.println("!!! Setup stared");
         socket = new TestSocket();
 
         testTwirk = new TwirkBuilder("#testchan", "testbot", "password")
-            .setSocket(socket)
+            .setSocketFactory((server, port) -> socket)
             .setSSL(false)
             .setVerboseMode(false)
             .build();

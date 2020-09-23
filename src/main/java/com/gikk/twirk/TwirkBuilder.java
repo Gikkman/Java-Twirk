@@ -12,7 +12,6 @@ import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
 import java.io.IOException;
 import java.net.Socket;
-import javax.net.ssl.SSLSocketFactory;
 
 /**Class for creating instances of {@link Twirk}.<br>
  * To build an instance of {@link Twirk}, the user has to supply the bot's nick and
@@ -49,7 +48,7 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
-    private Socket              socket;
+    private SocketFactory		socketFactory;
     private int					pingIntervalSeconds = 15 + (5 * 60);	// Twitch recommends pinging them every >5 minutes
 
 	//***********************************************************
@@ -97,6 +96,10 @@ public class TwirkBuilder {
 	 * on different ports.
 	 * See <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md">
 	 * 				https://github.com/justintv/Twitch-API/blob/master/IRC.md </a>
+	 *<br>
+	 * This setting will affect what type of {@link Socket} we create to connect to Twitch. If a custom {@link SocketFactory}
+	 * has been assigned to this TwirkBuilder, the value assigned in this method is not used. This method's value is only
+	 * relevant to decide what socket to create by default (a SSL socket or a non-SSL socket)
 	 *
 	 * @param ssl Whether we should use SSL connection or not.
 	 * @return this
@@ -228,14 +231,16 @@ public class TwirkBuilder {
 		return this;
 	}
 
-    /**Sets the {@link Socket}. Useful if you want to use your custom implementations of a {@link Socket}. If
-	 * no {@link Socket} is assigned, the created {@link Twirk} object will chose a suitable {@link Socket} implementation.
+    /**Sets the {@link SocketFactory}. Useful if you want to use your custom implementations of a {@link Socket}. If
+	 * no {@link SocketFactory} is assigned, the created {@link Twirk} object will chose a
+	 * suitable {@link SocketFactory} implementation, depending on whether SSL connection is chosen or not
+	 * (default is UseSSL)
 	 *
-	 * @param socket The {@link Socket} that Twirk should use
+	 * @param socketFactory The {@link SocketFactory} that Twirk should use
 	 * @return this
 	 */
-	public TwirkBuilder setSocket(Socket socket) {
-		this.socket = socket;
+	public TwirkBuilder setSocketFactory(SocketFactory socketFactory) {
+		this.socketFactory = socketFactory;
 		return this;
 	}
 
@@ -345,14 +350,13 @@ public class TwirkBuilder {
 		return ReconnectBuilder.getDefault();
 	}
 
-    /**Retrieves the assigned {@link Socket}, or a default one.
-     * The default one depends on whether you've decided to use SSL or not
-     * (ssl defaults to true).
+    /**Retrieves the assigned {@link SocketFactory}, or the default if none has been assigned. The default factory
+	 * depends on whether {@link #setSSL(boolean)} has been set to true or not (defaults to true).
      *
      * @return This builder's current {@link SocketFactory}
      */
-    public Socket getSocket() {
-        return this.socket;
+    public SocketFactory getSocketFactory() {
+        return socketFactory != null ? socketFactory : SocketFactory.getDefault(this.useSSL);
     }
 
 	/**Retrieves the assigned ping interval (in seconds). Defaults to 5:15 is not set by the user
@@ -370,15 +374,6 @@ public class TwirkBuilder {
      * @throws IOException if no socket could be constructed
 	 */
 	public Twirk build() throws IOException {
-        if(this.socket == null) {
-            if(useSSL) {
-                this.socket = SSLSocketFactory.getDefault().createSocket(server, port);
-            }
-            else {
-                this.socket = new Socket(server, port);
-            }
-        }
-
 		return new Twirk(this);
 	}
 }

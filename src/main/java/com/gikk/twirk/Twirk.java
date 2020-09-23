@@ -61,6 +61,9 @@ public final class Twirk {
 	//***********************************************************************************************
 	//											VARIABLES
 	//***********************************************************************************************
+	private final String serverAddress;
+	private final int serverPort;
+
 	private final String nick;
 	private final String pass;
 	private final String channel;
@@ -73,6 +76,7 @@ public final class Twirk {
 	private boolean resourcesCreated = false;
 	private boolean isConnected = false;
 	private boolean isDisposed  = false;
+	private Socket socket = null;
 	private BufferedWriter writer = null;
 	private BufferedReader reader = null;
 
@@ -89,12 +93,15 @@ public final class Twirk {
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
 	private final UsernoticeBuilder		usernoticeBuilder;
-	private final Socket socket;
-	private final int pingIntervalSeconds;
+	private final SocketFactory 		socketFactory;
+	private final int 					pingIntervalSeconds;
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************
 	Twirk(TwirkBuilder builder) {
+		this.serverAddress = builder.server;
+		this.serverPort = builder.port;
+
 		this.nick = builder.nick;
 		this.pass = builder.oauth;
 		this.channel = builder.channel;
@@ -110,7 +117,7 @@ public final class Twirk {
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder();
 		this.usernoticeBuilder= builder.getUsernoticeBuilder();
 
-        this.socket = builder.getSocket();
+        this.socketFactory = builder.getSocketFactory();
         this.pingIntervalSeconds = builder.getPingInterval();
 
 		this.queue = new OutputQueue();
@@ -354,6 +361,7 @@ public final class Twirk {
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************
 	private void createResources() throws IOException{
+		socket = socketFactory.createSocket(serverAddress, serverPort);
     	socket.setSoTimeout(this.pingIntervalSeconds * 1000);
 
 		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
