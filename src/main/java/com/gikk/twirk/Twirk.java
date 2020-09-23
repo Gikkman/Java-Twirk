@@ -120,9 +120,9 @@ public final class Twirk {
 	//***********************************************************************************************
 	//											PUBLIC
 	//***********************************************************************************************
-	/**Sends a message directly to the server. The message will not be formated in
+	/**Sends a message directly to the server. The message will not be formatted in
 	 * any way. <br>
-	 * This method should be used very sparsely, as it sidesteps the messageing
+	 * This method should be used very sparsely, as it sidesteps the messaging
 	 * delay and can get your bot Irc-banned on Twitch's side (might happen if the bot sends
 	 * more than 20 messages in 30 seconds).
 	 *
@@ -176,7 +176,7 @@ public final class Twirk {
 	}
 
 	/**Check if this Twirk instance is currently connected to Twitch. If we are not, and we are not
-	 * {@link #isDisposed()}, then we may try to reconenct. See {@link #connect()}
+	 * {@link #isDisposed()}, then we may try to reconnect. See {@link #connect()}
 	 *
 	 * @return <code>True</code> if we are connected
 	 */
@@ -184,7 +184,7 @@ public final class Twirk {
 		return isConnected;
 	}
 
-	/**Check if this Twirk instance has beed disposed. If it has, no further
+	/**Check if this Twirk instance has been disposed. If it has, no further
 	 * connect attempts will succeed.
 	 *
 	 * @return <code>True</code> if it is disposed
@@ -226,7 +226,7 @@ public final class Twirk {
 
 	/**Fetches the nick of the bot, which it will use to connect to an IRC server
 	 *
-	 * @return The bot's nick
+	 * @return The bot nick
 	 */
 	public String getNick() {
 		return nick;
@@ -283,7 +283,7 @@ public final class Twirk {
     		outThread.start();
 
     		//Add capacities to the bot and wait for them to take effect
-    		addCapacies();
+    		addCapacities();
     		Thread.sleep(1000);
 
     		//Start the input thread
@@ -408,11 +408,11 @@ public final class Twirk {
         return false;
 	}
 
-	/**Gives us the appropriate Twitch capacities, such as seing JOIN/PART messages,
+	/**Gives us the appropriate Twitch capacities, such as seeing JOIN/PART messages,
 	 * to send Twitch commands (such as .timeout, .mod and so on) and to see
 	 * users tags (such as display color)
 	 */
-	private void addCapacies(){
+	private void addCapacities(){
 		serverMessage("CAP REQ :twitch.tv/membership");
 		serverMessage("CAP REQ :twitch.tv/commands");
 		serverMessage("CAP REQ :twitch.tv/tags");
@@ -579,7 +579,7 @@ public final class Twirk {
 
 	private String parseUsername(String prefix) {
 		/* The user name is extracted from the message's prefix.
-		 * JOIN or PART messages are formated like this:
+		 * JOIN or PART messages are formatted like this:
 		 *
 		 * :twitch_username!twitch_username@twitch_username.tmi.twitch.tv JOIN #channel
 		 */
