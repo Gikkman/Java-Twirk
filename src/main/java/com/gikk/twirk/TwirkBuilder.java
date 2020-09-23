@@ -49,7 +49,6 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
-	private ReconnectBuilder	reconnectBuilder;
     private Socket              socket;
 
 	//***********************************************************
@@ -210,9 +209,10 @@ public class TwirkBuilder {
 	 *
 	 * @param reconnectBuilder The {@link ReconnectBuilder} you want the {@link Twirk} object to use
 	 * @return this
+	 * @deprecated ReconnectBuilder was never used by the bot anyway, since there is nothing to
+	 *  			process during a reconnect request. This method will be removed in future releases.
 	 */
 	public TwirkBuilder setReconnectBuilder(ReconnectBuilder reconnectBuilder) {
-		this.reconnectBuilder = reconnectBuilder;
 		return this;
 	}
 
@@ -313,9 +313,11 @@ public class TwirkBuilder {
 	/**Retrieves the assigned {@link ReconnectBuilder}, or the default one, if none is assigned.
 	 *
 	 * @return This builders current {@link ReconnectBuilder}
+	 * @deprecated ReconnectBuilder was never used by the bot anyway, since there is nothing to
+	 * 				process during a reconnect request. This method will be removed in future releases.
 	 */
 	public ReconnectBuilder getReconnectBuilder() {
-		return reconnectBuilder != null ? reconnectBuilder : ReconnectBuilder.getDefault();
+		return ReconnectBuilder.getDefault();
 	}
 
     /**Retrives the assigned {@link Socket}, or a default one.
