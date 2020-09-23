@@ -570,10 +570,12 @@ public final class Twirk {
                 }
                 case "366":
                 {
+                	//Code 366 means the USER LIST has ended
                     Set<String> users = Collections.unmodifiableSet(online);
                     for(TwirkListener l : listeners ) {
                         l.onNamesList(users);
                     }
+                    break;
                 }
                 default:
                 {
