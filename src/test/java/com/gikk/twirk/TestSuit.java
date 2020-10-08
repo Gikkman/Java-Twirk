@@ -15,6 +15,8 @@ import com.gikk.twirk.types.users.TestUserstate;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -40,7 +42,7 @@ public class TestSuit {
         testTwirk = new TwirkBuilder("#testchan", "testbot", "password")
             .setSocket(socket)
             .setSSL(false)
-            .setVerboseMode(false)
+            .setVerbosity(Level.INFO)
             .build();
 
         tl = new TestTwirkListener();

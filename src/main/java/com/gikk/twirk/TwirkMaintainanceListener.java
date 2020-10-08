@@ -21,25 +21,21 @@ class TwirkMaintainanceListener implements TwirkListener{
 	
 	@Override
 	public void onAnything(String line) {
-		if( instance.verboseMode ) {
-            System.out.println("IN  "+line );
-        }
+        instance.logger.fine("IN  "+line );
 	}
 
 	@Override
 	public void onJoin(String joinedNick) {
 		if( !instance.online.add( joinedNick ) ) {
-			if(instance.verboseMode)
-            	System.out.println("\tUser " + joinedNick + " was already listed as online....");
+			instance.logger.fine("\tUser " + joinedNick + " was already listed as online....");
         }
 	}
 
 	@Override
 	public void onPart(String partedNick) {
 		if( !instance.online.remove( partedNick ) ) {
-			if(instance.verboseMode)
-				System.out.println("\tUser " + partedNick + " was not listed as online....");
-        }
+			instance.logger.fine("\tUser " + partedNick + " was not listed as online....");
+		}
 	}
 
 	@Override

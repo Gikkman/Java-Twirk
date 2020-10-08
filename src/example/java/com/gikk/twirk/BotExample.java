@@ -6,6 +6,7 @@ import com.gikk.twirk.events.TwirkListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 /**Simple example of how Twirk can be used. <br><br>
  * 
@@ -27,8 +28,8 @@ public class BotExample {
 		String channel = "#" + scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-								.setVerboseMode(true)	//We want to print everything we receive from Twitch
-								.build();				//Create the Twirk object
+								.setVerbosity(Level.ALL)  //We want to print everything we receive from Twitch
+								.build();				  //Create the Twirk object
 		
 		twirk.addIrcListener( getOnDisconnectListener(twirk) );
 		twirk.addIrcListener( new PatternCommandExample(twirk) );

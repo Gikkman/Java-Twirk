@@ -12,6 +12,8 @@ import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+
 import javax.net.ssl.SSLSocketFactory;
 
 /**Class for creating instances of {@link Twirk}.<br>
@@ -30,8 +32,8 @@ public class TwirkBuilder {
 	//***********************************************************
 	// 				VARIABLES
 	//***********************************************************
-	boolean verboseMode = false;
-
+	Level verbosity = Level.INFO;
+	
 	String server = "irc.chat.twitch.tv";
 	int 	port  = 6697;
 	boolean useSSL = true;
@@ -106,14 +108,14 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/**Sets the {@link Twirk} object to VerboseMode<br>
-	 * In VerboseMode, every message that is received by {@link Twirk} will be printed to console. Default value is {@code false}
+	/**Sets the {@link Twirk} logger's verbosity<br>
+	 * With a verbosity greater or equal to fine, every message that is received by {@link Twirk} will be printed to console. Default value is {@code false}
 	 *
 	 * @param verboseMode {@code true} is you want {@link Twirk} in VerboseMode
 	 * @return this
 	 */
-	public TwirkBuilder setVerboseMode(boolean verboseMode){
-		this.verboseMode = verboseMode;
+	public TwirkBuilder setVerbosity(Level verbosity){
+		this.verbosity = verbosity;
 		return this;
 	}
 

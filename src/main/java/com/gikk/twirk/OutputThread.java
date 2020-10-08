@@ -116,9 +116,7 @@ class OutputThread extends Thread{
 			System.err.println("Twirk is not connected! Sending messages will not succeed!");
 		}
 
-        if(connection.verboseMode) {
-            System.out.println("OUT " + message);
-        }
+		connection.logger.fine("OUT " + message);
 
 		/**An IRC message may not be longer than 512 characters. Also, they must end with \r\n,
 		 * so if the supplied message is longer than 510 characters, we have to cut it short.
