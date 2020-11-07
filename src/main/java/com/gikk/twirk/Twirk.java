@@ -67,7 +67,7 @@ public final class Twirk {
 	private final String nick;
 	private final String pass;
 	private final String channel;
-	final boolean verboseMode;
+	final TwirkLogger logger;
 
 	private OutputThread outThread;
 	private InputThread inThread;
@@ -105,7 +105,7 @@ public final class Twirk {
 		this.nick = builder.nick;
 		this.pass = builder.oauth;
 		this.channel = builder.channel;
-		this.verboseMode = builder.verboseMode;
+		this.logger = builder.getLogger();
 
 		this.clearChatBuilder = builder.getClearChatBuilder();
 		this.hostTargetBuilder= builder.getHostTargetBuilder();
@@ -269,11 +269,11 @@ public final class Twirk {
      */
     public synchronized boolean connect() throws IOException, InterruptedException{
     	if( isDisposed ){
-    		System.err.println("\tError. Cannot connect. This Twirk instance has been disposed.");
+    		logger.error("\tError. Cannot connect. This Twirk instance has been disposed.");
 	    	return false;
     	}
     	if( isConnected ){
-	    	System.err.println("\tError. Cannot connect. Already connected to Twitch server");
+			logger.error("\tError. Cannot connect. Already connected to Twitch server");
 	    	return false;
     	}
 
@@ -326,9 +326,9 @@ public final class Twirk {
 
 		isConnected = false;
 
-		System.out.println("\n\tDisconnecting from Twitch chat...");
+		logger.info("\n\tDisconnecting from Twitch chat...");
 		releaseResources();
-		System.out.println("\tDisconnected from Twitch chat\n");
+		logger.info("\tDisconnected from Twitch chat\n");
 
 		for( TwirkListener l : listeners ) {
             l.onDisconnect();
@@ -351,9 +351,9 @@ public final class Twirk {
 		isConnected = false;
 		isDisposed = true;
 
-		System.out.println("\n\tDisposing of IRC...");
+		logger.info("\n\tDisposing of IRC...");
 		releaseResources();
-		System.out.println("\tDisposing of IRC completed\n");
+		logger.info("\tDisposing of IRC completed\n");
 	}
 
 
@@ -401,9 +401,8 @@ public final class Twirk {
         // Read lines from the server until it tells us we have connected.
         String line;
         while ((line = reader.readLine()) != null) {
-            if(verboseMode) {
-                System.out.println("IN  " + line);
-            }
+            logger.debug("IN  " + line);
+
             //When we get a message containing 004, we have successfully logged in
             if (line.contains("004")) {
                 return true;
@@ -444,9 +443,8 @@ public final class Twirk {
     		// A PING contains the message "PING MESSAGE", and we want to reply with MESSAGE as well
     		// Hence, we reply "PONG MESSAGE" . That's where the substring(5) comes from bellow, we strip
     		//out everything but the message
-			if (verboseMode) {
-				System.out.println("IN  " + line);
-			}
+			logger.debug("IN  " + line);
+
     		serverMessage("PONG " + line.substring(5) ); //Remove the "PING " part, and send the rest back
     		return;
 		}

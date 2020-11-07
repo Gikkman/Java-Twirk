@@ -5,6 +5,7 @@ import com.gikk.twirk.commands.PrefixCommandExample;
 import com.gikk.twirk.events.TwirkListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**Simple example of how Twirk can be used. <br><br>
@@ -23,12 +24,12 @@ public class BotExample {
 				         + "to send and receive messages from a Twitch chat channel. You will \n"
 				         + "make all input directly here in the command prompt. \n\n"
 				         + "Enter channel to join (leave out the #):");
-		Scanner scanner = new Scanner(new InputStreamReader(System.in, "UTF-8"));
+		Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 		String channel = "#" + scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-								.setVerboseMode(true)	//We want to print everything we receive from Twitch
-								.build();				//Create the Twirk object
+								.setLogLevel(TwirkLogLevel.DEBUG)	//We want to print everything we receive from Twitch
+								.build();							//Create the Twirk object
 		
 		twirk.addIrcListener( getOnDisconnectListener(twirk) );
 		twirk.addIrcListener( new PatternCommandExample(twirk) );
@@ -62,7 +63,7 @@ public class BotExample {
 					//If reconnection threw an IO exception, close the connection and release resources.
 					twirk.close(); 
 				} 
-				catch (InterruptedException e) {  }
+				catch (InterruptedException ignored) {  }
 			}
 		};
 	}

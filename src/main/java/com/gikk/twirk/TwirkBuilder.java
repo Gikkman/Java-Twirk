@@ -12,6 +12,7 @@ import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.function.Consumer;
 
 /**Class for creating instances of {@link Twirk}.<br>
  * To build an instance of {@link Twirk}, the user has to supply the bot's nick and
@@ -29,7 +30,7 @@ public class TwirkBuilder {
 	//***********************************************************
 	// 				VARIABLES
 	//***********************************************************
-	boolean verboseMode = false;
+	private boolean verboseMode = false;
 
 	String server = "irc.chat.twitch.tv";
 	int 	port  = 6697;
@@ -51,6 +52,12 @@ public class TwirkBuilder {
     private SocketFactory		socketFactory;
     private int					pingIntervalSeconds = 15 + (5 * 60);	// Twitch recommends pinging them every >5 minutes
 
+	private TwirkLogLevel		logLevel;
+	private Consumer<String>	errorLogger = System.err::println;
+	private Consumer<String>	warnLogger = System.out::println;
+	private Consumer<String>	infoLogger = System.out::println;
+	private Consumer<String>	debugLogger = System.out::println;
+
 	//***********************************************************
 	// 				CONSTRUCTOR
 	//***********************************************************
@@ -69,7 +76,7 @@ public class TwirkBuilder {
 	}
 
 	//***********************************************************
-	// 				PUBLIC
+	// 				PUBLIC - Setters
 	//***********************************************************
 	/**Sets the server which {@link Twirk} will try to connect to Twitch via
 	 *
@@ -111,9 +118,14 @@ public class TwirkBuilder {
 
 	/**Sets the {@link Twirk} object to VerboseMode<br>
 	 * In VerboseMode, every message that is received by {@link Twirk} will be printed to console. Default value is {@code false}
+	 * <p>
+	 * Deprecation note: Since {@link TwirkLogLevel} was introduced, this setting is deprecated. In effect, it will
+	 * set the log level to {@link TwirkLogLevel#DEBUG} if set to true, or {@link TwirkLogLevel#INFO} if set to false.
+	 * If you set the log level using {@link TwirkBuilder#setLogLevel(TwirkLogLevel)}, the value set here is ignored.
 	 *
 	 * @param verboseMode {@code true} is you want {@link Twirk} in VerboseMode
 	 * @return this
+	 * @deprecated Please use {@link TwirkBuilder#setLogLevel(TwirkLogLevel)} instead
 	 */
 	public TwirkBuilder setVerboseMode(boolean verboseMode){
 		this.verboseMode = verboseMode;
@@ -268,6 +280,79 @@ public class TwirkBuilder {
 		return this;
 	}
 
+	/** Sets the logging level of the Twirk instance. See {@link TwirkLogLevel}.
+	 *
+	 * @param logLevel the log level
+	 * @return this
+	 */
+	public TwirkBuilder setLogLevel(TwirkLogLevel logLevel) {
+		this.logLevel = logLevel;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an {@link TwirkLogLevel#ERROR} message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#severe(String)} ()}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::severe) </pre>
+	 *
+	 * @param errorLogMethod the method which to call to log error messages
+	 * @return this
+	 */
+	public TwirkBuilder setErrorLogMethod(Consumer<String> errorLogMethod) {
+		this.errorLogger = errorLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an {@link TwirkLogLevel#WARN} message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#warning(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::warning) </pre>
+	 *
+	 * @param warningLogMethod the method which to call to log warning messages
+	 * @return this
+	 */
+	public TwirkBuilder setWarningLogMethod(Consumer<String> warningLogMethod) {
+		this.warnLogger = warningLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an {@link TwirkLogLevel#INFO} message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#info(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::info) </pre>
+	 *
+	 * @param infoLogMethod the method which to call to log info messages
+	 * @return this
+	 */
+	public TwirkBuilder setInfoLogMethod(Consumer<String> infoLogMethod) {
+		this.infoLogger = infoLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an {@link TwirkLogLevel#DEBUG} message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#fine(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::fine) </pre>
+	 *
+	 * @param debugLogMethod the method which to call to log debug messages
+	 * @return this
+	 */
+	public TwirkBuilder setDebugLogMethod(Consumer<String> debugLogMethod) {
+		this.debugLogger = debugLogMethod;
+		return this;
+	}
+
+	//***********************************************************
+	// 				PUBLIC - Getters
+	//***********************************************************
 	/**Retrieves the assigned {@link ClearChatBuilder}, or the default one, if none is assigned.
 	 *
 	 * @return This builders current {@link ClearChatBuilder}
@@ -367,13 +452,28 @@ public class TwirkBuilder {
     	return this.pingIntervalSeconds;
 	}
 
+	/**Retrieves a built {@link TwirkLogger}
+	 *
+	 * @return a {@link TwirkLogger}
+	 */
+	TwirkLogger getLogger() {
+		TwirkLogLevel effectiveLogLevel = this.logLevel;
+		if(this.logLevel == null && this.verboseMode) effectiveLogLevel = TwirkLogLevel.DEBUG;
+		if(this.logLevel == null && !this.verboseMode) effectiveLogLevel = TwirkLogLevel.INFO;
+		return new TwirkLogger(effectiveLogLevel,
+				errorLogger, warnLogger,
+				infoLogger, debugLogger);
+	}
+
+	//***********************************************************
+	// 				PUBLIC - Build
+	//***********************************************************
 	/**Creates a Twirk object, with the parameters assigned to this
 	 * builder.
 	 *
 	 * @return A configured Twirk object
-     * @throws IOException if no socket could be constructed
 	 */
-	public Twirk build() throws IOException {
+	public Twirk build() {
 		return new Twirk(this);
 	}
 }
