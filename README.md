@@ -34,9 +34,8 @@ Some pretty big changes behind the scenes, but they should be fully backwards co
 * `Cheer.getImageURL(...)` should now return a proper URL. Fix #30
 * You can now set a custom PING interval, for how often the connection should ping Twitch. 
 See `TwirkBuilder.setPingInterval` Fix #29
-* You can now assign custom log methods to Twirk, in case you use some kind of logging framework. You can also set 
-different log levels, which gives a bit more control of what to log. 
-See `TwirkBuilder.setLogLevel` and`TwirkBuilder.setXXXLogMethod`. Fix #28 (thanks to PR #31).
+* You can now assign custom log methods to Twirk, in case you use some kind of logging framework. 
+See `TwirkBuilder.setXXXLogMethod`. Fix #28 (thanks to PR #31).
 * Calling connect after a disconnect should now work. Fix #26
 * You don't need to include the '#' anymore in the channel name. Fix #21
 
