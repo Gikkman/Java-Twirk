@@ -310,8 +310,8 @@ public final class Twirk {
     	}
     	else {
     		logger.error("Connection to Twitch failed permanently. Please consult the debug logs for information");
+    		return false;
 		}
-    	return false;
     }
 
 	/**Closes the connection to the IrcServer, leaves all channels, terminates the input- and output thread and

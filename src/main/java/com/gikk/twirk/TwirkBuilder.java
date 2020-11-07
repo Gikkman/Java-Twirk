@@ -10,7 +10,6 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Consumer;
 
@@ -49,8 +48,8 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
-    private SocketFactory		socketFactory;
-    private int					pingIntervalSeconds = 15 + (5 * 60);	// Twitch recommends pinging them every >5 minutes
+	private SocketFactory		socketFactory;
+	private int					pingIntervalSeconds = 15 + (5 * 60); // Twitch recommends pinging them every >5 minutes
 
 	private TwirkLogLevel		logLevel;
 	private Consumer<String>	errorLogger = System.err::println;
