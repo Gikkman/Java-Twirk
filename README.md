@@ -3,7 +3,8 @@
 
 Small, library for creating an IRC connection to the Twitch chat.
 
-The library is intended to make communication via Twitch chat as easy as possible, and uses Java objects to represent most events that can occur in Twitch chat. 
+The library is intended to make communication via Twitch chat as easy as possible, and uses Java objects to represent 
+most events that can occur in Twitch chat. 
 
 Java 8 compatible.
 
@@ -20,14 +21,25 @@ Include the following in your pom.xml
 <dependencies>
     <dependency>
         <groupId>com.github.gikkman</groupId>
-	<artifactId>Java-Twirk</artifactId>
-	<version>0.6.2</version>
+        <artifactId>Java-Twirk</artifactId>
+        <version>0.6.3</version>
     </dependency>
 </dependencies>
 ```
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
+### 0.6.3
+Some pretty big changes behind the scenes, but they should be fully backwards compatible. Below is a list of changes:
+* `Cheer.getImageURL(...)` should now return a proper URL. Fix #30
+* You can now set a custom PING interval, for how often the connection should ping Twitch. 
+See `TwirkBuilder.setPingInterval` Fix #29
+* You can now assign custom log methods to Twirk, in case you use some kind of logging framework. You can also set 
+different log levels, which gives a bit more control of what to log. 
+See `TwirkBuilder.setLogLevel` and`TwirkBuilder.setXXXLogMethod`. Fix #28 (thanks to PR #31).
+* Calling connect after a disconnect should now work. Fix #26
+* You don't need to include the '#' anymore in the channel name. Fix #21
+
 ### 0.6.2
 Hotfix release since some emote IDs were still not parsed correctly (see #22). This hotfix should hopefully fix this issue.
 Please report any further issues with parsing emotes.
@@ -39,12 +51,15 @@ There has only been minor changes between 0.5 and 0.6. Nothing that should break
 * Fixed SockerClosedException stacktrace printing on some locales
   * I think I fixed it at least, but this one is hard to test since there are so many locales.
 * Updated the emotes parse for a safer and faster implementation.
-  * This deprecates a previously public method (`EmoteParse.parseEmote(String, String)`), and the new method is package private. There isn't really any need to call these methods from outside the library
+  * This deprecates a previously public method (`EmoteParse.parseEmote(String, String)`), and the new method is package 
+  private. There isn't really any need to call these methods from outside the library
 * Twirk will not only show the "User X was not online" or "User X was already online", when in verbose mode.
-  * This happened when we see a leave/part message but didn't track the user correctly. I felt like it was not needed unless you want the verbose output
+  * This happened when we see a leave/part message but didn't track the user correctly. I felt like it was not needed 
+  unless you want the verbose output
 * Updated the example a bit
 * Started to move towards proper JUnit tests
-  * My home rolled test setup wasn't very user friendly, so now I started moving to user regular `@Test` tests. I'll eventually convert all tests to this format 
+  * My home rolled test setup wasn't very user friendly, so now I started moving to user regular `@Test` tests. I'll 
+  eventually convert all tests to this format 
 
 And probably some more...
 
@@ -67,10 +82,13 @@ message with a "pong USER_NAME".
   } );
 ```
 
-For a more complex example, which shows how to connect properly and how to write simple bot commands, check out the example code in `src/example/java`
+For a more complex example, which shows how to connect properly and how to write simple bot commands, check out the 
+example code in `src/example/java`
 
 #### Extendable
-You can make Twirk use your own implementation of all event types by using custom builder classes. By extending the types Builder interface, and then passing an instance of your custom builder to the TwirkBuilder, you can use your own custom implementation of whichever type you want.
+You can make Twirk use your own implementation of all event types by using custom builder classes. By extending the 
+types Builder interface, and then passing an instance of your custom builder to the TwirkBuilder, you can use your own 
+custom implementation of whichever type you want.
 ```Java
   final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
     .setClearChatBuilder( new MyClearChatBuilder() )
@@ -79,14 +97,19 @@ You can make Twirk use your own implementation of all event types by using custo
 This will make the Twirk instance build instances of your custom implementation of `ClearChat` events
 
 # Known / Verified bot
-If your bot requires a very high message rate limit, you can request a verified bot account. It will increase the bots message rate limits: https://dev.twitch.tv/docs/irc/guide#known-and-verified-bots
-This isn't strictly necessary if you are just making a bot for your own account, as you might not reach the message limits. For larger/more frequently used bots, it might
+If your bot requires a very high message rate limit, you can request a verified bot account. It will increase the 
+bots message rate limits: https://dev.twitch.tv/docs/irc/guide#known-and-verified-bots
+This isn't strictly necessary if you are just making a bot for your own account, as you might not reach the message 
+limits. For larger/more frequently used bots, it might
 be necessary.
 
 # Contribute
-If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
+If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit 
+an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me 
+on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
 
 
 # License
-This library is licensed under the [MIT License](https://tldrlegal.com/license/mit-license). If you use it, a link to this GitHub page is also greatly appriciated, if possible :)
+This library is licensed under the [MIT License](https://tldrlegal.com/license/mit-license). If you use it, a link to 
+this GitHub page is also greatly appriciated, if possible :)
 
