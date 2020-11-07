@@ -28,8 +28,8 @@ public class BotExample {
 		String channel = scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-								.setVerboseMode(true)				//We want to print everything we receive from Twitch
-								.build();							//Create the Twirk object
+								.setVerboseMode(true)
+								.build();
 		
 		twirk.addIrcListener( getOnDisconnectListener(twirk) );
 		twirk.addIrcListener( new PatternCommandExample(twirk) );
