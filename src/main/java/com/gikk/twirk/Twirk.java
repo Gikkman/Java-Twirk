@@ -277,10 +277,12 @@ public final class Twirk {
 	    	return false;
     	}
 
+		logger.debug("\n\tCreating Twirk resources (threads, sockets...)");
     	if( !resourcesCreated ) {
             createResources(); //Creates a socket and our input/output threads
         }
 
+		logger.debug("\tConnecting to Twitch\n");
         int oldTimeout = socket.getSoTimeout();
     	socket.setSoTimeout(10 * 1000); //Set a timeout for connection to 10 seconds, during connection
     	isConnected = doConnect();
@@ -306,6 +308,9 @@ public final class Twirk {
 
     		return true;
     	}
+    	else {
+    		logger.error("Connection to Twitch failed permanently. Please consult the debug logs for information");
+		}
     	return false;
     }
 
@@ -340,8 +345,9 @@ public final class Twirk {
      *
      * It is safe to call this method even if connections are already closed.<br><br>
      *
-     * This method is different from {@link Twirk#disconnect()} in that it <b>does not</b> call the {@link TwirkListener#onDisconnect()} method
-     * of any of the listeners. Thus, this method is intended to be called if you want to make sure no reconnect attempts are performed.
+     * This method is different from {@link Twirk#disconnect()} in that it <b>does not</b> call the
+	 * {@link TwirkListener#onDisconnect()} method of any of the listeners. Thus, this method is intended to be
+	 * called if you intend to end using the Twirk instance, and want to make sure no reconnect attempts are performed.
      */
 	public synchronized void close(){
 		if( isDisposed ) {

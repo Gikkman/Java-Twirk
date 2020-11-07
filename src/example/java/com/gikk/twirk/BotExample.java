@@ -35,17 +35,33 @@ public class BotExample {
 		twirk.addIrcListener( new PatternCommandExample(twirk) );
 		twirk.addIrcListener( new PrefixCommandExample(twirk) );
 
-		System.out.println("\nTo exit this example, type .quit and press Enter\n");
+		System.out.println("To send a message to the channel, type it in the console and press Enter");
+		System.out.println("To reconnect to Twitch, type .reconnect and press Enter");
+		System.out.println("To exit this example, type .quit and press Enter");
 
+		Thread.sleep(2000);
 		twirk.connect();	//Connect to Twitch
 		
 		//As long as we don't type .quit into the command prompt, send everything we type as a message to twitch
 		String line;
-		while( !(line = scanner.nextLine()).matches(".quit") )
-			twirk.channelMessage(line);
-		
+		while( (line = scanner.nextLine()) != null ) {
+			if(".quit".equals(line)) {
+				//Close the connection to Twitch, and release all resources. This will not fire the onDisconnect
+				//method
+				twirk.close();
+				break;
+			}
+			else if(".reconnect".equals(line)) {
+				//Close the connection to Twitch, and release all resources. This will fire the onDisconnect method
+				//however, which will cause us to reconnect to Twitch.
+				twirk.disconnect();
+			}
+			else {
+				twirk.channelMessage(line);
+			}
+		}
+
 		scanner.close();	//Close the scanner
-		twirk.close();		//Close the connection to Twitch, and release all resources
 	}
 
 	private static TwirkListener getOnDisconnectListener(final Twirk twirk) {
