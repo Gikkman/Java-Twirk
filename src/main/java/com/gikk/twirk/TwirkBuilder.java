@@ -10,9 +10,8 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
 import com.gikk.twirk.types.usernotice.UsernoticeBuilder;
 import com.gikk.twirk.types.users.TwitchUserBuilder;
 import com.gikk.twirk.types.users.UserstateBuilder;
-import java.io.IOException;
 import java.net.Socket;
-import javax.net.ssl.SSLSocketFactory;
+import java.util.function.Consumer;
 
 /**Class for creating instances of {@link Twirk}.<br>
  * To build an instance of {@link Twirk}, the user has to supply the bot's nick and
@@ -30,15 +29,15 @@ public class TwirkBuilder {
 	//***********************************************************
 	// 				VARIABLES
 	//***********************************************************
-	boolean verboseMode = false;
+	private boolean verboseMode = false;
 
 	String server = "irc.chat.twitch.tv";
 	int 	port  = 6697;
 	boolean useSSL = true;
 
-	String nick = "";
-	String oauth = "";
-	String channel = "";
+	String nick;
+	String oauth;
+	String channel;
 
 	private ClearChatBuilder 	clearChatBuilder;
 	private HostTargetBuilder 	hostTargetBuilder;
@@ -49,8 +48,13 @@ public class TwirkBuilder {
 	private TwitchUserBuilder 	twitchUserBuilder;
 	private UserstateBuilder 	userstateBuilder;
 	private UsernoticeBuilder	usernoticeBuilder;
-	private ReconnectBuilder	reconnectBuilder;
-    private Socket              socket;
+	private SocketFactory		socketFactory;
+	private int					pingIntervalSeconds = 15 + (5 * 60); // Twitch recommends pinging them every >5 minutes
+
+	private Consumer<String>	errorLogger = System.err::println;
+	private Consumer<String>	warnLogger = System.out::println;
+	private Consumer<String>	infoLogger = System.out::println;
+	private Consumer<String>	debugLogger = null;
 
 	//***********************************************************
 	// 				CONSTRUCTOR
@@ -64,17 +68,17 @@ public class TwirkBuilder {
 	 * @param oauth The bot's IRC oAuth token (on Twitch)
 	 */
 	public TwirkBuilder(String channel, String nick, String oauth){
-		this.channel = channel;
+		this.channel = channel.startsWith("#") ? channel : "#" + channel;
 		this.nick = nick;
 		this.oauth = oauth;
 	}
 
 	//***********************************************************
-	// 				PUBLIC
+	// 				PUBLIC - Setters
 	//***********************************************************
 	/**Sets the server which {@link Twirk} will try to connect to Twitch via
 	 *
-	 * @param server The server adress
+	 * @param server The server address
 	 * @return this
 	 */
 	public TwirkBuilder setServer(String server){
@@ -97,6 +101,10 @@ public class TwirkBuilder {
 	 * on different ports.
 	 * See <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md">
 	 * 				https://github.com/justintv/Twitch-API/blob/master/IRC.md </a>
+	 *<br>
+	 * This setting will affect what type of {@link Socket} we create to connect to Twitch. If a custom {@link SocketFactory}
+	 * has been assigned to this TwirkBuilder, the value assigned in this method is not used. This method's value is only
+	 * relevant to decide what socket to create by default (a SSL socket or a non-SSL socket)
 	 *
 	 * @param ssl Whether we should use SSL connection or not.
 	 * @return this
@@ -108,12 +116,21 @@ public class TwirkBuilder {
 
 	/**Sets the {@link Twirk} object to VerboseMode<br>
 	 * In VerboseMode, every message that is received by {@link Twirk} will be printed to console. Default value is {@code false}
+	 * <p>
+	 * Note: This method is mostly kept for convenience. What it does in practise is assign {@code System.out.println}
+	 * to the {@link TwirkBuilder#setDebugLogMethod}. You can fully customize which methods should consume the
+	 * various logging messages, by utilizing the {@code TwirkBuilder#setXXXLogMethod} methods.
 	 *
 	 * @param verboseMode {@code true} is you want {@link Twirk} in VerboseMode
 	 * @return this
 	 */
 	public TwirkBuilder setVerboseMode(boolean verboseMode){
-		this.verboseMode = verboseMode;
+		if(verboseMode) {
+			this.debugLogger = System.out::println;
+		}
+		else {
+			this.debugLogger = null;
+		}
 		return this;
 	}
 
@@ -210,9 +227,10 @@ public class TwirkBuilder {
 	 *
 	 * @param reconnectBuilder The {@link ReconnectBuilder} you want the {@link Twirk} object to use
 	 * @return this
+	 * @deprecated ReconnectBuilder was never used by the bot anyway, since there is nothing to
+	 *  			process during a reconnect request. This method will be removed in future releases.
 	 */
 	public TwirkBuilder setReconnectBuilder(ReconnectBuilder reconnectBuilder) {
-		this.reconnectBuilder = reconnectBuilder;
 		return this;
 	}
 
@@ -227,17 +245,110 @@ public class TwirkBuilder {
 		return this;
 	}
 
-    /**Sets the {@link Socket}. Useful if you want to use your custom implementations of a {@link Socket}. If
-	 * no {@link Socket} is assigned, the created {@link Twirk} object will chose a suitable {@link Socket} implementation.
+    /**Sets the {@link SocketFactory}. Useful if you want to use your custom implementations of a {@link Socket}. If
+	 * no {@link SocketFactory} is assigned, the created {@link Twirk} object will chose a
+	 * suitable {@link SocketFactory} implementation, depending on whether SSL connection is chosen or not
+	 * (default is UseSSL)
 	 *
-	 * @param socket The {@link Socket} that Twirk should use
+	 * @param socketFactory The {@link SocketFactory} that Twirk should use
 	 * @return this
 	 */
-	public TwirkBuilder setSocket(Socket socket) {
-		this.socket = socket;
+	public TwirkBuilder setSocketFactory(SocketFactory socketFactory) {
+		this.socketFactory = socketFactory;
 		return this;
 	}
 
+	/**Sets the interval at which we will ping Twitch's chat interface, in case we haven't heard anything from it in a
+	 * while. Twitch recommends setting this value to >5 minutes, so it defaults to 5:15.
+	 * <br>
+	 * A ping will only fire in case we haven't heard anything from Twitch for more than the set interval. Twitch also
+	 * pings us every ~5 minutes, hence why they recommend setting this to more than 5 minutes. However, sometimes there
+	 * are connection issues with Twitch, and someone using this library might want to ping Twitch more regularly to
+	 * ensure connectivity.
+	 * <br>
+	 * Once the ping interval has passed, and we haven't seen a message from Twitch, we will send a PING message. If we
+	 * the ping interval then passes again without a reply, the Twirk instance will issue a disconnect. Hence, if Twitch
+	 * drops our connection somehow, we will disconnect after two times the ping interval.
+	 * <br>
+	 *  Note that this might upset Twitch, if done excessively. Do not set this value too low.
+	 *
+	 * @param intervalSeconds Ping interval, in seconds
+	 * @return this
+	 * @throws IllegalArgumentException If intervalSeconds <= 0
+	 */
+	public TwirkBuilder setPingInterval(int intervalSeconds) {
+		if(intervalSeconds <= 0) throw new IllegalArgumentException("Timeout cannot be 0 or less");
+		this.pingIntervalSeconds = intervalSeconds;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an error message should be logged. If not set by the user,
+	 * this defaults to {@link System#err }. To disable logging at this level,
+	 * 	 * set this to {@code null}
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#severe(String)} ()}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::severe) </pre>
+	 *
+	 * @param errorLogMethod the method which to call to log error messages
+	 * @return this
+	 */
+	public TwirkBuilder setErrorLogMethod(Consumer<String> errorLogMethod) {
+		this.errorLogger = errorLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever a warning message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }. To disable logging at this level,
+	 * 	 * set this to {@code null}
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#warning(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::warning) </pre>
+	 *
+	 * @param warningLogMethod the method which to call to log warning messages
+	 * @return this
+	 */
+	public TwirkBuilder setWarningLogMethod(Consumer<String> warningLogMethod) {
+		this.warnLogger = warningLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an info message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }. To disable logging at this level,
+	 * set this to {@code null}
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#info(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::info) </pre>
+	 *
+	 * @param infoLogMethod the method which to call to log info messages
+	 * @return this
+	 */
+	public TwirkBuilder setInfoLogMethod(Consumer<String> infoLogMethod) {
+		this.infoLogger = infoLogMethod;
+		return this;
+	}
+
+	/** Sets the method which will be called whenever an debug message
+	 * should be logged. If not set by the user, this defaults to {@code null }. To disable logging at this level,
+	 * set this to {@code null}.
+	 * <br>
+	 * Should you want to set this to, say, {@link java.util.logging.Logger#fine(String)}, you can
+	 * use the syntax <br>
+	 * <pre> builder.setErrorLogger(logger::fine) </pre>
+	 *
+	 * @param debugLogMethod the method which to call to log debug messages
+	 * @return this
+	 */
+	public TwirkBuilder setDebugLogMethod(Consumer<String> debugLogMethod) {
+		this.debugLogger = debugLogMethod;
+		return this;
+	}
+
+	//***********************************************************
+	// 				PUBLIC - Getters
+	//***********************************************************
 	/**Retrieves the assigned {@link ClearChatBuilder}, or the default one, if none is assigned.
 	 *
 	 * @return This builders current {@link ClearChatBuilder}
@@ -313,37 +424,49 @@ public class TwirkBuilder {
 	/**Retrieves the assigned {@link ReconnectBuilder}, or the default one, if none is assigned.
 	 *
 	 * @return This builders current {@link ReconnectBuilder}
+	 * @deprecated ReconnectBuilder was never used by the bot anyway, since there is nothing to
+	 * 				process during a reconnect request. This method will be removed in future releases.
 	 */
 	public ReconnectBuilder getReconnectBuilder() {
-		return reconnectBuilder != null ? reconnectBuilder : ReconnectBuilder.getDefault();
+		return ReconnectBuilder.getDefault();
 	}
 
-    /**Retrives the assigned {@link Socket}, or a default one.
-     * The default one depends on whether you've decided to use SSL or not
-     * (ssl defaults to true).
+    /**Retrieves the assigned {@link SocketFactory}, or the default if none has been assigned. The default factory
+	 * depends on whether {@link #setSSL(boolean)} has been set to true or not (defaults to true).
      *
      * @return This builder's current {@link SocketFactory}
      */
-    public Socket getSocket() {
-        return this.socket;
+    public SocketFactory getSocketFactory() {
+        return socketFactory != null ? socketFactory : SocketFactory.getDefault(this.useSSL);
     }
 
+	/**Retrieves the assigned ping interval (in seconds). Defaults to 5:15 is not set by the user
+	 *
+	 * @return ping interval
+	 */
+	public int getPingInterval() {
+    	return this.pingIntervalSeconds;
+	}
+
+	/**Retrieves a built {@link TwirkLogger}
+	 *
+	 * @return a {@link TwirkLogger}
+	 */
+	TwirkLogger getLogger() {
+		return new TwirkLogger(
+				errorLogger, warnLogger,
+				infoLogger, debugLogger);
+	}
+
+	//***********************************************************
+	// 				PUBLIC - Build
+	//***********************************************************
 	/**Creates a Twirk object, with the parameters assigned to this
 	 * builder.
 	 *
 	 * @return A configured Twirk object
-     * @throws IOException if no socket could be constructed
 	 */
-	public Twirk build() throws IOException {
-        if(this.socket == null) {
-            if(useSSL) {
-                this.socket = SSLSocketFactory.getDefault().createSocket(server, port);
-            }
-            else {
-                this.socket = new Socket(server, port);
-            }
-        }
-
+	public Twirk build() {
 		return new Twirk(this);
 	}
 }

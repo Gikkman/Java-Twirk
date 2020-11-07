@@ -68,14 +68,10 @@ class OutputThread extends Thread{
 	/**Circumvents the message queue completely and attempts to send the message at once. Should only be used for sending
 	 * PING responses.
 	 *
-	 * @param message
+	 * @param message the message to send
 	 */
 	public void quickSend(String message) {
-		try {
-			sendLine(message);
-		} catch (SocketException e) {
-			System.err.println("Could not QuickSend message. Socket was closed (OutputThread @ Twirk)");
-		}
+		sendLine(message);
 	}
 
 	/**Tells the thread to stop execution. Future messages written to the {@code OutputQueue} will
@@ -104,23 +100,20 @@ class OutputThread extends Thread{
 	//***********************************************************************************************
 
 	/**Sends a message AS IS, without modifying it in any way. Users of this method are responsible for
-	 * formating the string correctly:
+	 * formatting the string correctly:
 	 * <br>
 	 * That means, who ever uses this method has to manually assign channel data and the similar to the
 	 * message.
 	 *
 	 * @param message The message to write to out BufferedWriter
 	 */
-	private void sendLine(String message) throws SocketException{
+	private void sendLine(String message) {
 		if( !isConnected ){
-			System.err.println("Twirk is not connected! Sending messages will not succeed!");
+			connection.logger.error("Twirk is not connected! Sending messages will not succeed!");
 		}
+		connection.logger.debug("OUT " + message);
 
-        if(connection.verboseMode) {
-            System.out.println("OUT " + message);
-        }
-
-		/**An IRC message may not be longer than 512 characters. Also, they must end with \r\n,
+		/* An IRC message may not be longer than 512 characters. Also, they must end with \r\n,
 		 * so if the supplied message is longer than 510 characters, we have to cut it short.
 		 *
 		 * While it might be an alternative to split the message and send it in different batches,
@@ -137,11 +130,12 @@ class OutputThread extends Thread{
 				writer.flush();
 			}
 		} catch (IOException e){
-			if( e.getMessage().matches("Stream closed") ){
-				System.err.println("Cannot send message: " + message +" Stream closed");
-				return;
+			if( e.getMessage().toLowerCase().matches("stream closed") ){
+				connection.logger.warn("Cannot send message: \"" + message + "\" Stream closed");
 			}
-			e.printStackTrace();
+			else {
+				Util.printError(connection.logger, e);
+			}
 		}
 	}
 }

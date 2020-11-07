@@ -7,7 +7,8 @@ import java.util.Objects;
  * @author Gikkman
  */
 public class CheerImpl implements Cheer{
-    private final static String ROOT_URL = "static-cdn.jtvnw.net/bits/<theme>/<type>/<color>/<size>";
+    // Full URL should be "static-cdn.jtvnw.net/bits/<theme>/<type>/<color>/<size>"
+    private final static String ROOT_URL = "static-cdn.jtvnw.net/bits";
     private final int bits;
     private final String message;
 
@@ -58,12 +59,10 @@ public class CheerImpl implements Cheer{
         } else {
             color = "red";
         }
-        StringBuilder b = new StringBuilder(ROOT_URL);
-        b.append("/").append(theme.getValue())
-         .append("/").append(type.getValue())
-         .append("/").append(color)
-         .append("/").append(size.getValue());
-        return b.toString();
-
+        return ROOT_URL +
+                "/" + theme.getValue() +
+                "/" + type.getValue() +
+                "/" + color +
+                "/" + size.getValue();
     }
 }

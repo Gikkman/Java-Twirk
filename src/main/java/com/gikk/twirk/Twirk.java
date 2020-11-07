@@ -9,7 +9,6 @@ import com.gikk.twirk.types.mode.Mode;
 import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.Notice;
 import com.gikk.twirk.types.notice.NoticeBuilder;
-import com.gikk.twirk.types.reconnect.ReconnectBuilder;
 import com.gikk.twirk.types.roomstate.Roomstate;
 import com.gikk.twirk.types.roomstate.RoomstateBuilder;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
@@ -62,10 +61,13 @@ public final class Twirk {
 	//***********************************************************************************************
 	//											VARIABLES
 	//***********************************************************************************************
+	private final String serverAddress;
+	private final int serverPort;
+
 	private final String nick;
 	private final String pass;
 	private final String channel;
-	final boolean verboseMode;
+	final TwirkLogger logger;
 
 	private OutputThread outThread;
 	private InputThread inThread;
@@ -74,6 +76,7 @@ public final class Twirk {
 	private boolean resourcesCreated = false;
 	private boolean isConnected = false;
 	private boolean isDisposed  = false;
+	private Socket socket = null;
 	private BufferedWriter writer = null;
 	private BufferedReader reader = null;
 
@@ -90,17 +93,19 @@ public final class Twirk {
 	private final TwitchUserBuilder 	twitchUserBuilder;
 	private final UserstateBuilder 		userstateBuilder;
 	private final UsernoticeBuilder		usernoticeBuilder;
-	private final ReconnectBuilder		reconnectBuilder;
-	private final Socket socket;
-
+	private final SocketFactory 		socketFactory;
+	private final int 					pingIntervalSeconds;
 	//***********************************************************************************************
 	//											CONSTRUCTOR
 	//***********************************************************************************************
 	Twirk(TwirkBuilder builder) {
+		this.serverAddress = builder.server;
+		this.serverPort = builder.port;
+
 		this.nick = builder.nick;
 		this.pass = builder.oauth;
 		this.channel = builder.channel;
-		this.verboseMode = builder.verboseMode;
+		this.logger = builder.getLogger();
 
 		this.clearChatBuilder = builder.getClearChatBuilder();
 		this.hostTargetBuilder= builder.getHostTargetBuilder();
@@ -111,9 +116,9 @@ public final class Twirk {
 		this.userstateBuilder = builder.getUserstateBuilder();
 		this.twitchMessageBuilder = builder.getTwitchMessageBuilder();
 		this.usernoticeBuilder= builder.getUsernoticeBuilder();
-		this.reconnectBuilder = builder.getReconnectBuilder();
 
-        this.socket = builder.getSocket();
+        this.socketFactory = builder.getSocketFactory();
+        this.pingIntervalSeconds = builder.getPingInterval();
 
 		this.queue = new OutputQueue();
 
@@ -123,9 +128,9 @@ public final class Twirk {
 	//***********************************************************************************************
 	//											PUBLIC
 	//***********************************************************************************************
-	/**Sends a message directly to the server. The message will not be formated in
+	/**Sends a message directly to the server. The message will not be formatted in
 	 * any way. <br>
-	 * This method should be used very sparsely, as it sidesteps the messageing
+	 * This method should be used very sparsely, as it sidesteps the messaging
 	 * delay and can get your bot Irc-banned on Twitch's side (might happen if the bot sends
 	 * more than 20 messages in 30 seconds).
 	 *
@@ -179,7 +184,7 @@ public final class Twirk {
 	}
 
 	/**Check if this Twirk instance is currently connected to Twitch. If we are not, and we are not
-	 * {@link #isDisposed()}, then we may try to reconenct. See {@link #connect()}
+	 * {@link #isDisposed()}, then we may try to reconnect. See {@link #connect()}
 	 *
 	 * @return <code>True</code> if we are connected
 	 */
@@ -187,7 +192,7 @@ public final class Twirk {
 		return isConnected;
 	}
 
-	/**Check if this Twirk instance has beed disposed. If it has, no further
+	/**Check if this Twirk instance has been disposed. If it has, no further
 	 * connect attempts will succeed.
 	 *
 	 * @return <code>True</code> if it is disposed
@@ -208,13 +213,9 @@ public final class Twirk {
 	 * @return A copy of the Set of online users.
 	 */
 	public Set<String> getUsersOnline(){
-		Set<String> out = new HashSet<>();
 		synchronized (online) {
-			for( String s : online ) {
-                out.add(s);
-            }
+			return new HashSet<>(online);
 		}
-		return out;
 	}
 
 	/**Fetches a set of all the moderators that are <b>currently</b> online in the joined channel. Note that this set is
@@ -226,18 +227,14 @@ public final class Twirk {
 	 * @return A copy of the Set of online moderators.
 	 */
 	public Set<String> getModsOnline(){
-		Set<String> out = new HashSet<>();
 		synchronized (moderators) {
-			for( String s : moderators ) {
-                out.add(s);
-            }
+			return new HashSet<>(moderators);
 		}
-		return out;
 	}
 
 	/**Fetches the nick of the bot, which it will use to connect to an IRC server
 	 *
-	 * @return The bot's nick
+	 * @return The bot nick
 	 */
 	public String getNick() {
 		return nick;
@@ -272,18 +269,20 @@ public final class Twirk {
      */
     public synchronized boolean connect() throws IOException, InterruptedException{
     	if( isDisposed ){
-    		System.err.println("\tError. Cannot connect. This Twirk instance has been disposed.");
+    		logger.error("\tError. Cannot connect. This Twirk instance has been disposed.");
 	    	return false;
     	}
     	if( isConnected ){
-	    	System.err.println("\tError. Cannot connect. Already connected to Twitch server");
+			logger.error("\tError. Cannot connect. Already connected to Twitch server");
 	    	return false;
     	}
 
+		logger.debug("\n\tCreating Twirk resources (threads, sockets...)");
     	if( !resourcesCreated ) {
             createResources(); //Creates a socket and our input/output threads
         }
 
+		logger.debug("\tConnecting to Twitch\n");
         int oldTimeout = socket.getSoTimeout();
     	socket.setSoTimeout(10 * 1000); //Set a timeout for connection to 10 seconds, during connection
     	isConnected = doConnect();
@@ -294,7 +293,7 @@ public final class Twirk {
     		outThread.start();
 
     		//Add capacities to the bot and wait for them to take effect
-    		addCapacies();
+    		addCapacities();
     		Thread.sleep(1000);
 
     		//Start the input thread
@@ -309,7 +308,10 @@ public final class Twirk {
 
     		return true;
     	}
-    	return false;
+    	else {
+    		logger.error("Connection to Twitch failed permanently. Please consult the debug logs for information");
+    		return false;
+		}
     }
 
 	/**Closes the connection to the IrcServer, leaves all channels, terminates the input- and output thread and
@@ -329,9 +331,9 @@ public final class Twirk {
 
 		isConnected = false;
 
-		System.out.println("\n\tDisconnecting from Twitch chat...");
+		logger.info("\n\tDisconnecting from Twitch chat...");
 		releaseResources();
-		System.out.println("\tDisconnected from Twitch chat\n");
+		logger.info("\tDisconnected from Twitch chat\n");
 
 		for( TwirkListener l : listeners ) {
             l.onDisconnect();
@@ -343,8 +345,9 @@ public final class Twirk {
      *
      * It is safe to call this method even if connections are already closed.<br><br>
      *
-     * This method is different from {@link Twirk#disconnect()} in that it <b>does not</b> call the {@link TwirkListener#onDisconnect()} method
-     * of any of the listeners. Thus, this method is intended to be called if you want to make sure no reconnect attempts are performed.
+     * This method is different from {@link Twirk#disconnect()} in that it <b>does not</b> call the
+	 * {@link TwirkListener#onDisconnect()} method of any of the listeners. Thus, this method is intended to be
+	 * called if you intend to end using the Twirk instance, and want to make sure no reconnect attempts are performed.
      */
 	public synchronized void close(){
 		if( isDisposed ) {
@@ -354,9 +357,9 @@ public final class Twirk {
 		isConnected = false;
 		isDisposed = true;
 
-		System.out.println("\n\tDisposing of IRC...");
+		logger.info("\n\tDisposing of IRC...");
 		releaseResources();
-		System.out.println("\tDisposing of IRC completed\n");
+		logger.info("\tDisposing of IRC completed\n");
 	}
 
 
@@ -364,7 +367,8 @@ public final class Twirk {
 	//										PRIVATE and PACKAGE
 	//***********************************************************************************************
 	private void createResources() throws IOException{
-    	socket.setSoTimeout(6 * 60 * 1000); //Set a timeout for connection to 6 minutes. Twitch's default timeout is 5 minutes
+		socket = socketFactory.createSocket(serverAddress, serverPort);
+    	socket.setSoTimeout(this.pingIntervalSeconds * 1000);
 
 		writer = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 		reader = new BufferedReader( new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
@@ -382,13 +386,13 @@ public final class Twirk {
 		inThread.end();
 
 		try { socket.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 
 		try { reader.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 
 		try { writer.close(); }
-		catch (IOException e) {  }
+		catch (IOException ignored) {  }
 	}
 
 
@@ -403,9 +407,8 @@ public final class Twirk {
         // Read lines from the server until it tells us we have connected.
         String line;
         while ((line = reader.readLine()) != null) {
-            if(verboseMode) {
-                System.out.println("IN  " + line);
-            }
+            logger.debug("IN  " + line);
+
             //When we get a message containing 004, we have successfully logged in
             if (line.contains("004")) {
                 return true;
@@ -419,11 +422,11 @@ public final class Twirk {
         return false;
 	}
 
-	/**Gives us the appropriate Twitch capacities, such as seing JOIN/PART messages,
+	/**Gives us the appropriate Twitch capacities, such as seeing JOIN/PART messages,
 	 * to send Twitch commands (such as .timeout, .mod and so on) and to see
 	 * users tags (such as display color)
 	 */
-	private void addCapacies(){
+	private void addCapacities(){
 		serverMessage("CAP REQ :twitch.tv/membership");
 		serverMessage("CAP REQ :twitch.tv/commands");
 		serverMessage("CAP REQ :twitch.tv/tags");
@@ -446,9 +449,8 @@ public final class Twirk {
     		// A PING contains the message "PING MESSAGE", and we want to reply with MESSAGE as well
     		// Hence, we reply "PONG MESSAGE" . That's where the substring(5) comes from bellow, we strip
     		//out everything but the message
-			if (verboseMode) {
-				System.out.println("IN  " + line);
-			}
+			logger.debug("IN  " + line);
+
     		serverMessage("PONG " + line.substring(5) ); //Remove the "PING " part, and send the rest back
     		return;
 		}
@@ -570,10 +572,12 @@ public final class Twirk {
                 }
                 case "366":
                 {
+                	//Code 366 means the USER LIST has ended
                     Set<String> users = Collections.unmodifiableSet(online);
                     for(TwirkListener l : listeners ) {
                         l.onNamesList(users);
                     }
+                    break;
                 }
                 default:
                 {
@@ -588,7 +592,7 @@ public final class Twirk {
 
 	private String parseUsername(String prefix) {
 		/* The user name is extracted from the message's prefix.
-		 * JOIN or PART messages are formated like this:
+		 * JOIN or PART messages are formatted like this:
 		 *
 		 * :twitch_username!twitch_username@twitch_username.tmi.twitch.tv JOIN #channel
 		 */
