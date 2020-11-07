@@ -4,42 +4,33 @@ import java.util.function.Consumer;
 
 class TwirkLogger {
 
-    private final TwirkLogLevel logLevel;
     private final Consumer<String> errorConsumer;
     private final Consumer<String> warnConsumer;
     private final Consumer<String> infoConsumer;
     private final Consumer<String> debugConsumer;
 
-    TwirkLogger(TwirkLogLevel logLevel,
-                Consumer<String> errorConsumer,
+    TwirkLogger(Consumer<String> errorConsumer,
                 Consumer<String> warnConsumer,
                 Consumer<String> infoConsumer,
                 Consumer<String> debugConsumer) {
-        this.logLevel = logLevel;
-        this.errorConsumer = errorConsumer;
-        this.warnConsumer = warnConsumer;
-        this.infoConsumer = infoConsumer;
-        this.debugConsumer = debugConsumer;
-    }
-
-    TwirkLogLevel getLogLevel() {
-        return logLevel;
+        this.errorConsumer = errorConsumer == null ? this::noop : errorConsumer;
+        this.warnConsumer = warnConsumer == null ? this::noop : warnConsumer;
+        this.infoConsumer = infoConsumer == null ? this::noop : infoConsumer;
+        this.debugConsumer = debugConsumer == null ? this::noop : debugConsumer;
     }
 
     void error(String message) {
-        if(logLevel.isAtLeast(TwirkLogLevel.ERROR))
-            errorConsumer.accept(message);
+        errorConsumer.accept(message);
     }
     void warn(String message) {
-        if(logLevel.isAtLeast(TwirkLogLevel.WARN))
-            warnConsumer.accept(message);
+        warnConsumer.accept(message);
     }
     void info(String message) {
-        if(logLevel.isAtLeast(TwirkLogLevel.INFO))
-            infoConsumer.accept(message);
+        infoConsumer.accept(message);
     }
     void debug(String message) {
-        if(logLevel.isAtLeast(TwirkLogLevel.DEBUG))
-            debugConsumer.accept(message);
+        debugConsumer.accept(message);
     }
+
+    private void noop(String s) {}
 }

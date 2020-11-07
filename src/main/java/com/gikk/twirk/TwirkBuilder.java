@@ -51,11 +51,10 @@ public class TwirkBuilder {
 	private SocketFactory		socketFactory;
 	private int					pingIntervalSeconds = 15 + (5 * 60); // Twitch recommends pinging them every >5 minutes
 
-	private TwirkLogLevel		logLevel;
 	private Consumer<String>	errorLogger = System.err::println;
 	private Consumer<String>	warnLogger = System.out::println;
 	private Consumer<String>	infoLogger = System.out::println;
-	private Consumer<String>	debugLogger = System.out::println;
+	private Consumer<String>	debugLogger = null;
 
 	//***********************************************************
 	// 				CONSTRUCTOR
@@ -118,16 +117,20 @@ public class TwirkBuilder {
 	/**Sets the {@link Twirk} object to VerboseMode<br>
 	 * In VerboseMode, every message that is received by {@link Twirk} will be printed to console. Default value is {@code false}
 	 * <p>
-	 * Deprecation note: Since {@link TwirkLogLevel} was introduced, this setting is deprecated. In effect, it will
-	 * set the log level to {@link TwirkLogLevel#DEBUG} if set to true, or {@link TwirkLogLevel#INFO} if set to false.
-	 * If you set the log level using {@link TwirkBuilder#setLogLevel(TwirkLogLevel)}, the value set here is ignored.
+	 * Note: This method is mostly kept for convenience. What it does in practise is assign {@code System.out.println}
+	 * to the {@link TwirkBuilder#setDebugLogMethod}. You can fully customize which methods should consume the
+	 * various logging messages, by utilizing the {@code TwirkBuilder#setXXXLogMethod} methods.
 	 *
 	 * @param verboseMode {@code true} is you want {@link Twirk} in VerboseMode
 	 * @return this
-	 * @deprecated Please use {@link TwirkBuilder#setLogLevel(TwirkLogLevel)} instead
 	 */
 	public TwirkBuilder setVerboseMode(boolean verboseMode){
-		this.verboseMode = verboseMode;
+		if(verboseMode) {
+			this.debugLogger = System.out::println;
+		}
+		else {
+			this.debugLogger = null;
+		}
 		return this;
 	}
 
@@ -279,18 +282,9 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/** Sets the logging level of the Twirk instance. See {@link TwirkLogLevel}.
-	 *
-	 * @param logLevel the log level
-	 * @return this
-	 */
-	public TwirkBuilder setLogLevel(TwirkLogLevel logLevel) {
-		this.logLevel = logLevel;
-		return this;
-	}
-
-	/** Sets the method which will be called whenever an {@link TwirkLogLevel#ERROR} message
-	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	/** Sets the method which will be called whenever an error message should be logged. If not set by the user,
+	 * this defaults to {@link System#err }. To disable logging at this level,
+	 * 	 * set this to {@code null}
 	 * <br>
 	 * Should you want to set this to, say, {@link java.util.logging.Logger#severe(String)} ()}, you can
 	 * use the syntax <br>
@@ -304,8 +298,9 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/** Sets the method which will be called whenever an {@link TwirkLogLevel#WARN} message
-	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	/** Sets the method which will be called whenever a warning message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }. To disable logging at this level,
+	 * 	 * set this to {@code null}
 	 * <br>
 	 * Should you want to set this to, say, {@link java.util.logging.Logger#warning(String)}, you can
 	 * use the syntax <br>
@@ -319,8 +314,9 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/** Sets the method which will be called whenever an {@link TwirkLogLevel#INFO} message
-	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	/** Sets the method which will be called whenever an info message
+	 * should be logged. If not set by the user, this defaults to {@link System#out }. To disable logging at this level,
+	 * set this to {@code null}
 	 * <br>
 	 * Should you want to set this to, say, {@link java.util.logging.Logger#info(String)}, you can
 	 * use the syntax <br>
@@ -334,8 +330,9 @@ public class TwirkBuilder {
 		return this;
 	}
 
-	/** Sets the method which will be called whenever an {@link TwirkLogLevel#DEBUG} message
-	 * should be logged. If not set by the user, this defaults to {@link System#out }.
+	/** Sets the method which will be called whenever an debug message
+	 * should be logged. If not set by the user, this defaults to {@code null }. To disable logging at this level,
+	 * set this to {@code null}.
 	 * <br>
 	 * Should you want to set this to, say, {@link java.util.logging.Logger#fine(String)}, you can
 	 * use the syntax <br>
@@ -456,10 +453,7 @@ public class TwirkBuilder {
 	 * @return a {@link TwirkLogger}
 	 */
 	TwirkLogger getLogger() {
-		TwirkLogLevel effectiveLogLevel = this.logLevel;
-		if(this.logLevel == null && this.verboseMode) effectiveLogLevel = TwirkLogLevel.DEBUG;
-		if(this.logLevel == null && !this.verboseMode) effectiveLogLevel = TwirkLogLevel.INFO;
-		return new TwirkLogger(effectiveLogLevel,
+		return new TwirkLogger(
 				errorLogger, warnLogger,
 				infoLogger, debugLogger);
 	}

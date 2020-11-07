@@ -28,7 +28,7 @@ public class BotExample {
 		String channel = scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-								.setLogLevel(TwirkLogLevel.DEBUG)	//We want to print everything we receive from Twitch
+								.setVerboseMode(true)				//We want to print everything we receive from Twitch
 								.build();							//Create the Twirk object
 		
 		twirk.addIrcListener( getOnDisconnectListener(twirk) );

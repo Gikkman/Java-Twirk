@@ -10,11 +10,11 @@ public class TestTwirkLogger {
     @Test
     public void testErrorLogger() {
         AtomicInteger callCount = new AtomicInteger(0);
-        TwirkLogger logger = new TwirkLogger(TwirkLogLevel.ERROR,
+        TwirkLogger logger = new TwirkLogger(
                 (s) -> callCount.set(1),    // Error log method
-                (s) -> callCount.set(5),    // Warn log method
-                (s) -> callCount.set(10),   // Info log method
-                (s) -> callCount.set(15));  // Debug log method
+                null,    // Warn log method
+                null,   // Info log method
+                null);  // Debug log method
 
         logger.debug("Test call");
         Assert.assertEquals("Debug method should not have been called", 0, callCount.get());
@@ -32,11 +32,11 @@ public class TestTwirkLogger {
     @Test
     public void testWarnLogger() {
         AtomicInteger callCount = new AtomicInteger(0);
-        TwirkLogger logger = new TwirkLogger(TwirkLogLevel.WARN,
+        TwirkLogger logger = new TwirkLogger(
                 (s) -> callCount.set(1),    // Error log method
                 (s) -> callCount.set(5),    // Warn log method
-                (s) -> callCount.set(10),   // Info log method
-                (s) -> callCount.set(15));  // Debug log method
+                null,   // Info log method
+                null);  // Debug log method
 
         logger.debug("Test call");
         Assert.assertEquals("Debug method should not have been called", 0, callCount.get());
@@ -54,11 +54,11 @@ public class TestTwirkLogger {
     @Test
     public void testInfoLogger() {
         AtomicInteger callCount = new AtomicInteger(0);
-        TwirkLogger logger = new TwirkLogger(TwirkLogLevel.INFO,
+        TwirkLogger logger = new TwirkLogger(
                 (s) -> callCount.set(1),    // Error log method
                 (s) -> callCount.set(5),    // Warn log method
                 (s) -> callCount.set(10),   // Info log method
-                (s) -> callCount.set(15));  // Debug log method
+                null);  // Debug log method
 
         logger.debug("Test call");
         Assert.assertEquals("Debug method should not have been called", 0, callCount.get());
@@ -76,7 +76,7 @@ public class TestTwirkLogger {
     @Test
     public void testDebugLogger() {
         AtomicInteger callCount = new AtomicInteger(0);
-        TwirkLogger logger = new TwirkLogger(TwirkLogLevel.DEBUG,
+        TwirkLogger logger = new TwirkLogger(
                 (s) -> callCount.set(1),    // Error log method
                 (s) -> callCount.set(5),    // Warn log method
                 (s) -> callCount.set(10),   // Info log method

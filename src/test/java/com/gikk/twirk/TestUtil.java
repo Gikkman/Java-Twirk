@@ -14,7 +14,7 @@ public class TestUtil {
         AtomicBoolean messageReceived = new AtomicBoolean(false);
         Exception e = new Exception("Hello Moto!");
 
-        TwirkLogger logger = new TwirkLogger(TwirkLogLevel.DEBUG, (s) -> {
+        TwirkLogger logger = new TwirkLogger((s) -> {
             if(s.contains("Hello Moto!")) messageReceived.set(true);
             callCounter.incrementAndGet();
         }, this::assertFail, this::assertFail, this::assertFail);

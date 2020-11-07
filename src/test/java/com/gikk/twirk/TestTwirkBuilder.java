@@ -32,34 +32,4 @@ public class TestTwirkBuilder
 		builder.setPingInterval(0);
 		Assert.fail("builder.setPingInterval(0) should have thrown exception");
 	}
-
-	@Test
-	public void testLogLevel_whenVerboseModeIsTrue() {
-		TwirkBuilder builder = new TwirkBuilder("","","");
-		builder.setVerboseMode(true);
-		Assert.assertEquals(TwirkLogLevel.DEBUG, builder.getLogger().getLogLevel());
-	}
-
-	@Test
-	public void testLogLevel_whenVerboseModeIsFalse() {
-		TwirkBuilder builder = new TwirkBuilder("","","");
-		builder.setVerboseMode(false);
-		Assert.assertEquals(TwirkLogLevel.INFO, builder.getLogger().getLogLevel());
-	}
-
-	@Test
-	public void testLogLevel_whenVerboseModeIsTrue_AndLevelIsSetManually() {
-		TwirkBuilder builder = new TwirkBuilder("","","");
-		builder.setVerboseMode(true);
-		builder.setLogLevel(TwirkLogLevel.ERROR);
-		Assert.assertEquals(TwirkLogLevel.ERROR, builder.getLogger().getLogLevel());
-	}
-
-	@Test
-	public void testLogLevel_whenVerboseModeIsFalse_AndLevelIsSetManually() {
-		TwirkBuilder builder = new TwirkBuilder("","","");
-		builder.setVerboseMode(false);
-		builder.setLogLevel(TwirkLogLevel.ERROR);
-		Assert.assertEquals(TwirkLogLevel.ERROR, builder.getLogger().getLogLevel());
-	}
 }
