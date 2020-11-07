@@ -23,9 +23,9 @@ public class BotExample {
 		System.out.println("Welcome to this Bot example. In this example you will be able \n"
 				         + "to send and receive messages from a Twitch chat channel. You will \n"
 				         + "make all input directly here in the command prompt. \n\n"
-				         + "Enter channel to join (leave out the #):");
+				         + "Enter channel to join:");
 		Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-		String channel = "#" + scanner.nextLine();
+		String channel = scanner.nextLine();
 		
 		final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
 								.setLogLevel(TwirkLogLevel.DEBUG)	//We want to print everything we receive from Twitch
