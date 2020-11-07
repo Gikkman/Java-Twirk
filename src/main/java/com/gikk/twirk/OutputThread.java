@@ -100,7 +100,7 @@ class OutputThread extends Thread{
 	//***********************************************************************************************
 
 	/**Sends a message AS IS, without modifying it in any way. Users of this method are responsible for
-	 * formating the string correctly:
+	 * formatting the string correctly:
 	 * <br>
 	 * That means, who ever uses this method has to manually assign channel data and the similar to the
 	 * message.
@@ -130,11 +130,12 @@ class OutputThread extends Thread{
 				writer.flush();
 			}
 		} catch (IOException e){
-			if( e.getMessage().matches("Stream closed") ){
-				connection.logger.error("Cannot send message: " + message +" Stream closed");
-				return;
+			if( e.getMessage().toLowerCase().matches("stream closed") ){
+				connection.logger.warn("Cannot send message: \"" + message + "\" Stream closed");
 			}
-			connection.logger.error( Util.stacktraceToString(e) );
+			else {
+				Util.printError(connection.logger, e);
+			}
 		}
 	}
 }

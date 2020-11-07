@@ -43,7 +43,7 @@ class InputThread extends Thread{
 		                	connection.incommingMessage(line);
 	                	} catch (Exception e) {
 	                		connection.logger.error("Error in handling the incoming Irc Message");
-	                		connection.logger.error( Util.stacktraceToString(e) );
+	                		Util.printError(connection.logger, e);
 	                	}
 	                }
 	                //If we reach this line, it means the line was null. That only happens if the end of the stream's been reached
@@ -67,10 +67,10 @@ class InputThread extends Thread{
 	            	if( (message.toLowerCase().contains("socket closed")) ){
 	            		//Ignore
 	            	} else if ( message.contains("connection reset") || message.contains("stream closed")) {
-	            		connection.logger.error( message );
+	            		connection.logger.warn( e.getMessage() );
 	            	}
 	            	else {
-						connection.logger.error( Util.stacktraceToString(e) );
+						Util.printError(connection.logger, e);
 	            	}
 	            	isConnected = false;
 				}
@@ -81,7 +81,7 @@ class InputThread extends Thread{
 			 * inner catch-blocks. That should be very rare, but can occur if the thread is interrupted while 
 			 * handling another exception
 			 */
-			connection.logger.error( Util.stacktraceToString(e) );
+			Util.printError(connection.logger, e);
 		}
         
 		//If we have been disconnected, we close the connection and clean up the resources held by the IrcConnection.

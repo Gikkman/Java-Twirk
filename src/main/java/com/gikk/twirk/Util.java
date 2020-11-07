@@ -2,14 +2,14 @@ package com.gikk.twirk;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 class Util {
-    static String stacktraceToString(Exception e) {
+    static void printError(TwirkLogger logger, Exception e) {
+        logger.error(e.getMessage());
         AtomicBoolean firstLine = new AtomicBoolean(true);
-        return Arrays.stream(e.getStackTrace())
+        Arrays.stream(e.getStackTrace())
                 .map(StackTraceElement::toString)
-                .map(s -> firstLine.getAndSet(false) ? "\t" + s : s)
-                .collect(Collectors.joining(System.lineSeparator()));
+                .map(s -> firstLine.getAndSet(false) ? s : "\t" + s)
+                .forEach(logger::error);
     }
 }
