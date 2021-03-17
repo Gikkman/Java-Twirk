@@ -5,11 +5,13 @@ class RoomstateImpl implements Roomstate {
 	private static final String R9K_IDENTIFIER = "r9k=";
 	private static final String SUBS_IDENTIFIER = "subs-only=";
 	private static final String SLOW_IDENTIFIER = "slow=";
+	private static final String FOLLOWERS_IDENTIFIER = "followers-only=";
 
 	private final String broadcasterLanguage;
-	private final  int r9kMode;
-	private final  int subMode;
-	private final  int slowModeTimer;
+	private final int r9kMode;
+	private final int subMode;
+	private final int slowModeTimer;
+	private final int followersMode;
 	private final String rawLine;
 
 	RoomstateImpl(DefaultRoomstateBuilder builder){
@@ -17,6 +19,7 @@ class RoomstateImpl implements Roomstate {
 		this.r9kMode = builder.r9kMode;
 		this.subMode = builder.subMode;
 		this.slowModeTimer = builder.slowModeTimer;
+		this.followersMode = builder.followersMode;
 		this.rawLine = builder.rawLine;
 	}
 
@@ -36,6 +39,11 @@ class RoomstateImpl implements Roomstate {
 	}
 
 	@Override
+	public int getFollowersMode() {
+		return followersMode;
+	}
+
+	@Override
 	public int getSlowModeTimer() {
 		return slowModeTimer;
 	}
@@ -47,7 +55,9 @@ class RoomstateImpl implements Roomstate {
 			   + " " +
 			   (slowModeTimer == 0 ? "" : (SLOW_IDENTIFIER + slowModeTimer))
 			   + " " +
-			   (subMode == 0 ? "" : (SUBS_IDENTIFIER + subMode));
+			   (subMode == 0 ? "" : (SUBS_IDENTIFIER + subMode))
+			   + " " +
+			   (followersMode == -1 ? "" : (FOLLOWERS_IDENTIFIER + followersMode));
 	}
 
 	@Override

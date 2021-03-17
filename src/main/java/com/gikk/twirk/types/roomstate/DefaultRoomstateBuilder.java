@@ -10,6 +10,7 @@ class DefaultRoomstateBuilder implements RoomstateBuilder{
 	int r9kMode;
 	int subMode;
 	int slowModeTimer;
+	int followersMode;
 	String rawLine;
 
     @Override
@@ -21,6 +22,7 @@ class DefaultRoomstateBuilder implements RoomstateBuilder{
 		r9kMode = r.getAsInt(TwitchTags.R9K_ROOM);
 		slowModeTimer = r.getAsInt(TwitchTags.SLOW_DURATION);
 		subMode = r.getAsInt(TwitchTags.SUB_ONLY_ROOM);
+		followersMode = r.getAsInt(TwitchTags.FOLLOWERS_ONLY_ROOM);
 
 		return new RoomstateImpl(this);
 	}
