@@ -1,6 +1,7 @@
 package com.gikk.twirk;
 
 import com.gikk.twirk.types.clearChat.ClearChatBuilder;
+import com.gikk.twirk.types.clearMsg.ClearMsgBuilder;
 import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.mode.ModeBuilder;
 import com.gikk.twirk.types.notice.NoticeBuilder;
@@ -40,6 +41,7 @@ public class TwirkBuilder {
 	String channel;
 
 	private ClearChatBuilder 	clearChatBuilder;
+	private ClearMsgBuilder 	clearMsgBuilder;
 	private HostTargetBuilder 	hostTargetBuilder;
 	private ModeBuilder 		modeBuilder;
 	private NoticeBuilder 		noticeBuilder;
@@ -355,6 +357,14 @@ public class TwirkBuilder {
 	 */
 	public ClearChatBuilder getClearChatBuilder() {
 		return clearChatBuilder != null ? clearChatBuilder : ClearChatBuilder.getDefault();
+	}
+	
+	/**Retrieves the assigned {@link ClearMsgBuilder}, or the default one, if none is assigned.
+	 *
+	 * @return This builders current {@link ClearMsgBuilder}
+	 */
+	public ClearMsgBuilder getClearMsgBuilder() {
+		return clearMsgBuilder != null ? clearMsgBuilder : ClearMsgBuilder.getDefault();
 	}
 
 	/**Retrieves the assigned {@link HostTargetBuilder}, or the default one, if none is assigned.

@@ -1,6 +1,7 @@
 package com.gikk.twirk.events;
 
 import com.gikk.twirk.types.clearChat.ClearChat;
+import com.gikk.twirk.types.clearMsg.ClearMsg;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.mode.Mode;
 import com.gikk.twirk.types.notice.Notice;
@@ -128,6 +129,13 @@ public interface TwirkListener {
 	 * @param clearChat The clear chat notice we received
 	 */
     default public void onClearChat( ClearChat  clearChat ) {}
+
+	/**Fires when we receive a CLEARMSG from Twitch. See {@link ClearMsg }<br>
+	 * 
+	 *
+	 * @param clearMsg The clear msg notice we received
+	 */
+    default public void onClearMsg( ClearMsg  clearMsg ) {}
 
 	/**Fires when we've successfully joined a channel and retrieved the list of
 	 * all users that were online. <br><br>
