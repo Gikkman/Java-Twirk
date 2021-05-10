@@ -3,6 +3,8 @@ package com.gikk.twirk;
 import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.clearChat.ClearChat;
 import com.gikk.twirk.types.clearChat.ClearChatBuilder;
+import com.gikk.twirk.types.clearMsg.ClearMsg;
+import com.gikk.twirk.types.clearMsg.ClearMsgBuilder;
 import com.gikk.twirk.types.hostTarget.HostTarget;
 import com.gikk.twirk.types.hostTarget.HostTargetBuilder;
 import com.gikk.twirk.types.mode.Mode;
@@ -85,6 +87,7 @@ public final class Twirk {
 	final Set<String> online	 = Collections.newSetFromMap( new ConcurrentHashMap<>() );
 
 	private final ClearChatBuilder 		clearChatBuilder;
+	private final ClearMsgBuilder 		clearMsgBuilder;
 	private final HostTargetBuilder 	hostTargetBuilder;
 	private final ModeBuilder 			modeBuilder;
 	private final NoticeBuilder 		noticeBuilder;
@@ -108,6 +111,7 @@ public final class Twirk {
 		this.logger = builder.getLogger();
 
 		this.clearChatBuilder = builder.getClearChatBuilder();
+		this.clearMsgBuilder = builder.getClearMsgBuilder();
 		this.hostTargetBuilder= builder.getHostTargetBuilder();
 		this.modeBuilder	  = builder.getModeBuilder();
 		this.noticeBuilder	  = builder.getNoticeBuilder();
@@ -496,6 +500,14 @@ public final class Twirk {
                     ClearChat clearChat = clearChatBuilder.build(message);
                     for(TwirkListener l : listeners ) {
                         l.onClearChat(clearChat);
+                    }
+                    break;
+                }
+                case "CLEARMSG":
+                {
+                    ClearMsg clearMsg = clearMsgBuilder.build(message);
+                    for(TwirkListener l : listeners ) {
+                        l.onClearMsg(clearMsg);
                     }
                     break;
                 }
