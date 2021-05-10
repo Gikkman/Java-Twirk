@@ -33,7 +33,14 @@ public interface Roomstate extends AbstractType{
 	 * @return sub mode status of this ROOMSTATE
 	 */
 	public int getSubMode();
-	
+
+	/** If -1, it means that followers mode is disabled. 0 means it is enabled. If greater than 0, it means only users
+	 * following for at least the specified number of minutes can chat.
+	 *
+	 * @return followers mode status of this ROOMSTATE
+	 */
+	public int getFollowersMode();
+
 	/** If greater than 0, it means that users must wait more than X seconds between posting messages. -1 means that this ROOMSTATE did not mention slowMode
 	 * 
 	 * @return slow mode status of this ROOMSTATE

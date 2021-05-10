@@ -125,6 +125,10 @@ public class TwitchTags {
 	 */
 	public static final String SUB_ONLY_ROOM= "subs-only";
 
+	/** Only followers can chat. -1 disabled, 0 all followers can chat, > 0 only users following for at least the specified number of minutes can chat.
+	 */
+	public static final String FOLLOWERS_ONLY_ROOM = "followers-only";
+
 	/** Determines how many seconds chatters without moderator privileges must wait between sending messages
 	 */
 	public static final String SLOW_DURATION= "slow";
