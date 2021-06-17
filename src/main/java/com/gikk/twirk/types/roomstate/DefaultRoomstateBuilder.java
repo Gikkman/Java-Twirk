@@ -11,6 +11,7 @@ class DefaultRoomstateBuilder implements RoomstateBuilder{
 	int subMode;
 	int slowModeTimer;
 	int followersMode;
+	int emoteOnlyMode;
 	String rawLine;
 
     @Override
@@ -23,6 +24,7 @@ class DefaultRoomstateBuilder implements RoomstateBuilder{
 		slowModeTimer = r.getAsInt(TwitchTags.SLOW_DURATION);
 		subMode = r.getAsInt(TwitchTags.SUB_ONLY_ROOM);
 		followersMode = r.getAsInt(TwitchTags.FOLLOWERS_ONLY_ROOM);
+		emoteOnlyMode = r.getAsInt(TwitchTags.EMOTE_ONLY_ROOM);
 
 		return new RoomstateImpl(this);
 	}
