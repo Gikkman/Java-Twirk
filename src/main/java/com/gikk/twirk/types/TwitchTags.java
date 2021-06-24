@@ -129,6 +129,10 @@ public class TwitchTags {
 	 */
 	public static final String FOLLOWERS_ONLY_ROOM = "followers-only";
 
+	/** Emote-only mode. If enabled, only emotes are allowed in chat. Valid values: 0 (disabled) or 1 (enabled).
+	 */
+	public static final String EMOTE_ONLY_ROOM = "emote-only";
+
 	/** Determines how many seconds chatters without moderator privileges must wait between sending messages
 	 */
 	public static final String SLOW_DURATION= "slow";
