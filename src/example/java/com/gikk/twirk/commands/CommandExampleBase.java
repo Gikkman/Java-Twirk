@@ -4,6 +4,8 @@ import com.gikk.twirk.enums.USER_TYPE;
 import com.gikk.twirk.events.TwirkListener;
 import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.users.TwitchUser;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -13,7 +15,7 @@ public abstract class CommandExampleBase implements TwirkListener {
 	 * A PREFIX_COMMAND are the classical commands that starts with a certain pattern (e.g. !time)
 	 * A CONTENT_COMMAND is a command that looks for a certain pattern in the message (e.g. this is !tick)
 	 */
-	public enum CommandType{ PREFIX_COMMAND, CONTENT_COMMAND };
+	public enum CommandType{ PREFIX_COMMAND, CONTENT_COMMAND }
 	
 	//***********************************************************************************************
 	//											VARIABLES
@@ -57,7 +59,7 @@ public abstract class CommandExampleBase implements TwirkListener {
 		if( sender.getUserType().value >= minPrivilidge.value )
 			if( type == CommandType.PREFIX_COMMAND ){
 				for( String pattern : commandPattern ){
-					if( command.startsWith(pattern) ){
+					if( command.equals(pattern) ){
 						performCommand(pattern, sender, message);
 						break;	//We don't want to fire twice for the same message
 					}
@@ -113,9 +115,8 @@ public abstract class CommandExampleBase implements TwirkListener {
 	//***********************************************************************************************
 	private Set<String> compile(){
 		String[] patterns = getCommandWords().toLowerCase(Locale.ENGLISH).split("\\|");
-		HashSet<String> out = new HashSet<String>();
-		for( String pattern : patterns )
-			out.add(pattern);
+		HashSet<String> out = new HashSet<>();
+		Collections.addAll(out, patterns);
 		return out;
 	}
 }
