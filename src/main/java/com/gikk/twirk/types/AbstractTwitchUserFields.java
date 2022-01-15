@@ -20,7 +20,7 @@ public abstract class AbstractTwitchUserFields {
 	public  String 	  displayName;
 	public  int 	  color;
 	public  long 	  userID;
-	public  int[] 	  emoteSets;
+	public  String[]  emoteSets;
     public  boolean   isOwner;
 	public  boolean   isMod;
 	public  boolean   isSub;
@@ -65,19 +65,13 @@ public abstract class AbstractTwitchUserFields {
 		this.rawLine = message.getRaw();
 	}
 
-	private int[] parseEmoteSets(String emoteSet) {
+	private String[] parseEmoteSets(String emoteSet) {
 		if( emoteSet.isEmpty() ) {
-            return new int[0];
+            return new String[0];
         }
 
 		String[] sets = emoteSet.split(",");
-		int[] out = new int[ sets.length ];
-
-		for( int i = 0; i < sets.length; i++ ) {
-            out[i] = Integer.parseInt( sets[i] );
-        }
-
-		return out;
+		return sets;
 	}
 
 	private USER_TYPE parseUserType(String userType, String sender, String channelOwner, boolean isSub) {

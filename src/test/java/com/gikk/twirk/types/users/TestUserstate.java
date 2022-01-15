@@ -1,58 +1,286 @@
 package com.gikk.twirk.types.users;
 
-import com.gikk.twirk.TestConsumer;
-import com.gikk.twirk.TestResult;
 import com.gikk.twirk.enums.USER_TYPE;
-import java.util.function.Consumer;
+import com.gikk.twirk.types.twitchMessage.TwitchMessage;
+import com.gikk.twirk.types.twitchMessage.TwitchMessageBuilder;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class TestUserstate {
-	private static final String USERSTATE_MOD = "@color=0x255;display-name=GikkBot;emote-sets=0;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
-	private static final String USERSTATE_USER = "@color=0x1234;display-name=GikkBot;emote-sets=0;mod=0;subscriber=0;turbo=0;user-type= :tmi.twitch.tv USERSTATE #gikkman";
-	private static final String USERSTATE_OWNER = "@color=#FF69B4;display-name=Gikkman;emote-sets=0,1454;mod=1;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
-
-    public static void test(Consumer<String> twirkIn, TestConsumer<Userstate> userstateTest) throws Exception {
-        TestResult t1 = userstateTest.assign(TestUserstate::testUserUserstate);
-        twirkIn.accept(USERSTATE_USER);
-        assertTrue(t1.await());
-
-        TestResult t2 = userstateTest.assign(TestUserstate::testModUserstate);
-        twirkIn.accept(USERSTATE_MOD);
-        assertTrue(t2.await());
-
-        TestResult t3 = userstateTest.assign(TestUserstate::testOwnerUserstate);
-        twirkIn.accept(USERSTATE_OWNER);
-        assertTrue(t3.await());
+    /* *****************************************************************************************************************
+     * Test display names
+     **************************************************************************************************************** */
+    @Test
+    public void displayNameTest_givenCustomDisplayName_thenDisplayNameIsParsedCorrect() {
+        // Given
+        String input = "@color=0x1234;display-name=GikkBot :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals("GikkBot", state.getDisplayName());
+    }
+    @Test
+    public void displayNameTest_givenDefaultDisplayName_thenDisplayNameIsParsedCorrect() {
+        // Given
+        String input = "@color=0x1234;display-name=gikkman :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals("gikkman", state.getDisplayName());
     }
 
-    private static boolean testUserUserstate(Userstate us) {
-        doTest(us, "GikkBot", 0x1234, USER_TYPE.DEFAULT, false, false, false, 0);
-        System.out.println("--- --- Regular User OK");
-        return true;
+    /* *****************************************************************************************************************
+     * Test colors
+     **************************************************************************************************************** */
+    @Test
+    public void colorTest_givenColor_thenColorIsParsed() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(0xFF69B4, state.getColor());
     }
 
-    private static boolean testModUserstate(Userstate us) {
-        doTest(us, "GikkBot", 0x255, USER_TYPE.MOD, false, true, false, 0);
-        System.out.println("--- --- Mod User OK");
-        return true;
+    /* *****************************************************************************************************************
+     * Test emote sets
+     **************************************************************************************************************** */
+    @Test
+    public void emoteSetTest_givenNoEmoteSets_thenEmptyEmoteSetIsReturned() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertArrayEquals(new String[0], state.getEmoteSets());
     }
 
-    private static boolean testOwnerUserstate(Userstate us) {
-        doTest(us, "Gikkman", 0xFF69B4, USER_TYPE.OWNER, false, true, false, 0, 1454);
-        System.out.println("--- --- Owner User OK");
-        return true;
+    @Test
+    public void emoteSetTest_givenEmoteSets_thenCorrectSetsAreReturned() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;emote-sets=0,564265402,f302a315-4fac-4e36-a9f3-3c7915933eb1 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertArrayEquals(new String[]{"0","564265402","f302a315-4fac-4e36-a9f3-3c7915933eb1"}, state.getEmoteSets());
     }
 
+    /* *****************************************************************************************************************
+     * Test isSub
+     **************************************************************************************************************** */
+    @Test
+    public void isSubTest_givenUserIsSub_thenIsSubIsTrue() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;subscriber=1 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertTrue(state.isSub());
+    }
 
-	private static void doTest(Userstate state, String displayName, int color,
-            USER_TYPE UserType, boolean isSub, boolean isMod, boolean isTubo, int... emoteSets) {
-        assertEquals( "Color match", color, state.getColor() );
-		assertEquals( "Display name", displayName, state.getDisplayName());
-		assertEquals( "User type", UserType, state.getUserType() );
-        assertEquals( "Is sub", isSub, state.isSub());
-        assertEquals( "Is mod", isMod, state.isMod());
-        assertEquals( "Is turbo", isTubo, state.isTurbo());
-        assertArrayEquals("Emote sets", emoteSets, state.getEmoteSets());
-	}
+    @Test
+    public void isSubTest_givenUserIsNotSub_thenIsSubIsFalse() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;subscriber=0 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertFalse(state.isSub());
+    }
+
+    @Test
+    public void isSubTest_givenSubIsNotPresent_thenIsSubIsFalse() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertFalse(state.isSub());
+    }
+
+    /* *****************************************************************************************************************
+     * Test isMod
+     **************************************************************************************************************** */
+    @Test
+    public void isModTest_givenUserIsMod_thenIsModIsTrue() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;mod=1 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertTrue(state.isMod());
+    }
+
+    @Test
+    public void isModTest_givenUserIsNotMod_thenIsModIsFalse() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;mod=0 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertFalse(state.isMod());
+    }
+
+    @Test
+    public void isModTest_givenModIsNotPresent_thenIsModIsFalse() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertFalse(state.isMod());
+    }
+
+    /* *****************************************************************************************************************
+     * Test isOwner
+     **************************************************************************************************************** */
+    @Test
+    public void isOwnerTest_givenDisplayNameMatchesChannel_thenUserIsOwner() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.OWNER, state.getUserType());
+    }
+
+    @Test
+    public void isOwnerTest_givenDisplayNameDoesNotMatchesChannel_thenUserIsNotOwner() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkbot :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertNotEquals(USER_TYPE.OWNER, state.getUserType());
+    }
+
+    /* *****************************************************************************************************************
+     * Test user type
+     **************************************************************************************************************** */
+    @Test
+    public void userTypeTest_givenUserIsOwner_thenIrregardlessOfUserTypeField_UserTypeIsOwner() {
+        // Given
+        String input = "@color=#FF69B4;display-name=Gikkman;subscriber=1;mod=1;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.OWNER, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsMod_thenUserTypeIsMod() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot;subscriber=1;mod=1;user-type=mod :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.MOD, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsAdmin_thenUserTypeIsAdmin() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot;subscriber=1;mod=1;user-type=global_mod :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.GLOBAL_MOD, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsGloblaMod_thenUserTypeIsGlobalMod() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot;subscriber=1;user-type=admin :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.ADMIN, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsStaff_thenUserTypeIsStaff() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot;user-type=staff :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.STAFF, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsSubscriber_thenUserTypeIsSub() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot;subscriber=1 :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.SUBSCRIBER, state.getUserType());
+    }
+
+    @Test
+    public void userTypeTest_givenUserIsNeitherOwnerModGlobalAdminOrSub_thenUserTypeIsDefault() {
+        // Given
+        String input = "@color=#FF69B4;display-name=GikkBot :tmi.twitch.tv USERSTATE #gikkman";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertEquals(USER_TYPE.DEFAULT, state.getUserType());
+    }
+
+    /* *****************************************************************************************************************
+     * Test badges
+     **************************************************************************************************************** */
+    @Test
+    public void badgeTest_givenUserHasNoBadges_thenBadgeArrayIsEmpty() {
+        // Given
+        String input = "@badge-info=;badges=;color=#0D4200;display-name=ronni :tmi.twitch.tv USERSTATE #dallas";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertArrayEquals(new String[0], state.getBadges());
+    }
+
+    @Test
+    public void badgeTest_givenBadgesIsMissing_thenBadgeArrayIsEmpty() {
+        // Given
+        String input = "@color=#0D4200;display-name=ronni :tmi.twitch.tv USERSTATE #dallas";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertArrayEquals(new String[0], state.getBadges());
+    }
+
+    @Test
+    public void badgeTest_givenUserHasBadges_thenBadgeArrayIsFilled() {
+        // Given
+        String input = "@badge-info=;badges=staff/1,subscriber/1;color=#0D4200;display-name=ronni :tmi.twitch.tv USERSTATE #dallas";
+        // When
+        TwitchMessage message = TwitchMessageBuilder.getDefault().build(input);
+        Userstate state = UserstateBuilder.getDefault().build(message);
+        // Then
+        assertArrayEquals(new String[]{"staff/1","subscriber/1"}, state.getBadges());
+    }
 }

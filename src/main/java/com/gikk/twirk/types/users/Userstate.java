@@ -67,6 +67,18 @@ public interface Userstate extends AbstractType{
 	 * 
 	 * @return Our emote sets
 	 */
-	public int[] getEmoteSets();
+	public String[] getEmoteSets();
+
+	/**Retrieves the users set of badges in Twitch chat. A badge looks like this: <br>
+	 * {@code broadcaster/1} <br><br>
+	 *
+	 * There are several different badges, such as {@code broadcaster/1}, {@code turbo/1} and so on. I do
+	 * not know all of them explicitly, or what to do with them.
+	 *
+	 * TODO: Find out more about badges
+	 *
+	 * @return Arrays of strings, representing this users badges. Might be empty if user has none.
+	 */
+	public String[] getBadges();
 
 }
