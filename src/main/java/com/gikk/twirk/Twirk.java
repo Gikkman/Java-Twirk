@@ -218,13 +218,17 @@ public final class Twirk {
 		}
 	}
 
-	/**Fetches a set of all the moderators that are <b>currently</b> online in the joined channel. Note that this set is
+	/** Fetches a set of all the moderators that are <b>currently</b> online in the joined channel. Note that this set is
 	 * <b>copy</b> of the underlying set of online moderators. Thus, changes to the original set will not be visible
 	 * in the returned set, and changes to the returned set will not affect the original set.<br><br>
 	 *
 	 * Also worth noting is that the set only contains the moderators names in lower case letters.
 	 *
 	 * @return A copy of the Set of online moderators.
+	 * @deprecated A few years ago, twitch sent a list of what mods were online when you connected. From that, it was
+	 *             easy to maintain a set of whom where online and not. But they've removed that feature some time ago,
+	 *             so this feature is now very much unreliable. It might still be doable via their Websocket API, but
+	 *             that is outside of the scope of this library.
 	 */
 	public Set<String> getModsOnline(){
 		synchronized (moderators) {
@@ -232,7 +236,8 @@ public final class Twirk {
 		}
 	}
 
-	/**Fetches the nick of the bot, which it will use to connect to an IRC server
+
+	/** Fetches the nick of the bot, which it will use to connect to an IRC server
 	 *
 	 * @return The bot nick
 	 */
