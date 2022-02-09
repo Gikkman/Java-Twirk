@@ -22,7 +22,7 @@ Include the following in your pom.xml
     <dependency>
         <groupId>com.github.gikkman</groupId>
         <artifactId>Java-Twirk</artifactId>
-        <version>0.6.3</version>
+        <version>0.7.1</version>
     </dependency>
 </dependencies>
 ```
