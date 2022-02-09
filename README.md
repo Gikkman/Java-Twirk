@@ -29,7 +29,7 @@ Include the following in your pom.xml
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
-### 0.7.0
+### 0.7.1
 Mostly fixes of git issues, but since I need to change a method signature, it requires a version update. You might need
 to update some code to use this version. Sorry!
 * `Userstate.getEmoteSets()` now returns a `String[]`. Used to be a `int[]`, but Twitch changed their definition for this
@@ -42,6 +42,8 @@ field. Fixes #42
 behaviour anymore.
 * Deprecated `Twirk.getModsOnline()`. Twitch has removed /namelist on connect from the IRC interface, so I can't 
  support this behaviour anymore.
+ 
+*(0.7.0 was redacted because I forgot to update the version in my pom file. Bummer)*
 
 ### 0.6.3
 Some pretty big changes behind the scenes, but they should be fully backwards compatible. Below is a list of changes:
