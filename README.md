@@ -29,6 +29,20 @@ Include the following in your pom.xml
 Or simply download the latest version of the library jar from the release page.
 
 ## Changes
+### 0.7.0
+Mostly fixes of git issues, but since I need to change a method signature, it requires a version update. You might need
+to update some code to use this version. Sorry!
+* `Userstate.getEmoteSets()` now returns a `String[]`. Used to be a `int[]`, but Twitch changed their definition for this
+field. Fixes #42
+* `Userstate` now also has access to the users badges. This was added to the IRC interface a few months ago.
+* `Emote.getEmoteID()` is removed. The method was deprecated in 0.6, and has now been removed.  Please  use
+`Emote.getEmoteIDString()` instead.
+* `TwirkBuilder` now automatically casts channel names to lower case. Fixes #44
+* Deprecated `Clearchat.getReason()`. Twitch has removed ban reasons from the IRC interface, so I can't support this
+behaviour anymore.
+* Deprecated `Twirk.getModsOnline()`. Twitch has removed /namelist on connect from the IRC interface, so I can't 
+ support this behaviour anymore.
+
 ### 0.6.3
 Some pretty big changes behind the scenes, but they should be fully backwards compatible. Below is a list of changes:
 * `Cheer.getImageURL(...)` should now return a proper URL. Fix #30

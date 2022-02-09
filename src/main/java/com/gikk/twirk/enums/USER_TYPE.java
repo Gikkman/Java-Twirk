@@ -36,7 +36,7 @@ public enum USER_TYPE{
      *  Note that both Turbo and Subs are given this type.
      *  For more granularity, check out {@link TwitchUser#isSub()}  and  {@link TwitchUser#isMod()}
      */
-     SUBSCRIBER(2),
+    SUBSCRIBER(2),
 
 	/** Type for users that does not fit into any other classes. This type has a value of 0*/
 	DEFAULT(0);

@@ -70,7 +70,7 @@ public class TwirkBuilder {
 	 * @param oauth The bot's IRC oAuth token (on Twitch)
 	 */
 	public TwirkBuilder(String channel, String nick, String oauth){
-		this.channel = channel.startsWith("#") ? channel : "#" + channel;
+		this.channel = (channel.startsWith("#") ? channel : "#" + channel).toLowerCase();
 		this.nick = nick;
 		this.oauth = oauth;
 	}

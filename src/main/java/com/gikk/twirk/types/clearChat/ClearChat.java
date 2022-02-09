@@ -17,13 +17,13 @@ public interface ClearChat extends AbstractType{
 	 *
 	 * @return {@link CLEARCHAT_MODE} of this CLEARCHAT
 	 */
-	public CLEARCHAT_MODE getMode();
+	CLEARCHAT_MODE getMode();
 
 	/** Retrieves the target of the CLEARCHAT. Might be a user name, if a user was purged, or empty, if the entire chat was purged
 	 *
 	 * @return Target of the CLEARCHAT, or empty if entire chat was cleared
 	 */
-	public String getTarget();
+	String getTarget();
 
 	/** Retrieves the duration of the ban/purge. Only applies to a CLEARCHAT of type USER. <br>
 	 * If the CLEARCHAT is of type {@link CLEARCHAT_MODE#COMPLETE}, this will always return -1. If it is of type {@link CLEARCHAT_MODE#USER}, it
@@ -31,11 +31,13 @@ public interface ClearChat extends AbstractType{
 	 * 
 	 * @return Duration on the ban in seconds, or -1 if no duration was assigned.
 	 */
-	public int getDuration();
+	int getDuration();
 
 	/**Retrieves the reason for the timout/ban/clear. Might be empty
 	 *
 	 * @return The reason for this CLEARCHAT. Might be empty
+	 * @deprecated Twitch has removed the ability to get the ban reason from IRC, so this library cannot support getting
+	 * ban reason anymore. This method will be removed in a future update.
 	 */
-	public String getReason();
+	String getReason();
 }

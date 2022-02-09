@@ -20,20 +20,12 @@ import com.gikk.twirk.enums.EMOTE_SIZE;
  *
  */
 public interface Emote {
-	/** Fetches the emotes numeric ID.
-	 * 
-	 * @return The emotes numeric ID
-	 * @deprecated use {@link #getEmoteIDString()} instead
-	 */
-	public int getEmoteID();
-
-
 	/** Fetches the emotes ID as String. This became necessary after Twitch start
 	 * including other characters than numbers in emote IDs
 	 *
 	 * @return The emotes ID
 	 */
-	public String getEmoteIDString();
+	String getEmoteIDString();
 	
 	/** A list of pairs on indices. Each pair is a BEGIN-END pair of a emote occurrence in the message.<br><br>
 	 * 
@@ -44,13 +36,13 @@ public interface Emote {
 	 * 
 	 * @return The indices this emote takes up in the associated message
 	 */
-	public LinkedList<EmoteIndices> getIndices();
+	LinkedList<EmoteIndices> getIndices();
 	
 	/** The emote's pattern. For example: 'Kappa'
 	 * 
 	 * @return The emote's pattern
 	 */
-	public String getPattern();
+	String getPattern();
 	
 	/**Emote images can be downloaded from Twitch's server, and come in three
 	 * sizes. Use this method to get the address for the emote.
@@ -58,13 +50,13 @@ public interface Emote {
 	 * @param imageSize Emotes comes in three sizes. Specify which size you want
 	 * @return The address for the emote's image
 	 */
-	public String getEmoteImageUrl(EMOTE_SIZE imageSize);
+	String getEmoteImageUrl(EMOTE_SIZE imageSize);
 	
 	/**Class for representing the beginning and end of an emote occurrence within a message
 	 * 
 	 * @author Gikkman
 	 */	
-	public static class EmoteIndices{
+	class EmoteIndices{
 		public final int beingIndex;
 		public final int endIndex;
 		

@@ -182,13 +182,6 @@ public class TestSuit {
 	}
 
     @Test
-	public void testUserstate() throws Exception{
-        System.out.println("--- Usernstate test started");
-		TestUserstate.test(twirkIn, tl.userstateTest);
-        System.out.println("--- Usernstate test completed");
-	}
-
-    @Test
     public void z_testDisconnect() throws Exception{
         System.out.println("--- Disconnect test started");
         // Make sure that the onDisconnect method was called
