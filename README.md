@@ -8,7 +8,7 @@ most events that can occur in Twitch chat.
 
 Java 8 compatible.
 
-## Installation
+# Installation
 Include the following in your pom.xml
 
 ```xml
@@ -28,7 +28,54 @@ Include the following in your pom.xml
 ```
 Or simply download the latest version of the library jar from the release page.
 
-## Changes
+# Usage
+#### Basic usage
+You will need to generate a Twitch IRC Oauth token to use this library. This token is then used as password when creating a `TwirkBuilder` instance. You can get generate such a token using [Twitch Chat OAuth Password Generator](https://twitchapps.com/tmi/).
+```Java
+  final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS).build();
+  twirk.connect();
+  ...
+  twirk.close();
+```
+
+#### Events
+All events which can be reacted to are listed in [TwirkListener.java](https://github.com/Gikkman/Java-Twirk/blob/master/twirc/src/main/java/com/gikk/twirk/events/TwirkListener.java) This snippet will make your bot respond to any channel
+message with a "pong USER_NAME".
+```Java
+  twirk.addIrcListener( new TwirkListener() { 
+    public void onPrivMsg( TwitchUser sender, TwitchMessage message) {
+      twirk.channelMessage("pong " + sender.getDisplayName() );
+    }
+  } );
+```
+
+For a more complex example, which shows how to connect properly and how to write simple bot commands, check out the 
+example code in `src/example/java`
+
+#### Extendable
+You can make Twirk use your own implementation of all event types by using custom builder classes. By extending the 
+types Builder interface, and then passing an instance of your custom builder to the TwirkBuilder, you can use your own 
+custom implementation of whichever type you want.
+```Java
+  final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
+    .setClearChatBuilder( new MyClearChatBuilder() )
+    .build();
+```
+This will make the Twirk instance build instances of your custom implementation of `ClearChat` events
+
+# Known / Verified bot
+If your bot requires a very high message rate limit, you can request a verified bot account. It will increase the 
+bots message rate limits: https://dev.twitch.tv/docs/irc/guide#known-and-verified-bots
+This isn't strictly necessary if you are just making a bot for your own account, as you might not reach the message 
+limits. For larger/more frequently used bots, it might
+be necessary.
+
+# Contribute
+If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit 
+an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me 
+on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
+
+# Changelog
 ### 0.7.1
 Mostly fixes of git issues, but since I need to change a method signature, it requires a version update. You might need
 to update some code to use this version. Sorry!
@@ -77,52 +124,6 @@ There has only been minor changes between 0.5 and 0.6. Nothing that should break
   eventually convert all tests to this format 
 
 And probably some more...
-
-# Usage
-#### Basic usage
-```Java
-  final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS).build();
-  twirk.connect();
-  ...
-  twirk.close();
-```
-#### Events
-All events which can be reacted to are listed in [TwirkListener.java](https://github.com/Gikkman/Java-Twirk/blob/master/twirc/src/main/java/com/gikk/twirk/events/TwirkListener.java) This snippet will make your bot respond to any channel
-message with a "pong USER_NAME".
-```Java
-  twirk.addIrcListener( new TwirkListener() { 
-    public void onPrivMsg( TwitchUser sender, TwitchMessage message) {
-      twirk.channelMessage("pong " + sender.getDisplayName() );
-    }
-  } );
-```
-
-For a more complex example, which shows how to connect properly and how to write simple bot commands, check out the 
-example code in `src/example/java`
-
-#### Extendable
-You can make Twirk use your own implementation of all event types by using custom builder classes. By extending the 
-types Builder interface, and then passing an instance of your custom builder to the TwirkBuilder, you can use your own 
-custom implementation of whichever type you want.
-```Java
-  final Twirk twirk = new TwirkBuilder(channel, SETTINGS.MY_NICK, SETTINGS.MY_PASS)
-    .setClearChatBuilder( new MyClearChatBuilder() )
-    .build();
-```
-This will make the Twirk instance build instances of your custom implementation of `ClearChat` events
-
-# Known / Verified bot
-If your bot requires a very high message rate limit, you can request a verified bot account. It will increase the 
-bots message rate limits: https://dev.twitch.tv/docs/irc/guide#known-and-verified-bots
-This isn't strictly necessary if you are just making a bot for your own account, as you might not reach the message 
-limits. For larger/more frequently used bots, it might
-be necessary.
-
-# Contribute
-If you find any issues, or have suggestions for features (which does not clutter the library), feel free to submit 
-an [Issue](https://github.com/Gikkman/Java-Twirk/issues) or make a pull request. You can also reach me 
-on [Twitter](https://twitter.com/gikkman) or on [Twitch](http://twitch.com/gikkman)
-
 
 # License
 This library is licensed under the [MIT License](https://tldrlegal.com/license/mit-license). If you use it, a link to 
