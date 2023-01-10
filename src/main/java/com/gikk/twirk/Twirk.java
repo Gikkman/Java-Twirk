@@ -170,13 +170,32 @@ public final class Twirk {
                queue.add("PRIVMSG " + channel + " :/w " + userName + " " + message);
        }
 
+   	/**Enqueues a message at the end of the message queue. The message will be
+   	 * sent to the channel when all messages enqueued before it has been sent.
+   	 *
+   	 * @param message The message that should be sent
+   	 */
+   	public void channelMessage(String message){
+   		queue.add("PRIVMSG " + channel + " :" + message);
+   	}
+
 	/**Enqueues a message at the end of the message queue. The message will be
 	 * sent to the channel when all messages enqueued before it has been sent.
 	 *
 	 * @param message The message that should be sent
+	 * @param messageId The message id to reply to
 	 */
-	public void channelMessage(String message){
-		queue.add("PRIVMSG " + channel + " :" + message);
+	public void channelMessage(String message, String replyTarget){
+		queue.add("@reply-parent-msg-id=" + replyTarget + " PRIVMSG " + channel + " :" + message);
+	}
+
+	/**Enqueues a message at the front of the message queue. The message will be sent as soon as possible.
+	 *
+	 * @param message The message that should be sent
+	 * @param messageId The message id to reply to
+	 */
+	public void priorityChannelMessage(String message, String replyTarget){
+		queue.addFirst("@reply-parent-msg-id=" + replyTarget + " PRIVMSG " + channel + " :" + message);
 	}
 
 	/**Enqueues a message at the front of the message queue. The message will be sent as soon as possible.
